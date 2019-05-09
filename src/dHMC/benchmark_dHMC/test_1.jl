@@ -1,12 +1,12 @@
 using CmdStan, Turing,DynamicHMC,LogDensityProblems,Statistics
 using Random,Distributions,Parameters,DataFrames,StatsPlots
 
-include("rob_test_1a.jl")
-
 Random.seed!(38445)
 
 ProjDir = @__DIR__
 cd(ProjDir)
+
+include("test_1a.jl")
 
 Nsamples = 2000
 Nadapt = 1000
