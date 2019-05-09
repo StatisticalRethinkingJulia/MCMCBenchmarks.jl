@@ -1,0 +1,3 @@
+module MCMCBenchmarks
+
+end # module

@@ -1,0 +1,14 @@
+name = "MCMCBenchmarks"
+uuid = "72ce6e51-3f7f-5ebd-8e88-b86aa3e31c30"
+authors = ["Rob J Goedman <goedman@mac.com>"]
+
+[deps]
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
+
+[compat]
+julia = "^1"
