@@ -1,7 +1,7 @@
 using CmdStan, Turing,DynamicHMC,LogDensityProblems,Statistics
 using Random,Distributions,Parameters,DataFrames,StatsPlots
 
-include("chris_test_6a.jl")
+include("bm_01_dHMC.jl")
 
 Random.seed!(38445)
 
