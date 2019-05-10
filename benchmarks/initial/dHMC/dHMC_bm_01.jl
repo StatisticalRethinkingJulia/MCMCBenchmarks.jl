@@ -1,6 +1,8 @@
 # chris_test_5a.jl
 
-using DynamicHMCModels
+using DynamicHMCModels, Random, BenchmarkTools
+
+Random.seed!(38445)
 
 ProjDir = @__DIR__
 cd(ProjDir)
@@ -33,7 +35,7 @@ function (problem::ChrisProblem5a)(θ)
 end;
 
 # Define problem with data and inits.
-function dhmc(data::Dict, nsamples=2000)
+function dhmc_bm(data::Dict, Nsamples=2000)
   
   N = data["N"]
   obs = data["y"]
@@ -53,7 +55,7 @@ function dhmc(data::Dict, nsamples=2000)
 
   # FSample from the posterior.
 
-  chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, nsamples);
+  chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, Nsamples);
 
   # Undo the transformation to obtain the posterior from the chain.
 
@@ -65,8 +67,8 @@ function dhmc(data::Dict, nsamples=2000)
 
   # Create a3d
 
-  a3d = Array{Float64, 3}(undef, 2000, 2, 1);
-  for i in 1:2000
+  a3d = Array{Float64, 3}(undef, Nsamples, 2, 1);
+  for i in 1:Nsamples
     a3d[i, 1, 1] = values(posterior[i][1])
     a3d[i, 2, 1] = values(posterior[i][2])
   end
@@ -81,4 +83,12 @@ function dhmc(data::Dict, nsamples=2000)
   chns
 end
 
-# end of chris_test_5a.jl
+BenchmarkTools.DEFAULT_PARAMETERS.samples = 25
+
+Ns = [200, 500, 1000]
+t = Vector{BenchmarkTools.Trial}(undef, length(Ns))
+for (i, N) in enumerate(Ns)
+  t[i] = @benchmark dhmc_bm(Dict("y" => rand(Normal(0,1),N), "N" => N), N)
+end
+
+t[1]

@@ -17,7 +17,7 @@ cd(ProjDir)
  model {
    mu ~ normal(0,1);
    sigma ~ cauchy(0,1);
-   y ~ normal(mu,sigma);
+   y ~ normal(mu, sigma);
  }
  "
 
