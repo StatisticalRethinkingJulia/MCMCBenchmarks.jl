@@ -12,4 +12,14 @@
 
 ## Introduction
 
-This package contains performance and diagnostics comparison between CmdStan, DynamicHMC, AdvancedHMC and Turing.
+This package will contain performance and diagnostics comparison between CmdStan, DynamicHMC, AdvancedHMC and Turing.
+
+Initial examples of the types of results are:
+
+[Performance comparison on sample size](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/performance/initial/Comparison_Sample_Size_02.pdf)
+
+[Diagnostics comparison ess ](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/diagnostics/initial/ess_mu__estimates_plot.pdf)
+
+[Diagnostics comparison rhat ](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/diagnostics/initial/rhat_mu__estimates_plot.pdf)
+
+[Diagnostics comparison leapfrog stepsize ](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/diagnostics/initial/stepsize_sigma_estimates_plot.pdf)

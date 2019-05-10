@@ -140,6 +140,6 @@ sdf = stack(df2,[:dNUTS,:CmdStan,:dHMC])
 rename!(sdf,:value=>:time,:variable=>:sampler)
 @df sdf plot(:N,:time,group=:sampler,ylabel="Cummulative Time",
   xlabel="Data Points")
-savefig("Comparison Sample Size.pdf")
+savefig("Comparison_Sample_Size_xx.pdf")
 
 df
