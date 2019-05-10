@@ -12,7 +12,7 @@
 
 ## Introduction
 
-This package will contain performance and diagnostics comparison between CmdStan, DynamicHMC, AdvancedHMC and Turing.
+This package will contain performance and diagnostics comparisons between CmdStan, DynamicHMC, AdvancedHMC and/or Turing/NUTS.
 
 Initial examples of the types of results are:
 
