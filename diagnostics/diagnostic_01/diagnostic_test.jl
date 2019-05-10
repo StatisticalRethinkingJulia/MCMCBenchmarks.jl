@@ -69,14 +69,14 @@ N = 30
      Turing.NUTS(Nsamples, Nadapt, 0.8)), chainscat, 1:4)
      
    dft = describe(chn[(Nadapt+1):end,:,:])[1]
-   push!(ess_array_MCMCChains_turing, dft[:ess])
-   push!(rhat_array_MCMCChains_turing, dft[:r_hat])
+   push!(ess_array_MCMCChains_turing, dft[[:μ, :σ], :ess])
+   push!(rhat_array_MCMCChains_turing, dft[[:μ, :σ], :r_hat])
    
    global rc, chns, cnames = stan(stanmodel,data, summary=true, ProjDir)
    dfc = describe(chns)[1]
    
-   push!(ess_array_MCMCChains_cmdstan, dfc[:ess])
-   push!(rhat_array_MCMCChains_cmdstan, dfc[:r_hat])
+   push!(ess_array_MCMCChains_cmdstan, dfc[[:mu, :sigma], :ess])
+   push!(rhat_array_MCMCChains_cmdstan, dfc[[:mu, :sigma], :r_hat])
    
    summary_df = read_summary(stanmodel, ProjDir)
    push!(ess_array_cmdstan, summary_df[[:mu, :sigma], :ess])
@@ -102,7 +102,7 @@ N = 30
     [summary_df[:stepsize__, :mean][1],
     summary_df[:stepsize__, :std][1]]
   )
-  dfti = describe(chn[(Nadapt+1):end,:,:], sections=[:internals])[1]
+  dfti = describe(chn[(Nadapt+1):end,:,:])[1]
   push!(ϵ_array_turing, 
     [dfti[:epsilon, :mean][1], 
     dfti[:epsilon, :std][1]]

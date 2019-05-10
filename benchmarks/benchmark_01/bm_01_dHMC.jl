@@ -79,5 +79,3 @@ function dhmc(data::Dict, nsamples=2000)
   
   chns
 end
-
-# end of chris_test_5a.jl

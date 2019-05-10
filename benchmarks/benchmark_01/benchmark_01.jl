@@ -1,7 +1,7 @@
 using CmdStan, Turing,DynamicHMC,LogDensityProblems,Statistics
 using Random,Distributions,Parameters,DataFrames,StatsPlots
 
-include("benchmark_01/bm_01_dHMC.jl")
+include("../benchmark_01/bm_01_dHMC.jl")
 
 Random.seed!(38445)
 
@@ -36,14 +36,14 @@ Nchains = 1
 
  function logpdf(dist::mydist,data::Array{Float64,1})
      @unpack μ,σ=dist
-     #=
+     
      LL = 0.0
      for d in data
          LL += logpdf(Normal(μ,σ),d)
      end
      isnan(LL) ? (return Inf) : (return LL) #not as robust as I thought
-     =#
-     loglikelihood(Normal(μ, σ), data)
+     #loglikelihood(Normal(μ, σ), data)
+     LL
  end
 
  #Function barrier in mydist
@@ -130,7 +130,7 @@ function dataLoop(Ns, nIter=25)
   return df
 end
 
-Ns = [100, 200, 500, 1000, 1500]
+Ns = [10, 100, 200, 500, 1000, 1500, 2000, 2500]
 df = dataLoop(Ns)
 df2 = df[[:N, :Iters,:dNUTS,:CmdStan,:dHMC]]
 summary = aggregate(df2, :N, mean)
