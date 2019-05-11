@@ -37,7 +37,7 @@ function cmdstan_bm(stanmodel, data, ProjDir = ProjDir)
   stan(stanmodel, data, summary=false, ProjDir)  
 end
 
-Ns = [200, 500, 1000]
+Ns = [100, 500, 1000]
 t = Vector{BenchmarkTools.Trial}(undef, length(Ns))
 for (i, N) in enumerate(Ns)
   data=Dict("y" => rand(Normal(0, 1), N), "N" => N)

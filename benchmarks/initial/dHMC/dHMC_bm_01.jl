@@ -84,9 +84,9 @@ function dhmc_bm(data::Dict, Nsamples=2000)
   chns
 end
 
-BenchmarkTools.DEFAULT_PARAMETERS.samples = 25
+BenchmarkTools.DEFAULT_PARAMETERS.samples = 50
 
-Ns = [200, 500, 1000]
+Ns = [100, 500, 1000]
 t = Vector{BenchmarkTools.Trial}(undef, length(Ns))
 for (i, N) in enumerate(Ns)
   data = Dict("y" => rand(Normal(0,1),N), "N" => N)
