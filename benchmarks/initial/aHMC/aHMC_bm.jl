@@ -9,8 +9,8 @@ logπ(θ::AbstractVector{<:Real}) = logpdf(target, θ)
 ∂logπ∂θ(θ::AbstractVector{<:Real}) = gradient(logπ, θ)
 
 # Sampling parameter settings
-n_samples = 100_000
-n_adapts = 2_000
+n_samples = 2000
+n_adapts = 2000
 
 # Initial points
 θ_init = randn(D)
