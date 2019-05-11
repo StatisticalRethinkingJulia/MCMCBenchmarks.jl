@@ -55,7 +55,8 @@ function dhmc_bm(data::Dict, Nsamples=2000)
 
   # FSample from the posterior.
 
-  chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, Nsamples);
+  chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, Nsamples, 
+    report=ReportSilent());
 
   # Undo the transformation to obtain the posterior from the chain.
 
@@ -88,7 +89,10 @@ BenchmarkTools.DEFAULT_PARAMETERS.samples = 25
 Ns = [200, 500, 1000]
 t = Vector{BenchmarkTools.Trial}(undef, length(Ns))
 for (i, N) in enumerate(Ns)
-  t[i] = @benchmark dhmc_bm(Dict("y" => rand(Normal(0,1),N), "N" => N), N)
+  data = Dict("y" => rand(Normal(0,1),N), "N" => N)
+  t[i] = @benchmark dhmc_bm($data, $N)
 end
 
-t[1]
+t[1] |> display
+println()
+t[end]
