@@ -1,4 +1,4 @@
-using CmdStan, Random, BenchmarkTools
+using CmdStan, Random, Distributions, BenchmarkTools
 
 Random.seed!(38445)
 
@@ -33,16 +33,17 @@ stanmodel = Stanmodel(
      adapt = CmdStan.Adapt(delta=0.8),
      save_warmup = false));
 
-function cmdstan_bm(stanmodel, N,
-  data=Dict("y" => rand(Normal(0, 1), N), "N" => N),
-  ProjDir = ProjDir)
-    
-  stan(stanmodel, data, summary=false, ProjDir)
-  
+function cmdstan_bm(stanmodel, data, ProjDir = ProjDir)    
+  stan(stanmodel, data, summary=false, ProjDir)  
 end
 
-Ns = [200, 500, 1000]
+Ns = [100, 500, 1000]
 t = Vector{BenchmarkTools.Trial}(undef, length(Ns))
 for (i, N) in enumerate(Ns)
-  t[i] = @benchmark cmdstan_bm(stanmodel, N)
+  data=Dict("y" => rand(Normal(0, 1), N), "N" => N)
+  t[i] = @benchmark cmdstan_bm($stanmodel, $data)
 end
+
+t[1] |> display
+println()
+t[end]
