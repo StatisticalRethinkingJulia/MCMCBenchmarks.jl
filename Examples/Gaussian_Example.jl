@@ -39,8 +39,8 @@ Nd = [10,100,500]
 #perform the benchmark
 results = benchmark(samplers,GaussianGen,Nd)
 timeDf = by(results,[:Nd,:sampler],:time=>mean)
-gr()
-Ns = length(samplers)
+gr()#Might want to use pyplot() because it has better formatting and less crowding
+Ns = length(Nd)
 p1=@df timeDf plot(:Nd,:time_mean,group=:sampler,xlabel="Number of data points",
     ylabel="Mean Time (seconds)",grid=false)
 p2=@df results density(:mu_ess,group=(:sampler,:Nd),grid=false,xlabel="Mu ESS",ylabel="Density",
