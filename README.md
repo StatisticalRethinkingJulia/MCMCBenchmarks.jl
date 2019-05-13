@@ -16,10 +16,12 @@ This package will contain performance and diagnostics comparisons between CmdSta
 
 Initial examples of the types of results are:
 
-[Performance comparison on sample size](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/performance/initial/Comparison_Sample_Size_02.pdf)
+[Performance comparison on sample size](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Mean%20Time.pdf)
 
-[Diagnostics comparison of estimated ess values ](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/diagnostics/initial/ess_mu__estimates_plot.pdf)
+[Performance distribution on sample size](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Time%20Dist.pdf)
 
-[Diagnostics comparison of rhat estimates ](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/diagnostics/initial/rhat_mu__estimates_plot.pdf)
+[Diagnostics comparison of estimated ess values ](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Mu%20ESS%20Dist.pdf)
 
-[Diagnostics comparison leapfrog stepsizes ](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/diagnostics/initial/stepsize_sigma_estimates_plot.pdf)
+[Diagnostics comparison of rhat estimates ](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Mu%20rhat%20Dist.pdf)
+
+[Diagnostics comparison leapfrog stepsizes ](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Mu%20Epsilon%20Scatter.pdf)
