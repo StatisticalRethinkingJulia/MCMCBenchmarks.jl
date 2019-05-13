@@ -1,4 +1,4 @@
-using Turing, Random
+using MCMCBenchmarks
 import Distributions: logpdf
 
 Random.seed!(38445)

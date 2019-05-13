@@ -1,9 +1,11 @@
 name = "MCMCBenchmarks"
 uuid = "72ce6e51-3f7f-5ebd-8e88-b86aa3e31c30"
-authors = ["Rob J Goedman <goedman@mac.com>"]
-version = "0.0.2"
+authors = ["Chris Fisher, Rob J Goedman"]
+version = "0.0.3"
 
 [deps]
+AdvancedHMC = "0bf59076-c3b1-5ca4-86bd-e02cd72cde3d"
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 CmdStan = "593b3428-ca2f-500c-ae53-031589ec8ddd"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"

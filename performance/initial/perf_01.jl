@@ -1,5 +1,4 @@
-using CmdStan, Turing,DynamicHMC,LogDensityProblems,Statistics
-using Random,Distributions,Parameters,DataFrames,StatsPlots
+using MCMCBenchmarks
 
 include("../performance/perf_dHMC.jl")
 

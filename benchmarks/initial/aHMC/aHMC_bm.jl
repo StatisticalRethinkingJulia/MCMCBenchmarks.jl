@@ -1,12 +1,12 @@
+using MCMCBenchmarks
 using Distributions: MvNormal, logpdf
 using ForwardDiff: gradient
-using AdvancedHMC
 
 # Define the target distribution and its gradient
 const D = 10
 const target = MvNormal(zeros(D), ones(D))
 logπ(θ::AbstractVector{<:Real}) = logpdf(target, θ)
-∂logπ∂θ(θ::AbstractVector{<:Real}) = gradient(logπ, θ)
+∂logπ∂θ(θ::AbstractVector{<:Real}) = ForwardDiff.gradient(logπ, θ)
 
 # Sampling parameter settings
 n_samples = 2000

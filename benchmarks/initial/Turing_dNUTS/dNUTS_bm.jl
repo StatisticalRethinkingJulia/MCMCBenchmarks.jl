@@ -1,6 +1,4 @@
-using Turing, Random
-using DynamicHMC,LogDensityProblems,Statistics
-using Distributions,Parameters,DataFrames,StatsPlots
+using MCMCBenchmarks
 import Distributions: logpdf
 
 Random.seed!(38445)

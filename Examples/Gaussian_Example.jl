@@ -1,13 +1,16 @@
-#using Revise,Turing,MCMCBenchmarks,CmdStan,StatsPlots
-#using Statistics,DataFrames,Random,Parameters,DynamicHMCModels
 using MCMCBenchmarks
+
 #Model and configuration patterns for each sampler are located in a
 #seperate model file.
 include("../Models/Gaussian.jl")
+
 Random.seed!(2202184)
+
 turnprogress(false) #not working
+
 ProjDir = @__DIR__
 cd(ProjDir)
+
 #create a sampler object or a tuple of sampler objects
 #Note that AHMC and DynamicNUTS do not work together due to an error in MCMCChains:
 #https://github.com/TuringLang/MCMCChains.jl/issues/101

@@ -1,5 +1,4 @@
-using CmdStan, Turing
-using StatsPlots, Random, MCMCDiagnostics
+using MCMCBenchmarks
 
 Random.seed!(12395391)
 

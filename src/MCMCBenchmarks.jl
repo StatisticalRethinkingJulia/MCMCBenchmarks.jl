@@ -5,6 +5,7 @@ using Reexport
 @reexport using Revise,Turing,MCMCBenchmarks,CmdStan,StatsPlots
 @reexport using Statistics,DataFrames,Random,Parameters,DynamicHMC
 @reexport using LogDensityProblems, TransformVariables, MCMCDiagnostics
+@reexport using BenchmarkTools, AdvancedHMC, ForwardDiff
 
 abstract type MCMCSampler end
 

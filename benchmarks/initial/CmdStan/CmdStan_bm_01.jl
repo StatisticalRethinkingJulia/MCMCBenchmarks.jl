@@ -1,4 +1,4 @@
-using CmdStan, Random, Distributions, BenchmarkTools
+using MCMCBenchmarks
 
 Random.seed!(38445)
 
