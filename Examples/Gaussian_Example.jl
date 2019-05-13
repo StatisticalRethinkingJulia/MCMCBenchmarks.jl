@@ -35,7 +35,7 @@ function benchmark(samplers,simulate,Nd,Nreps=100)
     return results
 end
 #Number of data points
-Nd = [10,100,500]
+Nd = [10,100,500,1000]
 #perform the benchmark
 results = benchmark(samplers,GaussianGen,Nd)
 timeDf = by(results,[:Nd,:sampler],:time=>mean)
