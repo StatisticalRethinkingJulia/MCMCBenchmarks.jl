@@ -1,8 +1,6 @@
 # chris_test_5a.jl
 
-using Revise,Turing,MCMCBenchmarks,CmdStan,StatsPlots
-using Statistics,DataFrames,Random,Parameters,DynamicHMC
-using LogDensityProblems, TransformVariables
+using MCMCBenchmarks
 
 Random.seed!(38445)
 

@@ -4,7 +4,7 @@
 /deps/deps.jl
 /docs/build
 tmp
-Manifest.toml
+#Manifest.toml
 *.cpp
 *.d
 *.csv
