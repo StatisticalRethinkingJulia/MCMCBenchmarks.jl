@@ -1,7 +1,8 @@
 module MCMCBenchmarks
 
 using Revise,Turing,MCMCBenchmarks,CmdStan,StatsPlots
-using Statistics,DataFrames,Random,Parameters,DynamicHMCModels
+using Statistics,DataFrames,Random,Parameters,DynamicHMC
+using LogDensityProblems, TransformVariables, MCMCDiagnostics
 
 abstract type MCMCSampler end
 

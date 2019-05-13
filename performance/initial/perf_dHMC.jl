@@ -1,6 +1,6 @@
 # chris_test_5a.jl
 
-using DynamicHMCModels
+using MCMCBenchmarks
 
 ProjDir = @__DIR__
 cd(ProjDir)

@@ -1,5 +1,6 @@
-using Revise,Turing,MCMCBenchmarks,CmdStan,StatsPlots
-using Statistics,DataFrames,Random,Parameters,DynamicHMCModels
+#using Revise,Turing,MCMCBenchmarks,CmdStan,StatsPlots
+#using Statistics,DataFrames,Random,Parameters,DynamicHMCModels
+using MCMCBenchmarks
 #Model and configuration patterns for each sampler are located in a
 #seperate model file.
 include("../Models/Gaussian.jl")
