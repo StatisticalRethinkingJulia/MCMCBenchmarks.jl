@@ -2,46 +2,24 @@ using MCMCBenchmarks
 
 #Model and configuration patterns for each sampler are located in a
 #seperate model file.
-include("../Models/Gaussian.jl")
+include("../Models/LBA_Models.jl")
+include("LinearBallisticAccumulator.jl")
 
-Random.seed!(2202184)
-
-turnprogress(false) #not working
+Random.seed!(551158015)
 
 ProjDir = @__DIR__
 cd(ProjDir)
 
 #create a sampler object or a tuple of sampler objects
-#Note that AHMC and DynamicNUTS do not work together due to an error in MCMCChains:
-#https://github.com/TuringLang/MCMCChains.jl/issues/101
-samplers=(CmdStanNUTS(CmdStanConfig,ProjDir),AHMCNUTS(AHMCGaussian,AHMCconfig),
-    DHMCNUTS(sampleDHMC,2000))#,DNNUTS(DNGaussian,DNconfig))
+samplers=(CmdStanNUTS(CmdStanConfig,ProjDir),AHMCNUTS(AHMClba,AHMCconfig),
+    DHMCNUTS(sampleDHMC,2000))#,DNNUTS(DNlba,DNconfig))
 
-#Here is an example in which the number of data points is varied
-#samplers is the sampler object or tuple of sampler objects
-#simulate is the data generating function
-#Nd is a vector of data sample sizes
-#Nreps is the number of repetitions per simulation configuration. Default=100
-function benchmark(samplers,simulate,Nd,Nreps=100)
-    #Initialize an empty Dataframe to collect results
-    results = DataFrame()
-    #loop over the data sample sizes
-    for nd in Nd
-        #benchmark! is a general function that does the heavy lifting. It modifies the mcmc configuration,
-        #runs the sampler and records the results. Since each sampler has a different interface and returns
-        #output in a different form, each sampler requires its own object wrapper, as well as a method for modifyConfig!
-        #runSampler, and updateResults!.
-        #Keyword and option keyword arguments are leveraged to create a flexible framework and
-        #are recorded in the results DataFrame
-        #Nsamples, Nadapt and delta must be defined. These could be varied in a benchmark simulation also.
-        benchmark!(samplers,results,simulate,Nreps;Nd=nd,Nsamples=2000,Nadapt=1000,delta=.8)
-    end
-    return results
-end
 #Number of data points
-Nd = [10,100,500,1000]
+Nd = [10,100,500]
+
 #perform the benchmark
-results = benchmark(samplers,GaussianGen,Nd)
+results = benchmark(samplers,simulateLBA,Nd)
+
 timeDf = by(results,[:Nd,:sampler],:time=>mean)
 gr()#Might want to use pyplot() because it has better formatting and less crowding
 Ns = length(Nd)
