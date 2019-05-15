@@ -2,7 +2,7 @@ using MCMCBenchmarks
 
 #Model and configuration patterns for each sampler are located in a
 #seperate model file.
-include("../Models/Gaussian.jl")
+include("../../Models/Gaussian.jl")
 
 Random.seed!(2202184)
 
