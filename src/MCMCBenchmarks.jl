@@ -221,12 +221,20 @@ e.g. If col = :ess, and parameters are mu and sigma, the new columns
 will be mu_ess and sigma_ess and will contain their respective ess values
 """
 function addColumns!(newDF,chn,df,col)
-    parms = chn.name_map.parameters
+    parms = sort!(chn.name_map.parameters)
     values = getindex(df,col)
     for (p,v) in zip(parms,values)
-        colname = Symbol(string(p,"_",col))
+        colname = createName(p,col)
         setindex!(newDF,v,colname)
     end
+end
+
+function createName(p,col)
+    if occursin(".",p)
+        s = split(p,".")
+        p = string(s[1],"[",s[2],"]")
+    end
+    return Symbol(string(p,"_",col))
 end
 
 export

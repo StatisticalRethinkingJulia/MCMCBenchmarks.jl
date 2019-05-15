@@ -1,4 +1,4 @@
-using MCMCBenchmarks,Revise
+using Revise,MCMCBenchmarks
 
 #Model and configuration patterns for each sampler are located in a
 #seperate model file.

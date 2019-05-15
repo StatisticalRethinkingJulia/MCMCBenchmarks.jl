@@ -127,13 +127,10 @@ parameters {
      vector<lower=0>[Nc] v;
 }
 
-transformed parameters {
-     real s;
-     s = 1;
-}
-
 model {
+     real s;
      matrix[N,2] RT;
+     s=1;
      RT[:,1] = rt;
      RT[:,2] = choice;
      k ~ normal(.5,1)T[0,];
@@ -200,6 +197,6 @@ function sampleDHMC(choice,rt,N,Nc,nsamples)
     return posterior#chns
 end
 
-function simulateLBA(;Nd,v=[1.0,1.5,2.0],A=.8,k=.2,tau=.4)
+function simulateLBA(;Nd,v=[1.0,1.5,2.0],A=.8,k=.2,tau=.4,kwargs...)
     return (rand(LBA(ν=v,A=A,k=k,τ=tau),Nd)...,N=Nd,Nc=length(v))
 end
