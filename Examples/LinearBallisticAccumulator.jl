@@ -14,16 +14,41 @@ Base.broadcastable(x::LBA)=Ref(x)
 
 LBA(;τ,A,k,ν,σ=1.0) = LBA(ν,A,k,τ,σ)
 
+function selectWinner(dt)
+    if any(x->x >0,dt)
+        mi,mv = 0,Inf
+        for (i,t) in enumerate(dt)
+            if (t > 0) && (t < mv)
+                mi = i
+                mv = t
+            end
+        end
+    else
+        return 1,-1.0
+    end
+    return mi,mv
+end
+
+function sampleDriftRates(ν,σ)
+    noPositive=true
+    v = similar(ν)
+    while noPositive
+        v = [rand(Normal(d,σ)) for d in ν]
+        any(x->x>0,v) ? noPositive=false : nothing
+    end
+    return v
+end
+
 function rand(d::LBA)
     @unpack τ,A,k,ν,σ = d
     b=A+k
     N = length(ν)
-    v = @. rand(TruncatedNormal(ν,σ,0,Inf))
+    v = sampleDriftRates(ν,σ)
     a = rand(Uniform(0,A),N)
     dt = @. (b-a)/v
-    mn,choice = findmin(dt)
+    choice,mn = selectWinner(dt)
     rt = τ .+ mn
-    return choice, rt
+    return choice,rt
 end
 
 function rand(d::LBA,N::Int)
@@ -44,8 +69,9 @@ end
 function pdf(d::LBA,c,rt)
     @unpack τ,A,k,ν,σ = d
     b=A+k; den = 1.0
-    for v in ν
-        if v == ν[c]
+    rt < τ ? (return 1e-10) : nothing 
+    for (i,v) in enumerate(ν)
+        if c == i
             den *= dens(d,v,rt)
         else
             den *= (1-cummulative(d,v,rt))

@@ -215,7 +215,7 @@ adds columns to newDF for each parameter.
 * `newDF`: dataframe that collects results on an iteration
 * `chn`: chain for given iteration
 * `df`: df of chain results
-* `col`: name of column 
+* `col`: name of column
 
 e.g. If col = :ess, and parameters are mu and sigma, the new columns
 will be mu_ess and sigma_ess and will contain their respective ess values

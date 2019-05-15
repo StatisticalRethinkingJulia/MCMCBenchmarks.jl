@@ -215,62 +215,55 @@ CmdStanConfig = Stanmodel(name = "CmdStanLBA",model=CmdStanLBA,nchains=1,
    Sample(num_samples=2000,num_warmup=1000,adapt=CmdStan.Adapt(delta=0.8),
    save_warmup = false))
 
-   struct LBAProb{TY <: AbstractVector}
-      "Observations."
-      y::TY
+   struct LBAProb{T}
+      data::T
+      N::Int
+      Nc::Int
   end
 
   function (problem::LBAProb)(θ)
-      @unpack y = problem   # extract the data
-      @unpack mu, sigma = θ
-      loglikelihood(Normal(mu, sigma), y) + logpdf(Normal(0.1), mu) +
-      logpdf(Truncated(Cauchy(0,5),0,Inf), sigma)
-  end;
+      @unpack data=problem   # extract the data
+      @unpack v,A,k,tau=θ
+      d=LBA(ν=v,A=A,k=k,τ=tau)
+      loglikelihood(d,data)+sum(logpdf.(TruncatedNormal(0,3,0,Inf),v)) +
+      logpdf(TruncatedNormal(.8,.4,0,Inf),A)+logpdf(TruncatedNormal(.2,.3,0,Inf),k)+
+      logpdf(TruncatedNormal(.4,.1,0,Inf),tau)
+  end
 
-  # Define problem with data and inits.
-  function sampleDHMC(obs,N,nsamples)
-    p = LBAProb(obs);
-    p((mu = 0.0, sigma = 1.0))
-
+# Define problem with data and inits.
+function sampleDHMC(choice,rt,N,Nc,nsamples)
+    data = [(c,r) for (c,r) in zip(choice,rt)]
+    p = LBAProb(data,N,Nc)
+    p((v=fill(.5,Nc),A=.8,k=.2,tau=.4))
     # Write a function to return properly dimensioned transformation.
-
     problem_transformation(p::LBAProb) =
-        as((mu  = as(Real, -25, 25), sigma = asℝ₊), )
-
+    as((v=as(Array,Nc),A=asℝ₊,k=asℝ₊,tau=asℝ₊))
     # Use Flux for the gradient.
-
     P = TransformedLogDensity(problem_transformation(p), p)
     ∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P));
-
     # FSample from the posterior.
-
     chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, nsamples);
-
     # Undo the transformation to obtain the posterior from the chain.
-
     posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));
-
     # Set varable names, this will be automated using θ
-
-    parameter_names = ["mu", "sigma"]
-
-    # Create a3d
-
-    a3d = Array{Float64, 3}(undef, 2000, 2, 1);
-    for i in 1:2000
-      a3d[i, 1, 1] = values(posterior[i][1])
-      a3d[i, 2, 1] = values(posterior[i][2])
+    parameter_names = ["v[1]","v[2]","v[3]","A","k","tau"]
+    # Create a3
+    Np = Nc+3
+    a3d = Array{Float64,3}(undef,nsamples,Np,1)
+    for i in 1:nsamples
+        temp = Float64[]
+        for p in posterior[i]
+            push!(temp,values(p)...)
+        end
+        a3d[i,:,1] = temp'
     end
-
-    chns = MCMCChains.Chains(a3d,
-      parameter_names,
-      Dict(
+    chns = MCMCChains.Chains(a3d,parameter_names,
+    Dict(
         :parameters => parameter_names,
-      )
+        )
     )
-
-    return chns
-  end
+    return posterior#chns
+end
 
 function simulateLBA(;Nd,v=[1.0,1.5,2.0],A=.8,k=.2,tau=.4)
     return (rand(LBA(ν=v,A=A,k=k,τ=tau),Nd)...,N=Nd,Nc=length(v))
