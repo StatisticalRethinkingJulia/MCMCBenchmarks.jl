@@ -1,8 +1,8 @@
-using MCMCBenchmarks, Revise
+using MCMCBenchmarks,Revise
 
 #Model and configuration patterns for each sampler are located in a
 #seperate model file.
-include("../Models/LBA_Models.jl")
+include("../../Models/LBA_Models.jl")
 include("LinearBallisticAccumulator.jl")
 
 Random.seed!(551158015)

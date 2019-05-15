@@ -111,83 +111,20 @@ functions{
           out = sum(log(prob));
           return out;
      }
-
-    vector lba_rng(real k, real A, vector v, real s, real tau){
-
-          int get_pos_drift;
-          int no_pos_drift;
-          int get_first_pos;
-          vector[num_elements(v)] drift;
-          int max_iter;
-          int iter;
-          real start[num_elements(v)];
-          real ttf[num_elements(v)];
-          int resp[num_elements(v)];
-          real rt;
-          vector[2] pred;
-          real b;
-
-          //try to get a positive drift rate
-          get_pos_drift = 1;
-          no_pos_drift = 0;
-          max_iter = 1000;
-          iter = 0;
-          while(get_pos_drift){
-               for(j in 1:num_elements(v)){
-                    drift[j] = normal_rng(v[j],s);
-                    if(drift[j] > 0){
-                         get_pos_drift = 0;
-                    }
-               }
-               iter = iter + 1;
-               if(iter > max_iter){
-                    get_pos_drift = 0;
-                    no_pos_drift = 1;
-               }
-          }
-          //if both drift rates are <= 0
-          //return an infinite response time
-          if(no_pos_drift){
-               pred[1] = -1;
-               pred[2] = -1;
-          }else{
-               b = A + k;
-               for(i in 1:num_elements(v)){
-                    //start time of each accumulator
-                    start[i] = uniform_rng(0,A);
-                    //finish times
-                    ttf[i] = (b-start[i])/drift[i];
-               }
-               //rt is the fastest accumulator finish time
-               //if one is negative get the positive drift
-               resp = sort_indices_asc(ttf);
-               ttf = sort_asc(ttf);
-               get_first_pos = 1;
-               iter = 1;
-               while(get_first_pos){
-                    if(ttf[iter] > 0){
-                         pred[1] = ttf[iter] + tau;
-                         pred[2] = resp[iter];
-                         get_first_pos = 0;
-                    }
-                    iter = iter + 1;
-               }
-          }
-          return pred;
-     }
 }
 
 data{
-     int LENGTH;
-     matrix[LENGTH,2] RT;
-     int NUM_CHOICES;
+     int N;
+     int Nc;
+     vector[N] rt;
+     vector[N] choice;
 }
 
 parameters {
      real<lower=0> k;
      real<lower=0> A;
      real<lower=0> tau;
-     vector<lower=0>[NUM_CHOICES] v;
+     vector<lower=0>[Nc] v;
 }
 
 transformed parameters {
@@ -196,18 +133,16 @@ transformed parameters {
 }
 
 model {
+     matrix[N,2] RT;
+     RT[:,1] = rt;
+     RT[:,2] = choice;
      k ~ normal(.5,1)T[0,];
      A ~ normal(.5,1)T[0,];
      tau ~ normal(.5,.5)T[0,];
-     for(n in 1:NUM_CHOICES){
+     for(n in 1:Nc){
           v[n] ~ normal(2,1)T[0,];
      }
      RT ~ lba(k,A,v,s,tau);
-}
-
-generated quantities {
-     vector[2] pred;
-     pred = lba_rng(k,A,v,s,tau);
 }
 "
 
