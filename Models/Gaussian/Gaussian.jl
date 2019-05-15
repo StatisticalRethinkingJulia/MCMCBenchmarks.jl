@@ -35,7 +35,7 @@ model {
 "
 
 CmdStanConfig = Stanmodel(name = "CmdStanGaussian",model=CmdStanGaussian,nchains=1,
-   Sample(num_samples=2000,num_warmup=1000,adapt=CmdStan.Adapt(delta=0.8),
+   Sample(num_samples=1000,num_warmup=1000,adapt=CmdStan.Adapt(delta=0.8),
    save_warmup = false))
 
    struct GaussianProb{TY <: AbstractVector}
