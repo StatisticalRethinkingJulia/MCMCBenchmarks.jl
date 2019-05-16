@@ -1,4 +1,4 @@
-import Distributions: logpdf
+import Distributions: logpdf,pdf
 
 struct SDT{T1,T2} <: ContinuousUnivariateDistribution
     d::T1
@@ -18,6 +18,7 @@ function logpdf(d::SDT,hits,fas,Nd)
     return loghits+logfas
 end
 
+pdf(d::SDT,data::Vector{Int64}) = exp(logpdf(d,data...))
 
 function benchmark(samplers,simulate,Nd,Nreps=100)
     results = DataFrame()

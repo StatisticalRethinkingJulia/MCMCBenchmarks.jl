@@ -15,22 +15,23 @@ DNconfig = DynamicNUTS(2000)
 CmdStan_SDT = "
 data {
   int<lower=1> Nd;
-  int<lower=0> hits[k];
-  int<lower=0> fas[k];
+  int<lower=0> hits;
+  int<lower=0> fas;
 }
 parameters {
   real d;
   real c;
 }
-transformed parameters {
-  real<lower=0,upper=1> thetah;
-  real<lower=0,upper=1> thetaf;
-  thetah = Phi(d/2-c);
-  thetaf = Phi(-d/2-c);
-}
+
 model {
+  real thetah;
+  real thetaf;
+
   d ~ normal(0, inv_sqrt(.5));
   c ~ normal(0, inv_sqrt(2));
+
+  thetah = Phi(d/2-c);
+  thetaf = Phi(-d/2-c);
 
   // Observed counts
   hits ~ binomial(Nd, thetah);
@@ -51,41 +52,29 @@ CmdStanConfig = Stanmodel(name = "CmdStan_SDT",model=CmdStan_SDT,nchains=1,
   function (problem::SDTProblem)(θ)
       @unpack hits,fas,Nd=problem   # extract the data
       @unpack d,c=θ
-      loglikelihood(SDT(d,c),[hits,fas,Nd])+logpdf(Normal(0,1/sqrt(2)),d) +
+      logpdf(SDT(d,c),[hits,fas,Nd])+logpdf(Normal(0,1/sqrt(2)),d) +
       logpdf(Normal(0,1/sqrt(2)),c)
   end
 
   # Define problem with data and inits.
-  function sampleDHMC(hits,fas,Nd,nsamples)
-    p = SDTProblem(obs);
+  function sampleDHMC(hits,fas,Nd,Nsamples)
+    p = SDTProblem(hits,fas,Nd)
     p((d=2.0,c=.0))
-
     # Write a function to return properly dimensioned transformation.
-
     problem_transformation(p::SDTProblem) =
-        as((d =as(Real,-25,25),(c =as(Real, -25, 25))), )
-
+         as((d=as(Real,-25, 25),c=as(Real,-25, 25)), )
     # Use Flux for the gradient.
-
     P = TransformedLogDensity(problem_transformation(p), p)
     ∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P));
-
     # FSample from the posterior.
-
     chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, nsamples);
-
     # Undo the transformation to obtain the posterior from the chain.
-
     posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));
-
     # Set varable names, this will be automated using θ
-
     parameter_names = ["d","c"]
-
     # Create a3d
-
-    a3d = Array{Float64, 3}(undef, 2000, 2, 1);
-    for i in 1:2000
+    a3d = Array{Float64, 3}(undef, Nsamples, 2, 1);
+    for i in 1:Nsamples
       a3d[i, 1, 1] = values(posterior[i][1])
       a3d[i, 2, 1] = values(posterior[i][2])
     end
@@ -96,7 +85,6 @@ CmdStanConfig = Stanmodel(name = "CmdStan_SDT",model=CmdStan_SDT,nchains=1,
         :parameters => parameter_names,
       )
     )
-
     return chns
   end
 
