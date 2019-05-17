@@ -65,12 +65,15 @@ runSampler, providing flexibility in benchmark simulations.
 """
 function benchmark!(samplers,results,simulate,Nreps=100;kwargs...)
     for rep in 1:Nreps
-        data = simulate(;kwargs...)
-        for s in samplers
-            modifyConfig!(s;kwargs...)
-            t = @elapsed chn = runSampler(s,data;kwargs...)
-            updateResults!(s,t,results,chn;kwargs...)
-        end
+      data = simulate(;kwargs...)
+      for s in samplers
+          println("\nSampler: $(typeof(s))")
+          println("Simulation: $simulate")
+          println("Repetition: $rep of $Nreps")
+          modifyConfig!(s;kwargs...)
+          t = @elapsed chn = runSampler(s,data;kwargs...)
+          updateResults!(s,t,results,chn;kwargs...)
+      end
     end
     return results
 end
@@ -86,10 +89,12 @@ parameter estimation
 * `data': data for benchmarking
 """
 function runSampler(s::AHMCNUTS,data;kwargs...)
+    Turing.turnprogress(false)
     return sample(s.model(data...),s.config)
 end
 
 function runSampler(s::DNNUTS,data;kwargs...)
+    Turing.turnprogress(false)
     return sample(s.model(data...),s.config)
 end
 
