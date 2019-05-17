@@ -118,7 +118,11 @@ end
 function benchmark(samplers,simulate,Nd,Nreps=100)
     results = DataFrame()
     for nd in Nd
-        benchmark!(samplers,results,simulate,Nreps;Nd=nd,Nsamples=2000,Nadapt=1000,delta=.8)
+      println("\nSampler: $(typeof(s))")
+      println("Simulation: $simulate")
+      println("No of obs: $nd")
+      println("Repetition: $rep of $Nreps\n")
+      benchmark!(samplers,results,simulate,Nreps;Nd=nd,Nsamples=2000,Nadapt=1000,delta=.8)
     end
     return results
 end

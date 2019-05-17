@@ -67,9 +67,6 @@ function benchmark!(samplers,results,simulate,Nreps=100;kwargs...)
     for rep in 1:Nreps
       data = simulate(;kwargs...)
       for s in samplers
-          println("\nSampler: $(typeof(s))")
-          println("Simulation: $simulate")
-          println("Repetition: $rep of $Nreps")
           modifyConfig!(s;kwargs...)
           t = @elapsed chn = runSampler(s,data;kwargs...)
           updateResults!(s,t,results,chn;kwargs...)
