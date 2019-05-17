@@ -17,37 +17,6 @@ cd(ProjDir)
 samplers=(CmdStanNUTS(CmdStanConfig,ProjDir),AHMCNUTS(AHMCGaussian,AHMCconfig),
     DHMCNUTS(sampleDHMC,2000))#,DNNUTS(DNGaussian,DNconfig))
 
-#Here is an example in which the number of data points is varied
-#samplers is the sampler object or tuple of sampler objects
-#simulate is the data generating function
-#Nd is a vector of data sample sizes
-#Nreps is the number of repetitions per simulation configuration. Default=100
-function benchmark(samplers,simulate,Nd,Nreps=100)
-  #Initialize an empty Dataframe to collect results
-  results = DataFrame()
-  #loop over the data sample sizes
-  for nd in Nd
-    println("\nSampler: $(typeof(s))")
-    println("Simulation: $simulate")
-    println("No of obs: $nd")
-    println("Repetition: $rep of $Nreps\n")
-    
-    #benchmark! is a general function that does the heavy lifting.
-    
-    # It modifies the mcmc configuration, runs the sampler and records the results.
-    # Since each sampler has a different interface and returns
-    # output in a different form, each sampler requires its own object
-    # wrapper, as well as a method for modifyConfig! runSampler, and updateResults!.
-    # Keyword and option keyword arguments are leveraged to create
-    # a flexible framework and are recorded in the results DataFrame
-    # Nsamples, Nadapt and delta must be defined. These could be
-    # varied in a benchmark simulation also.
-    
-    benchmark!(samplers,results,simulate,Nreps;Nd=nd,Nsamples=2000,Nadapt=1000,delta=.8)
-  end
-  return results
-end
-
 #Number of data points
 Nd = [10, 100, 1000]
 
