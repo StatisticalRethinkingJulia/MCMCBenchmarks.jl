@@ -2,7 +2,7 @@ using MCMCBenchmarks
 
 #Model and configuration patterns for each sampler are located in a
 #seperate model file.
-include("../Models/Gaussian.jl")
+include("../../Models/Gaussian/Gaussian.jl")
 
 Random.seed!(2202184)
 
@@ -39,11 +39,12 @@ function benchmark(samplers,simulate,Nd,Nreps=100)
     return results
 end
 #Number of data points
-Nd = [10,100,500,1000]
+Nd = [10,100,1000]
 #perform the benchmark
 results = benchmark(samplers,GaussianGen,Nd)
 timeDf = by(results,[:Nd,:sampler],:time=>mean)
-gr()#Might want to use pyplot() because it has better formatting and less crowding
+
+pyplot()#Might want to use pyplot() because it has better formatting and less crowding
 Ns = length(Nd)
 p1=@df timeDf plot(:Nd,:time_mean,group=:sampler,xlabel="Number of data points",
     ylabel="Mean Time (seconds)",grid=false)
@@ -52,7 +53,7 @@ p2=@df results density(:mu_ess,group=(:sampler,:Nd),grid=false,xlabel="Mu ESS",y
 p3=@df results density(:sigma_ess,group=(:sampler,:Nd),grid=false,xlabel="Sigma ESS",ylabel="Density",
    xlims=(0,1000),layout=(Ns,1),fill=(0,.5),width=1.5)
 p4=@df results density(:time,group=(:sampler,:Nd),grid=false,xlabel="Time",ylabel="Density",
-   xlims=(0,10),layout=(Ns,1),fill=(0,.5),width=1)
+   layout=(Ns,1),fill=(0,.5),width=1)
 p5=@df results density(:mu_r_hat,group=(:sampler,:Nd),grid=false,xlabel="Mu r̂",ylabel="Density",
     layout=(Ns,1),fill=(0,.5),width=1.5)
 p6=@df results density(:sigma_r_hat,group=(:sampler,:Nd),grid=false,xlabel="Sigma r̂",ylabel="Density",

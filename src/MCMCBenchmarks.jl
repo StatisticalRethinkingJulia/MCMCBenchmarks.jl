@@ -132,7 +132,6 @@ end
 
 function updateResults!(s::CmdStanNUTS,t,results,chain;kwargs...)
     newDF = DataFrame()
-    chain=removeBurnin(chain;kwargs...)
     df = describe(chain)[1].df
     addColumns!(newDF,chain,df,:ess)
     addColumns!(newDF,chain,df,:r_hat)
@@ -194,7 +193,7 @@ function modifyConfig!(s::AHMCNUTS;Nsamples,Nadapt,delta,kwargs...)
 end
 
 function modifyConfig!(s::CmdStanNUTS;Nsamples,Nadapt,delta,kwargs...)
-    s.model.num_samples = Nsamples
+    s.model.num_samples = Nsamples-Nadapt
     s.model.num_warmup = Nadapt
     s.model.method.adapt.delta = delta
 end

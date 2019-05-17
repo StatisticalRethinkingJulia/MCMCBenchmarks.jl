@@ -2,10 +2,10 @@ using Revise,MCMCBenchmarks
 
 #Model and configuration patterns for each sampler are located in a
 #seperate model file.
-include("../../Models/LBA_Models.jl")
-include("LinearBallisticAccumulator.jl")
 
 Turing.turnprogress(false)
+include("../../Models/LBA/LBA_Models.jl")
+include("../../Models/LBA/LinearBallisticAccumulator.jl")
 
 Random.seed!(551158015)
 
