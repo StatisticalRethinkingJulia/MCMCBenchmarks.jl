@@ -6,7 +6,7 @@ include("../../Models/Gaussian/Gaussian.jl")
 
 Random.seed!(2202184)
 
-turnprogress(false) #not working
+Turing.turnprogress(false)
 
 ProjDir = @__DIR__
 cd(ProjDir)
