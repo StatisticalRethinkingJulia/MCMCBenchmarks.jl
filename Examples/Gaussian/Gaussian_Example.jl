@@ -38,10 +38,15 @@ function benchmark(samplers,simulate,Nd,Nreps=100)
     end
     return results
 end
+
 #Number of data points
-Nd = [10,100,1000]
+Nd = [10, 100, 1000]
+
+#Number of simulations
+Nreps = 50
+
 #perform the benchmark
-results = benchmark(samplers,GaussianGen,Nd)
+results = benchmark(samplers,GaussianGen,Nd, Nreps)
 timeDf = by(results,[:Nd,:sampler],:time=>mean)
 
 pyplot()#Might want to use pyplot() because it has better formatting and less crowding
@@ -63,11 +68,14 @@ p7=@df results scatter(:epsilon,:mu_ess,group=(:sampler,:Nd),grid=false,xlabel="
 p8=@df results scatter(:epsilon,:sigma_ess,group=(:sampler,:Nd),grid=false,xlabel="Epsilon",ylabel="Sigma ESS",
     layout=(Ns,1))
 
-savefig(p1,"Mean Time.pdf")
-savefig(p2,"Mu ESS Dist.pdf")
-savefig(p3,"Sigma ESS Dist.pdf")
-savefig(p4,"Time Dist.pdf")
-savefig(p5,"Mu rhat Dist.pdf")
-savefig(p6,"Sigma rhat Dist.pdf")
-savefig(p7,"Mu Epsilon Scatter.pdf")
-savefig(p8,"Sigma Epsilon Scatter.pdf")
+!isdir("results") && mkdir("results")
+savefig(p1,"./results/Mean Time.pdf")
+savefig(p2,"./results/Mu ESS Dist.pdf")
+savefig(p3,"./results/Sigma ESS Dist.pdf")
+savefig(p4,"./results/Time Dist.pdf")
+savefig(p5,"./results/Mu rhat Dist.pdf")
+savefig(p6,"./results/Sigma rhat Dist.pdf")
+savefig(p7,"./results/Mu Epsilon Scatter.pdf")
+savefig(p8,"./results/Sigma Epsilon Scatter.pdf")
+
+timeDF

@@ -20,8 +20,10 @@ samplers=(
   #DHMCNUTS(sampleDHMC,2000))
 
 #Number of data points
-Nd = [10, 20]
-Nreps = 5
+Nd = [10, 50, 200]
+
+#Number of simulations
+Nreps = 50
 
 #perform the benchmark
 results = benchmark(samplers,simulateLBA,Nd, Nreps)
@@ -50,15 +52,16 @@ p9=@df results density(:k_ess,group=(:sampler,:Nd),grid=false,xlabel="k ESS",yla
 p10=@df results scatter(:epsilon,:k_ess,group=(:sampler,:Nd),grid=false,xlabel="Epsilon",ylabel="k ESS",
     layout=(Ns,1))
 
-savefig(p1,"Mean Time.pdf")
-savefig(p2,"A ESS Dist.pdf")
-savefig(p3,"Tau ESS Dist.pdf")
-savefig(p4,"Time Dist.pdf")
-savefig(p5,"A rhat Dist.pdf")
-savefig(p6,"Tau rhat Dist.pdf")
-savefig(p7,"A Epsilon Scatter.pdf")
-savefig(p8,"Tau Epsilon Scatter.pdf")
-savefig(p9,"k ESS Scatter.pdf")
-savefig(p10,"k Epsilon Scatter.pdf")
+!isdir("results") && mkdir("results")
+savefig(p1,"./results/Mean Time.pdf")
+savefig(p2,"./results/A ESS Dist.pdf")
+savefig(p3,"./results/Tau ESS Dist.pdf")
+savefig(p4,"./results/Time Dist.pdf")
+savefig(p5,"./results/A rhat Dist.pdf")
+savefig(p6,"./results/Tau rhat Dist.pdf")
+savefig(p7,"./results/A Epsilon Scatter.pdf")
+savefig(p8,"./results/Tau Epsilon Scatter.pdf")
+savefig(p9,"./results/k ESS Scatter.pdf")
+savefig(p10,"./results/k Epsilon Scatter.pdf")
 
 timeDf
