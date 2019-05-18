@@ -7,6 +7,8 @@ using Reexport
 @reexport using LogDensityProblems, TransformVariables, MCMCDiagnostics
 @reexport using BenchmarkTools, AdvancedHMC, ForwardDiff
 
+include("plotting.jl")
+
 abstract type MCMCSampler end
 
 """
@@ -255,6 +257,7 @@ export
   AHMCNUTS,
   CmdStanNUTS,
   DHMCNUTS,
-  DNNUTS
+  DNNUTS,
+  plotdensity
 
 end # module
