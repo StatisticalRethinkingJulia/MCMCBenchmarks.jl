@@ -39,9 +39,9 @@ p3=@df results density(:tau_ess,group=(:sampler,:Nd),grid=false,xlabel="tau ESS"
    xlims=(0,1000),layout=(Ns,1),fill=(0,.5),width=1.5)
 p4=@df results density(:time,group=(:sampler,:Nd),grid=false,xlabel="Time",ylabel="Density",
    xlims=(0,50),layout=(Ns,1),fill=(0,.5),width=1)
-p5=@df results density(:A_r_hat,group=(:sampler,:Nd),grid=false,xlabel="A r̂",ylabel="Density",
+p5=@df results density(:A_r_hat,group=(:sampler,:Nd),grid=false,xlabel="A R_hat",ylabel="Density",
     layout=(Ns,1),fill=(0,.5),width=1.5)
-p6=@df results density(:tau_r_hat,group=(:sampler,:Nd),grid=false,xlabel="tau r̂",ylabel="Density",
+p6=@df results density(:tau_r_hat,group=(:sampler,:Nd),grid=false,xlabel="tau R_hat",ylabel="Density",
     layout=(Ns,1),fill=(0,.5),width=1.5)
 p7=@df results scatter(:epsilon,:A_ess,group=(:sampler,:Nd),grid=false,xlabel="Epsilon",ylabel="A ESS",
     layout=(Ns,1))
