@@ -12,15 +12,21 @@
 
 ## Introduction
 
-MCMCBenchmarks (WIP) provides a flexable yet lightweight framework for benchmarking MCMC samplers in terms of runtime, convergence metrics and effective sample size. Currently, MCMCBenchmarks provides out of the box support for benchmarking the NUTS algorithm as instantiated in CmdStan, DynamicHMC, AdvancedHMC/Turing. However, methods can be extended to acommodate other samplers and any test model.
+MCMCBenchmarks (WIP) provides a lightweight yet flexible framework for benchmarking MCMC samplers in terms of runtime, convergence metrics and effective sample size. Currently, MCMCBenchmarks provides out of the box support for benchmarking the [No-U-Turn Sampler](http://jmlr.org/papers/volume15/hoffman14a/hoffman14a.pdf) (NUTS) algorithm as instantiated in [CmdStan](https://github.com/StanJulia/CmdStan.jl), [DynamicHMC](https://github.com/tpapp/DynamicHMC.jl) and [AdvancedHMC](https://github.com/TuringLang/AdvancedHMC.jl) via [Turing](https://github.com/TuringLang/Turing.jl). However, methods can be extended to acommodate other samplers and test models.
 
-Our plan to provide a suite of test models that span a wide range of difficulty. The table provides a partial list of test model that will be included in the suite as well as their current development status, ordered approximately from easist to most difficult:  
+## Overview of Features
+- Benchmarking Parameters: vary factors such as sample size, data-generating parameters, prior distributions, and target acceptance rate. The use of optional keywords allows other benchmarking parameters to be varied. 
+- Plotting: generate and save plots comparing samplers in terms of run time, convergence diagnostics and effective sample size (see below).
+- Test Suite: a suite of test models that span a wide range of difficulty. 
 
-- Gaussian Model: simple two parameter Gaussian distribution
-- Signal Detection Model: a simple model used in psychophysics and signal processing, which decomposes performance in terms of descriminability and bias
-- Linear Regession Model
+## Test Suite 
+The table below provides a working list of test models that will be included in the test suite as well as their current development status, ordered approximately from easist to most difficult:  
+
+- [Gaussian Model](https://en.wikipedia.org/wiki/Normal_distribution): simple two parameter Gaussian distribution
+- [Signal Detection Model](https://en.wikipedia.org/wiki/Detection_theory): a simple model used in psychophysics and signal processing, which decomposes performance in terms of descriminability and bias
+- [Linear Regession Model](https://en.wikipedia.org/wiki/Linear_regression)
 - Hierarchical Poisson Regression
-- Linear Ballistic Accumulator: a cognitive model of perception and simple decision making. 
+- [Linear Ballistic Accumulator](https://s3.amazonaws.com/academia.edu.documents/38243618/The_simplest_complete_model_of_choice_response_time-_Linear_Ballistic_Accumulation.pdf?AWSAccessKeyId=AKIAIWOWYYGZ2Y53UL3A&Expires=1558170639&Signature=DucSUdy%2FFW1jFCZcsN%2FvZbAqsrk%3D&response-content-disposition=inline%3B%20filename%3DThe_simplest_complete_model_of_choice_re.pdf): a cognitive model of perception and simple decision making. 
 
 | Model                           | Author | Turing  | DynamicHMC       | DynamicNUTS               | CmdStan |
 |---------------------------------|--------|---------|------------------|---------------------------|---------|
@@ -29,6 +35,8 @@ Our plan to provide a suite of test models that span a wide range of difficulty.
 | Linear Regression               | Rob    |         |                  |                           |         |
 | Hierarchical Poisson Regression | Rob    |         |                  |                           |         |
 | Linear Ballistic Accumulator    | Chris  | Working | Non-finite error | density start point error | Working |
+
+## Preliminary Results
 
 In the links below, you will find preliminary results for a simple Gaussian model. 
 
