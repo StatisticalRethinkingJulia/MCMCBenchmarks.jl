@@ -9,6 +9,7 @@ Random.seed!(2202184)
 Turing.turnprogress(false)
 
 ProjDir = @__DIR__
+pwd = pwd()
 cd(ProjDir)
 
 #create a sampler object or a tuple of sampler objects
@@ -30,35 +31,21 @@ Nreps = 50
 
 #perform the benchmark
 results = benchmark(samplers,GaussianGen,Nd, Nreps)
-timeDf = by(results,[:Nd,:sampler],:time=>mean)
 
-gr()#Might want to use pyplot() because it has better formatting and less crowding
-Ns = length(Nd)
-p1=@df timeDf plot(:Nd,:time_mean,group=:sampler,xlabel="Number of data points",
-    ylabel="Mean Time (seconds)",grid=false)
-p2=@df results density(:mu_ess,group=(:sampler,:Nd),grid=false,xlabel="Mu ESS",ylabel="Density",
-    xlims=(0,1000),layout=(Ns,1),fill=(0,.5),width=1.5)
-p3=@df results density(:sigma_ess,group=(:sampler,:Nd),grid=false,xlabel="Sigma ESS",ylabel="Density",
-   xlims=(0,1000),layout=(Ns,1),fill=(0,.5),width=1.5)
-p4=@df results density(:time,group=(:sampler,:Nd),grid=false,xlabel="Time",ylabel="Density",
-   layout=(Ns,1),fill=(0,.5),width=1)
-p5=@df results density(:mu_r_hat,group=(:sampler,:Nd),grid=false,xlabel="Mu r̂",ylabel="Density",
-    layout=(Ns,1),fill=(0,.5),width=1.5)
-p6=@df results density(:sigma_r_hat,group=(:sampler,:Nd),grid=false,xlabel="Sigma r̂",ylabel="Density",
-    layout=(Ns,1),fill=(0,.5),width=1.5)
-p7=@df results scatter(:epsilon,:mu_ess,group=(:sampler,:Nd),grid=false,xlabel="Epsilon",ylabel="Mu ESS",
-    layout=(Ns,1))
-p8=@df results scatter(:epsilon,:sigma_ess,group=(:sampler,:Nd),grid=false,xlabel="Epsilon",ylabel="Sigma ESS",
-    layout=(Ns,1))
+#pyplot()
+cd(pwd)
+dir = "results/"
+#Plot mean run time as a function of number of data points (Nd) for each sampler
+summaryPlots = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir)
 
-!isdir("results") && mkdir("results")
-savefig(p1,"./results/Mean Time.pdf")
-savefig(p2,"./results/Mu ESS Dist.pdf")
-savefig(p3,"./results/Sigma ESS Dist.pdf")
-savefig(p4,"./results/Time Dist.pdf")
-savefig(p5,"./results/Mu rhat Dist.pdf")
-savefig(p6,"./results/Sigma rhat Dist.pdf")
-savefig(p7,"./results/Mu Epsilon Scatter.pdf")
-savefig(p8,"./results/Sigma Epsilon Scatter.pdf")
+#Plot density of effective sample size as function of number of data points (Nd) for each sampler
+essPlots = plotdensity(results,:ess,(:sampler,:Nd);save=true,dir=dir)
 
-timeDf
+#Plot density of rhat as function of number of data points (Nd) for each sampler
+rhatPlots = plotdensity(results,:r_hat,(:sampler,:Nd);save=true,dir=dir)
+
+#Plot density of time as function of number of data points (Nd) for each sampler
+timePlots = plotdensity(results,:time,(:sampler,:Nd);save=true,dir=dir)
+
+#Scatter plot of epsilon and effective sample size as function of number of data points (Nd) for each sampler
+scatterPlots = plotscatter(results,:epsilon,:ess,(:sampler,:Nd);save=true,dir=dir)

@@ -258,6 +258,8 @@ export
   CmdStanNUTS,
   DHMCNUTS,
   DNNUTS,
-  plotdensity
+  plotdensity,
+  plotsummary,
+  plotscatter
 
 end # module
