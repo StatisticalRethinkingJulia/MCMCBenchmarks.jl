@@ -1,5 +1,8 @@
 # # Linear regression
 
+ProjDir = @__DIR__
+cd(ProjDir)
+
 # We estimate simple linear regression model with a half-T prior.
 # First, we load the packages we use.
 
@@ -34,14 +37,13 @@ end
 # We should test this, also, this would be a good place to benchmark and
 # optimize more complicated problems.
 
-Nobs = 10
-Nparms = 2
-Ncoef = 3
+Nobs = 100
+Nparms = 3
+Ncoef = Nparms + 1
 Nchains = 4
 Nsamples = 1000
 
-X = hcat(ones(Nobs), randn(Nobs, 2));
-β = [1.0, 2.0, -1.0]
+X = hcat(ones(Nobs), randn(Nobs, Nparms));
 β = vcat([1.0], sample(-5:5, Nparms, replace=true))
 σ = 0.5
 y = X*β .+ randn(Nobs) .* σ;
@@ -111,3 +113,15 @@ chn_d = MCMCChains.Chains(a3d, cnames)
 # Describe draws
 
 describe(chn_d)
+
+# Plot chains
+
+plot(chn_d)
+savefig("chn_d.pdf")
+
+# Save the chain (not a portable format)
+
+write("chn_d.jls", chn_d)
+
+# If needed, read chain back in
+# chain = read("chn_d.jls", MCMCChains.Chains)
