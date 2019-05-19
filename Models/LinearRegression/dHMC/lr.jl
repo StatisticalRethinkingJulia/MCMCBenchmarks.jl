@@ -34,13 +34,15 @@ end
 # We should test this, also, this would be a good place to benchmark and
 # optimize more complicated problems.
 
-Nobs = 100
-Nparms = 3
+Nobs = 10
+Nparms = 2
+Ncoef = 3
 Nchains = 4
 Nsamples = 1000
 
 X = hcat(ones(Nobs), randn(Nobs, 2));
 β = [1.0, 2.0, -1.0]
+β = vcat([1.0], sample(-5:5, Nparms, replace=true))
 σ = 0.5
 y = X*β .+ randn(Nobs) .* σ;
 p = LinearRegressionProblem(y, X, 1.0);
@@ -74,7 +76,11 @@ ess = mapslices(effective_sample_size,
 
 # NUTS-specific statistics
 
-NUTS_statistics(chain)
+display(NUTS_statistics(chain))
+
+# Stepsize
+
+display(NUTS_tuned)
 
 # Sample from 4 chains and store the draws in the a3d array
 
@@ -89,17 +95,17 @@ end;
 
 # Create a3d
 
-a3d = Array{Float64, 3}(undef, Nsamples, Nparms+1, Nchains);
+a3d = Array{Float64, 3}(undef, Nsamples, Ncoef+1, Nchains);
 for j in 1:Nchains
   for i in 1:Nsamples
-    a3d[i, 1:Nparms, j] = values(posterior[j][i][1])
-    a3d[i, Nparms+1, j] = values(posterior[j][i][2])
+    a3d[i, 1:Ncoef, j] = values(posterior[j][i][1])
+    a3d[i, Ncoef+1, j] = values(posterior[j][i][2])
   end
 end
 
 # Create MCMCChains object
 
-cnames = vcat(["beta[$i]" for i in 1:Nparms], "sigma")
+cnames = vcat("alpha", ["beta[$i]" for i in 1:Nparms], "sigma")
 chn_d = MCMCChains.Chains(a3d, cnames)
 
 # Describe draws

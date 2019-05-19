@@ -12,11 +12,11 @@ function plotdensity(df::DataFrame,metric::Symbol,group=(:sampler,);save=false,
     figfmt="pdf",options...)
     plots = Plots.Plot[]
     layout = SetLayout(df,group)
-    println((group))
+    grouping = map(x ->df[x], group)
     for c in names(df)
         !isin(metric,c) ? (continue) : nothing
         xlabel = string(c)
-        p=@df df density(cols(c),group=cols(group),grid=false,xlabel=xlabel,
+        p=@df df density(cols(c),group=grouping,grid=false,xlabel=xlabel,
             ylabel="Density",layout=layout,fill=(0,.5),width=1.5,options...)
         push!(plots,p)
         save ? savefig(p,string(c,".",figfmt)) : nothing
