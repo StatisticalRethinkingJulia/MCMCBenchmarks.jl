@@ -14,7 +14,7 @@ function plotdensity(df::DataFrame,metric::Symbol,group=(:sampler,);save=false,
     for c in names(df)
         !isin(metric,c) ? (continue) : nothing
         p=density(df[c],group=grouping,grid=false,xlabel=string(c),
-            ylabel="Density",layout=layout,fill=(0,.5),width=1.5,options...)
+            ylabel="Density",layout=layout,fill=(0,.5),width=1.5;options...)
         push!(plots,p)
         save ? savefig(p,string(dir,"density_",c,".",figfmt)) : nothing
     end
@@ -59,7 +59,7 @@ function plotsummary(df::DataFrame,xvar::Symbol,metric::Symbol,group=(:sampler,)
         summary,yvar = summarize(df,c,[xvar,group...],func)
         grouping = map(x->summary[x],group)
         p=plot(summary[xvar],summary[yvar],group=grouping,grid=false,xlabel=string(c),
-            ylabel=string(yvar),layout=layout,width=1.5,options...)
+            ylabel=string(yvar),layout=layout,width=1.5;options...)
         push!(plots,p)
         save ? savefig(p,string(dir,"summary_",c,".",figfmt)) : nothing
     end
@@ -90,7 +90,7 @@ function plotscatter(df::DataFrame,xvar::Symbol,metric::Symbol,group=(:sampler,)
     for c in names(df)
         !isin(metric,c) ? (continue) : nothing
         p=scatter(df[xvar],df[c],group=grouping,grid=false,xlabel=string(xvar),
-            ylabel=string(c),layout=layout,width=1.5,options...)
+            ylabel=string(c),layout=layout,width=1.5;options...)
         push!(plots,p)
         save ? savefig(p,string(dir,"scatter_",xvar,"_",c,".",figfmt)) : nothing
     end
