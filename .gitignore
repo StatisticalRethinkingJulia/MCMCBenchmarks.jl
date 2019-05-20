@@ -7,7 +7,7 @@ tmp
 #Manifest.toml
 *.cpp
 *.d
-*.csv
+#*.csv
 *.o
 *.log
 tmp
