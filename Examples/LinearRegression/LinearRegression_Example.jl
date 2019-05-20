@@ -2,13 +2,14 @@ using MCMCBenchmarks
 
 #Model and configuration patterns for each sampler are located in a
 #seperate model file.
-include("../../Models/Gaussian/Gaussian_Models.jl")
+include("../../Models/LinearRegression/lt.jl")
 
 Random.seed!(2202184)
 
 Turing.turnprogress(false)
 
 ProjDir = @__DIR__
+pwd = pwd()
 cd(ProjDir)
 
 #create a sampler object or a tuple of sampler objects
@@ -17,13 +18,13 @@ cd(ProjDir)
 # error in MCMCChains: https://github.com/TuringLang/MCMCChains.jl/issues/101
 
 samplers=(
-  CmdStanNUTS(CmdStanConfig,ProjDir),
-  AHMCNUTS(AHMCGaussian,AHMCconfig),
+  #CmdStanNUTS(CmdStanConfig,ProjDir),
+  #AHMCNUTS(AHMCGaussian,AHMCconfig),
   DHMCNUTS(sampleDHMC,2000))
   #DNNUTS(DNGaussian,DNconfig))
 
 #Number of data points
-Nd = [10, 100, 1000, 2000]
+Nd = [10, 100, 1000]
 
 #Number of simulations
 Nreps = 50
