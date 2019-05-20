@@ -2,7 +2,7 @@ using MCMCBenchmarks
 
 #Model and configuration patterns for each sampler are located in a
 #seperate model file.
-include("../../Models/Gaussian/Gaussian_Models.jl")
+include("../../Models/LinearRegression/lt.jl")
 
 Random.seed!(2202184)
 
@@ -18,8 +18,8 @@ cd(ProjDir)
 # error in MCMCChains: https://github.com/TuringLang/MCMCChains.jl/issues/101
 
 samplers=(
-  CmdStanNUTS(CmdStanConfig,ProjDir),
-  AHMCNUTS(AHMCGaussian,AHMCconfig),
+  #CmdStanNUTS(CmdStanConfig,ProjDir),
+  #AHMCNUTS(AHMCGaussian,AHMCconfig),
   DHMCNUTS(sampleDHMC,2000))
   #DNNUTS(DNGaussian,DNconfig))
 
