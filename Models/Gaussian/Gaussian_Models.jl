@@ -107,3 +107,17 @@ function GaussianGen(;μ=0,σ=1,Nd,kwargs...)
      end
      return results
  end
+
+ function pbenchmark(samplers,simulate,Nd,Nreps=100)
+     results = DataFrame()
+     pfun(nd) = benchmark!(samplers,results,simulate,Nreps;Nd=nd,Nsamples=2000,Nadapt=1000,delta=.8)
+     presults = pmap(nd->pfun(nd),Nd)
+     return vcat(presults...)
+ end
+ 
+ #doesn't work if put in MCMCBenchmarks module
+ function setSeeds!(seeds...)
+     for (i,seed) in enumerate(seeds)
+         @fetch @spawnat i Random.seed!(seed)
+     end
+ end
