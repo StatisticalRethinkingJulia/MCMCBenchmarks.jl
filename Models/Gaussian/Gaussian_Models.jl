@@ -100,10 +100,11 @@ function GaussianGen(;μ=0,σ=1,Nd,kwargs...)
       return data
  end
 
- function benchmark(samplers,simulate,Nd,Nreps=100)
+ function benchmark(samplers,simulate,Nd,seed,Nreps=100)
+     println(samplers)
      results = DataFrame()
      for nd in Nd
-       benchmark!(samplers,results,simulate,Nreps;Nd=nd,Nsamples=2000,Nadapt=1000,delta=.8)
+       benchmark!(samplers,results,simulate,seed,Nreps;Nd=nd,Nsamples=2000,Nadapt=1000,delta=.8)
      end
      return results
  end

@@ -65,24 +65,26 @@ and records the results.
 * `kwargs`: optional keyword arguments that are passed to modifyConfig!, updateResults! and
 runSampler, providing flexibility in benchmark simulations.
 """
-function benchmark!(samplers,results,simulate,Nreps=100;kwargs...)
+function benchmark!(samplers,results,simulate,seed,Nreps=100;kwargs...)
     for rep in 1:Nreps
-      data = simulate(;kwargs...)
-      for s in samplers
-          modifyConfig!(s;kwargs...)
-          println("\nSampler: $(typeof(s))")
-          println("Simulation: $simulate")
-          println("No of obs: $(kwargs[1])")
-          println("Repetition: $rep of $Nreps\n")
-          t = @elapsed chn = runSampler(s,data;kwargs...)
-          updateResults!(s,t,results,chn;kwargs...)
-      end
+        Random.seed!(seed+rep)
+        data = simulate(;kwargs...)
+        for s in samplers
+            modifyConfig!(s;kwargs...)
+            println("\nSampler: $(typeof(s))")
+            println("Simulation: $simulate")
+            println("No of obs: $(kwargs[1])")
+            println("Repetition: $rep of $Nreps\n")
+            t = @elapsed chn = runSampler(s,data;kwargs...)
+            allowmissing!(results)
+            updateResults!(s,t,results,chn;kwargs...)
+        end
     end
     return results
 end
 
-function benchmark!(sampler::T,results,simulate,Nreps=100;kwargs...) where {T<:MCMCSampler}
-    return benchmark!((sampler,),results,simulate,Nreps;kwargs...)
+function benchmark!(sampler::T,results,simulate,seed,Nreps=100;kwargs...) where {T<:MCMCSampler}
+    return benchmark!((sampler,),results,simulate,seed,Nreps;kwargs...)
 end
 
 """
@@ -92,12 +94,10 @@ parameter estimation
 * `data': data for benchmarking
 """
 function runSampler(s::AHMCNUTS,data;kwargs...)
-    Turing.turnprogress(false)
     return sample(s.model(data...),s.config)
 end
 
 function runSampler(s::DNNUTS,data;kwargs...)
-    Turing.turnprogress(false)
     return sample(s.model(data...),s.config)
 end
 
@@ -158,7 +158,6 @@ function updateResults!(s::DNNUTS,t,results,chain;kwargs...)
     newDF[:time] = t
     newDF[:sampler]=:DNNUTS
     addKW!(newDF;kwargs...)
-    allowmissing!(results,:epsilon)
     append!(results,newDF)
 end
 
@@ -173,7 +172,6 @@ function updateResults!(s::DHMCNUTS,t,results,chain;kwargs...)
     newDF[:time] = t
     newDF[:sampler]=:DHMCNUTS
     addKW!(newDF;kwargs...)
-    allowmissing!(results,:epsilon)
     append!(results,newDF)
 end
 
