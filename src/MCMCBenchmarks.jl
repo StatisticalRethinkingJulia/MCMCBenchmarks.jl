@@ -75,6 +75,7 @@ function benchmark!(samplers,results,simulate,Nreps=100;kwargs...)
           println("No of obs: $(kwargs[1])")
           println("Repetition: $rep of $Nreps\n")
           t = @elapsed chn = runSampler(s,data;kwargs...)
+          allowmissing!(results)
           updateResults!(s,t,results,chn;kwargs...)
       end
     end
@@ -92,12 +93,10 @@ parameter estimation
 * `data': data for benchmarking
 """
 function runSampler(s::AHMCNUTS,data;kwargs...)
-    Turing.turnprogress(false)
     return sample(s.model(data...),s.config)
 end
 
 function runSampler(s::DNNUTS,data;kwargs...)
-    Turing.turnprogress(false)
     return sample(s.model(data...),s.config)
 end
 
@@ -158,7 +157,6 @@ function updateResults!(s::DNNUTS,t,results,chain;kwargs...)
     newDF[:time] = t
     newDF[:sampler]=:DNNUTS
     addKW!(newDF;kwargs...)
-    allowmissing!(results,:epsilon)
     append!(results,newDF)
 end
 
@@ -173,7 +171,6 @@ function updateResults!(s::DHMCNUTS,t,results,chain;kwargs...)
     newDF[:time] = t
     newDF[:sampler]=:DHMCNUTS
     addKW!(newDF;kwargs...)
-    allowmissing!(results,:epsilon)
     append!(results,newDF)
 end
 
@@ -261,5 +258,4 @@ export
   plotdensity,
   plotsummary,
   plotscatter
-
 end # module
