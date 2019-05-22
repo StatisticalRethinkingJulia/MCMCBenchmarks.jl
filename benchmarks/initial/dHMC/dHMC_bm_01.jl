@@ -87,12 +87,18 @@ end
 BenchmarkTools.DEFAULT_PARAMETERS.samples = 50
 
 Ns = [100, 500, 1000]
+
+chns = Vector{MCMCChains.Chains}(undef, length(Ns))
 t = Vector{BenchmarkTools.Trial}(undef, length(Ns))
+
 for (i, N) in enumerate(Ns)
   data = Dict("y" => rand(Normal(0,1),N), "N" => N)
   t[i] = @benchmark dhmc_bm($data, $N)
+  chns[i] = dhmc_bm(data, N)
 end
 
 t[1] |> display
 println()
-t[end]
+t[end] |> display
+
+describe(chns[end])
