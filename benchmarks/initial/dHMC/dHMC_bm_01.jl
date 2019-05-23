@@ -85,8 +85,10 @@ function dhmc_bm(data::Dict, Nsamples=2000)
 end
 
 BenchmarkTools.DEFAULT_PARAMETERS.samples = 50
+BenchmarkTools.DEFAULT_PARAMETERS.seconds = 15
+BenchmarkTools.DEFAULT_PARAMETERS.time_tolerance = 1.0
 
-Ns = [100, 500, 1000]
+Ns = [100, 1000]
 
 chns = Vector{MCMCChains.Chains}(undef, length(Ns))
 t = Vector{BenchmarkTools.Trial}(undef, length(Ns))
