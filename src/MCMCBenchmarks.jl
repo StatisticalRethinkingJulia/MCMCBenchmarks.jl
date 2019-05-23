@@ -74,9 +74,9 @@ function benchmark!(samplers,results,simulate,Nreps=100;kwargs...)
           println("Simulation: $simulate")
           println("No of obs: $(kwargs[1])")
           println("Repetition: $rep of $Nreps\n")
-          t = @elapsed chn = runSampler(s,data;kwargs...)
+          performance = @timed runSampler(s,data;kwargs...)
           allowmissing!(results)
-          updateResults!(s,t,results,chn;kwargs...)
+          updateResults!(s,performance,results;kwargs...)
       end
     end
     return results
@@ -117,7 +117,8 @@ update results on each iteration
 * `chain`: mcmc chain results
 * `Nadapt`: number of adaption iterations to be removed from chain
 """
-function updateResults!(s::AHMCNUTS,t,results,chain;kwargs...)
+function updateResults!(s::AHMCNUTS,performance,results;kwargs...)
+    chain = performance[1]
     newDF = DataFrame()
     chain=removeBurnin(chain;kwargs...)
     df = describe(chain)[1].df
@@ -126,13 +127,14 @@ function updateResults!(s::AHMCNUTS,t,results,chain;kwargs...)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     dfi=describe(chain,sections=[:internals])[1]
     newDF[:epsilon]=dfi[:lf_eps, :mean][1]
-    newDF[:time] = t
+    addPerformance!(newDF,performance)
     newDF[:sampler]=:AHMCNUTS
     addKW!(newDF;kwargs...)
     append!(results,newDF)
 end
 
-function updateResults!(s::CmdStanNUTS,t,results,chain;kwargs...)
+function updateResults!(s::CmdStanNUTS,performance,results;kwargs...)
+    chain = performance[1]
     newDF = DataFrame()
     df = describe(chain)[1].df
     addColumns!(newDF,chain,df,:ess)
@@ -140,13 +142,14 @@ function updateResults!(s::CmdStanNUTS,t,results,chain;kwargs...)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     dfi=describe(chain,sections=[:internals])[1]
     newDF[:epsilon]=dfi[:stepsize__, :mean][1]
-    newDF[:time] = t
+    addPerformance!(newDF,performance)
     newDF[:sampler]=:CmdStanNUTS
     addKW!(newDF;kwargs...)
     append!(results,newDF)
 end
 
-function updateResults!(s::DNNUTS,t,results,chain;kwargs...)
+function updateResults!(s::DNNUTS,performance,results;kwargs...)
+    chain = performance[1]
     newDF = DataFrame()
     chain=removeBurnin(chain;kwargs...)
     df = describe(chain)[1].df
@@ -154,13 +157,14 @@ function updateResults!(s::DNNUTS,t,results,chain;kwargs...)
     addColumns!(newDF,chain,df,:r_hat)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     newDF[:epsilon]=missing
-    newDF[:time] = t
+    addPerformance!(newDF,performance)
     newDF[:sampler]=:DNNUTS
     addKW!(newDF;kwargs...)
     append!(results,newDF)
 end
 
-function updateResults!(s::DHMCNUTS,t,results,chain;kwargs...)
+function updateResults!(s::DHMCNUTS,performance,results;kwargs...)
+    chain = performance[1]
     newDF = DataFrame()
     chain=removeBurnin(chain;kwargs...)
     df = describe(chain)[1].df
@@ -168,7 +172,7 @@ function updateResults!(s::DHMCNUTS,t,results,chain;kwargs...)
     addColumns!(newDF,chain,df,:r_hat)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     newDF[:epsilon]=missing
-    newDF[:time] = t
+    addPerformance!(newDF,performance)
     newDF[:sampler]=:DHMCNUTS
     addKW!(newDF;kwargs...)
     append!(results,newDF)
@@ -183,6 +187,20 @@ function addKW!(df;kwargs...)
         setindex!(df,v,k)
     end
 end
+
+"""
+Adds performance metrics to benchmark results
+* `df`: the dataframe to which performance metrics are added
+* `p`: performance metrics computed from @timed
+"""
+function addPerformance!(df,p)
+    df[:time] = p[2]
+    df[:megabytes] = p[3]/10e6
+    df[:gctime] = p[4]
+    df[:gcpercent] = p[4]/p[2]
+    df[:allocations] = p[5].poolalloc + p[5].malloc
+end
+
 
 """
 Modifies MCMC sampler configuration outside of runSampler
@@ -247,6 +265,7 @@ export
   removeBurnin,
   toDict,
   addKW!,
+  addPerformance!,
   updateResults!,
   runSampler,
   benchmark!,

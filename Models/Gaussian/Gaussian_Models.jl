@@ -1,3 +1,5 @@
+using Distributed
+
 @model AHMCGaussian(y,N) = begin
     mu ~ Normal(0,1)
     sigma ~ Truncated(Cauchy(0,5),0,Inf)
@@ -114,7 +116,7 @@ function GaussianGen(;μ=0,σ=1,Nd,kwargs...)
      presults = pmap(nd->pfun(nd),Nd)
      return vcat(presults...)
  end
- 
+
  #doesn't work if put in MCMCBenchmarks module
  function setSeeds!(seeds...)
      for (i,seed) in enumerate(seeds)
