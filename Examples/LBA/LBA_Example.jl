@@ -28,40 +28,29 @@ Nreps = 50
 #perform the benchmark
 results = benchmark(samplers,simulateLBA,Nd, Nreps)
 
-timeDf = by(results,[:Nd,:sampler],:time=>mean)
-gr()#Might want to use pyplot() because it has better formatting and less crowding
-Ns = length(Nd)
-p1=@df timeDf plot(:Nd,:time_mean,group=:sampler,xlabel="Number of data points",
-    ylabel="Mean Time (seconds)",grid=false)
-p2=@df results density(:A_ess,group=(:sampler,:Nd),grid=false,xlabel="A ESS",ylabel="Density",
-    xlims=(0,1000),layout=(Ns,1),fill=(0,.5),width=1.5)
-p3=@df results density(:tau_ess,group=(:sampler,:Nd),grid=false,xlabel="tau ESS",ylabel="Density",
-   xlims=(0,1000),layout=(Ns,1),fill=(0,.5),width=1.5)
-p4=@df results density(:time,group=(:sampler,:Nd),grid=false,xlabel="Time",ylabel="Density",
-   xlims=(0,500),layout=(Ns,1),fill=(0,.5),width=1)
-p5=@df results density(:A_r_hat,group=(:sampler,:Nd),grid=false,xlabel="A R_hat",ylabel="Density",
-    layout=(Ns,1),fill=(0,.5),width=1.5)
-p6=@df results density(:tau_r_hat,group=(:sampler,:Nd),grid=false,xlabel="tau R_hat",ylabel="Density",
-    layout=(Ns,1),fill=(0,.5),width=1.5)
-p7=@df results scatter(:epsilon,:A_ess,group=(:sampler,:Nd),grid=false,xlabel="Epsilon",ylabel="A ESS",
-    layout=(Ns,1))
-p8=@df results scatter(:epsilon,:tau_ess,group=(:sampler,:Nd),grid=false,xlabel="Epsilon",ylabel="Tau ESS",
-    layout=(Ns,1))
-p9=@df results density(:k_ess,group=(:sampler,:Nd),grid=false,xlabel="k ESS",ylabel="Density",
-    xlims=(0,1000),layout=(Ns,1),fill=(0,.5),width=1.5)
-p10=@df results scatter(:epsilon,:k_ess,group=(:sampler,:Nd),grid=false,xlabel="Epsilon",ylabel="k ESS",
-    layout=(Ns,1))
+#pyplot()
+cd(pwd)
+dir = "results/"
+#Plot mean run time as a function of number of data points (Nd) for each sampler
+summaryPlots = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir)
 
-!isdir("results") && mkdir("results")
-savefig(p1,"./results/Mean Time.pdf")
-savefig(p2,"./results/A ESS Dist.pdf")
-savefig(p3,"./results/Tau ESS Dist.pdf")
-savefig(p4,"./results/Time Dist.pdf")
-savefig(p5,"./results/A rhat Dist.pdf")
-savefig(p6,"./results/Tau rhat Dist.pdf")
-savefig(p7,"./results/A Epsilon Scatter.pdf")
-savefig(p8,"./results/Tau Epsilon Scatter.pdf")
-savefig(p9,"./results/k ESS Scatter.pdf")
-savefig(p10,"./results/k Epsilon Scatter.pdf")
+#Plot density of effective sample size as function of number of data points (Nd) for each sampler
+essPlots = plotdensity(results,:ess,(:sampler,:Nd);save=true,dir=dir)
 
-timeDf
+#Plot density of rhat as function of number of data points (Nd) for each sampler
+rhatPlots = plotdensity(results,:r_hat,(:sampler,:Nd);save=true,dir=dir)
+
+#Plot density of time as function of number of data points (Nd) for each sampler
+timePlots = plotdensity(results,:time,(:sampler,:Nd);save=true,dir=dir)
+
+#Plot density of gc time percent as function of number of data points (Nd) for each sampler
+gcPlots = plotdensity(results,:gcpercent,(:sampler,:Nd);save=true,dir=dir)
+
+#Plot density of memory allocations as function of number of data points (Nd) for each sampler
+gcPlots = plotdensity(results,:allocations,(:sampler,:Nd);save=true,dir=dir)
+
+#Plot density of megabytes allocated as function of number of data points (Nd) for each sampler
+gcPlots = plotdensity(results,:megabytes,(:sampler,:Nd);save=true,dir=dir)
+
+#Scatter plot of epsilon and effective sample size as function of number of data points (Nd) for each sampler
+scatterPlots = plotscatter(results,:epsilon,:ess,(:sampler,:Nd);save=true,dir=dir)

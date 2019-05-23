@@ -46,5 +46,14 @@ rhatPlots = plotdensity(results,:r_hat,(:sampler,:Nd);save=true,dir=dir)
 #Plot density of time as function of number of data points (Nd) for each sampler
 timePlots = plotdensity(results,:time,(:sampler,:Nd);save=true,dir=dir)
 
+#Plot density of gc time percent as function of number of data points (Nd) for each sampler
+gcPlots = plotdensity(results,:gcpercent,(:sampler,:Nd);save=true,dir=dir)
+
+#Plot density of memory allocations as function of number of data points (Nd) for each sampler
+gcPlots = plotdensity(results,:allocations,(:sampler,:Nd);save=true,dir=dir)
+
+#Plot density of megabytes allocated as function of number of data points (Nd) for each sampler
+gcPlots = plotdensity(results,:megabytes,(:sampler,:Nd);save=true,dir=dir)
+
 #Scatter plot of epsilon and effective sample size as function of number of data points (Nd) for each sampler
 scatterPlots = plotscatter(results,:epsilon,:ess,(:sampler,:Nd);save=true,dir=dir)
