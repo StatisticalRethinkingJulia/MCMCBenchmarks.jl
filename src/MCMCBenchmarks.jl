@@ -5,7 +5,7 @@ using Reexport
 @reexport using Revise,Turing,MCMCBenchmarks,CmdStan,StatsPlots
 @reexport using Statistics,DataFrames,Random,Parameters,DynamicHMC
 @reexport using LogDensityProblems, TransformVariables, MCMCDiagnostics
-@reexport using BenchmarkTools, AdvancedHMC, ForwardDiff
+@reexport using BenchmarkTools, AdvancedHMC, ForwardDiff,Distributed
 
 include("plotting.jl")
 
@@ -31,7 +31,10 @@ CmdStan NUTS
 mutable struct CmdStanNUTS{T1} <: MCMCSampler
     model::T1
     dir::String
+    name::String
 end
+
+CmdStanNUTS(model,dir) = CmdStanNUTS(model,dir,model.name)
 
 """
 DynamicHMC NUTS
@@ -214,6 +217,10 @@ function modifyConfig!(s::CmdStanNUTS;Nsamples,Nadapt,delta,kwargs...)
     s.model.num_samples = Nsamples-Nadapt
     s.model.num_warmup = Nadapt
     s.model.method.adapt.delta = delta
+    id = myid()
+    if id != 1
+        s.model.name = string(s.name,id)
+    end
 end
 
 function modifyConfig!(s::DNNUTS;Nsamples,kwargs...)
@@ -259,12 +266,38 @@ function createName(p,col)
     return Symbol(string(p,"_",col))
 end
 
+function initStan(s)
+    base = string(s.dir,"/tmp/",s.model.name)
+    for p in procs()
+        stream = open(base*".stan","r")
+        str = read(stream,String)
+        close(stream)
+        stream = open(string(base,p,".stan"),"w")
+        write(stream,str)
+        close(stream)
+    end
+end
+
+function compileStanModel(s,fun)
+    data = fun(;Nd=1)
+    pmap(x->compile(s,data),procs())
+
+end
+
+function compile(s,data)
+    modifyConfig!(s;Nsamples=10,Nadapt=10,delta=.8)
+    runSampler(s,data)
+    return
+end
+
 export
   modifyConfig!,
   addColumns!,
   removeBurnin,
   toDict,
   addKW!,
+  initStan,
+  compileStanModel,
   addPerformance!,
   updateResults!,
   runSampler,

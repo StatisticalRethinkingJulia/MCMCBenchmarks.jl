@@ -8,7 +8,6 @@ addprocs(3)
 end
 #run this on primary processor to create tmp folder
 include("../../Models/Gaussian/Gaussian_Models.jl")
-
 setSeeds!(545484,54841,844841,18377)
 
 @everywhere Turing.turnprogress(false)
@@ -16,6 +15,11 @@ setSeeds!(545484,54841,844841,18377)
 ProjDir = @__DIR__
 cd(ProjDir)
 
+stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
+#Initialize model files for each instance of stan
+initStan(stanSampler)
+#Compile stan model
+compileStanModel(stanSampler,GaussianGen)
 #create a sampler object or a tuple of sampler objects
 
 #Note that AHMC and DynamicNUTS do not work together due to an
