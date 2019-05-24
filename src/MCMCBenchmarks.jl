@@ -8,6 +8,8 @@ using Reexport
 @reexport using BenchmarkTools, AdvancedHMC, ForwardDiff,Distributed
 
 include("plotting.jl")
+include("Utilities.jl")
+
 
 abstract type MCMCSampler end
 
@@ -318,5 +320,6 @@ export
   DNNUTS,
   plotdensity,
   plotsummary,
-  plotscatter
+  plotscatter,
+  nptochain
 end # module

@@ -72,26 +72,7 @@ CmdStanConfig = Stanmodel(name = "CmdStanGaussian",model=CmdStanGaussian,nchains
     # Undo the transformation to obtain the posterior from the chain.
 
     posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));
-
-    # Set varable names, this will be automated using θ
-
-    parameter_names = ["mu", "sigma"]
-
-    # Create a3d
-
-    a3d = Array{Float64, 3}(undef, 2000, 2, 1);
-    for i in 1:2000
-      a3d[i, 1, 1] = values(posterior[i][1])
-      a3d[i, 2, 1] = values(posterior[i][2])
-    end
-
-    chns = MCMCChains.Chains(a3d,
-      parameter_names,
-      Dict(
-        :parameters => parameter_names,
-      )
-    )
-
+    chns = nptochain(posterior)
     return chns
   end
 

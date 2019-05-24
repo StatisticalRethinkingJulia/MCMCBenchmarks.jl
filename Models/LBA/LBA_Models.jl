@@ -181,23 +181,7 @@ function sampleDHMC(data,N,Nc,nsamples)
     chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, nsamples);
     # Undo the transformation to obtain the posterior from the chain.
     posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));
-    # Set varable names, this will be automated using θ
-    parameter_names = ["v[1]","v[2]","v[3]","A","k","tau"]
-    # Create a3
-    Np = Nc+3
-    a3d = Array{Float64,3}(undef,nsamples,Np,1)
-    for i in 1:nsamples
-        temp = Float64[]
-        for p in posterior[i]
-            push!(temp,values(p)...)
-        end
-        a3d[i,:,1] = temp'
-    end
-    chns = MCMCChains.Chains(a3d,parameter_names,
-    Dict(
-        :parameters => parameter_names,
-        )
-    )
+    chns = nptochain(posterior)
     return chns
 end
 
