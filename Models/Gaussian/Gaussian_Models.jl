@@ -111,9 +111,9 @@ function GaussianGen(;μ=0,σ=1,Nd,kwargs...)
  end
 
  function pbenchmark(samplers,simulate,Nd,Nreps=100)
-     results = DataFrame()
-     pfun(nd) = benchmark!(samplers,results,simulate,Nreps;Nd=nd,Nsamples=2000,Nadapt=1000,delta=.8)
-     presults = pmap(nd->pfun(nd),Nd)
+     pfun(rep) = benchmark(samplers,simulate,Nd,rep)
+     reps = setreps(Nreps)
+     presults = pmap(rep->pfun(rep),reps)
      return vcat(presults...)
  end
 

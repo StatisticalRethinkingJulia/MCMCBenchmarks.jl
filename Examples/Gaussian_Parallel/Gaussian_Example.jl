@@ -32,7 +32,7 @@ samplers=(
   #DNNUTS(DNGaussian,DNconfig))
 
 #Number of data points
-Nd = [10,100,1000,2000]
+Nd = [10,100,1000]
 
 #Number of simulations
 Nreps = 50

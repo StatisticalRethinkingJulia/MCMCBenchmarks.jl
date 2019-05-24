@@ -281,13 +281,21 @@ end
 function compileStanModel(s,fun)
     data = fun(;Nd=1)
     pmap(x->compile(s,data),procs())
-
 end
 
 function compile(s,data)
     modifyConfig!(s;Nsamples=10,Nadapt=10,delta=.8)
     runSampler(s,data)
     return
+end
+
+function setreps(Nreps)
+    p = nprocs()-1
+    v = Int(floor(Nreps/p))
+    reps = fill(v,p)
+    r = mod(Nreps,p)
+    reps[1:r] .+= 1
+    return reps
 end
 
 export
@@ -297,6 +305,7 @@ export
   toDict,
   addKW!,
   initStan,
+  setreps,
   compileStanModel,
   addPerformance!,
   updateResults!,
