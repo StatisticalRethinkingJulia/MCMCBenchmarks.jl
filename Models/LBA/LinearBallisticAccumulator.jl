@@ -66,6 +66,14 @@ function logpdf(d::LBA,data::T) where {T<:NamedTuple}
     return sum(logpdf.(d,data...))
 end
 
+function logpdf(dist::LBA,data::Array{<:Tuple,1})
+    LL = 0.0
+    for d in data
+        LL += logpdf(dist,d...)
+    end
+    return LL
+end
+
 function pdf(d::LBA,c,rt)
     @unpack τ,A,k,ν,σ = d
     b=A+k; den = 1.0

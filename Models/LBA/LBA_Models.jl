@@ -154,22 +154,26 @@ CmdStanConfig = Stanmodel(name = "CmdStanLBA",model=CmdStanLBA,nchains=1,
   end
 
   function (problem::LBAProb)(θ)
-      @unpack data=problem   # extract the data
+      @unpack data=problem
       @unpack v,A,k,tau=θ
       d=LBA(ν=v,A=A,k=k,τ=tau)
-      loglikelihood(d,data)+sum(logpdf.(TruncatedNormal(0,3,0,Inf),v)) +
+      logpdf(d,data)+sum(logpdf.(TruncatedNormal(0,3,0,Inf),v)) +
       logpdf(TruncatedNormal(.8,.4,0,Inf),A)+logpdf(TruncatedNormal(.2,.3,0,Inf),k)+
       logpdf(TruncatedNormal(.4,.1,0,Inf),tau)
   end
 
-# Define problem with data and inits.
 function sampleDHMC(choice,rt,N,Nc,nsamples)
     data = [(c,r) for (c,r) in zip(choice,rt)]
+    return sampleDHMC(data,N,Nc,nsamples)
+end
+
+# Define problem with data and inits.
+function sampleDHMC(data,N,Nc,nsamples)
     p = LBAProb(data,N,Nc)
     p((v=fill(.5,Nc),A=.8,k=.2,tau=.4))
     # Write a function to return properly dimensioned transformation.
     problem_transformation(p::LBAProb) =
-    as((v=as(Array,Nc),A=asℝ₊,k=asℝ₊,tau=asℝ₊))
+    as((v=as(Array,asℝ₊,Nc),A=asℝ₊,k=asℝ₊,tau=asℝ₊))
     # Use Flux for the gradient.
     P = TransformedLogDensity(problem_transformation(p), p)
     ∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P));
@@ -194,7 +198,7 @@ function sampleDHMC(choice,rt,N,Nc,nsamples)
         :parameters => parameter_names,
         )
     )
-    return posterior#chns
+    return chns
 end
 
 function simulateLBA(;Nd,v=[1.0,1.5,2.0],A=.8,k=.2,tau=.4,kwargs...)

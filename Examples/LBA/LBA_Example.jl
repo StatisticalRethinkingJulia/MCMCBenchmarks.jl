@@ -9,7 +9,7 @@ include("../../Models/LBA/LinearBallisticAccumulator.jl")
 #load benchmarking configuration
 include("../../benchmark_configurations/Vary_Data_size.jl")
 
-Random.seed!(551158015)
+Random.seed!(55115805)
 
 ProjDir = @__DIR__
 cd(ProjDir)
@@ -17,9 +17,10 @@ cd(ProjDir)
 #create a sampler object or a tuple of sampler objects
 samplers=(
   CmdStanNUTS(CmdStanConfig,ProjDir),
-  AHMCNUTS(AHMClba,AHMCconfig))
-  #DNNUTS(DNlba,DNconfig))
-  #DHMCNUTS(sampleDHMC,2000))
+  AHMCNUTS(AHMClba,AHMCconfig),
+  DHMCNUTS(sampleDHMC,2000)
+  #DNNUTS(DNlba,DNconfig)
+  )
 
 #Number of data points
 Nd = [10, 50, 200]
@@ -28,7 +29,7 @@ Nd = [10, 50, 200]
 Nreps = 50
 
 #perform the benchmark
-results = benchmark(samplers,simulateLBA,Nd, Nreps)
+results = benchmark(samplers,simulateLBA,Nd,Nreps)
 
 #pyplot()
 cd(pwd)
