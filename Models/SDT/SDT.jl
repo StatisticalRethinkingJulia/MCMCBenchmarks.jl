@@ -62,12 +62,12 @@ CmdStanConfig = Stanmodel(name = "CmdStan_SDT",model=CmdStan_SDT,nchains=1,
     p((d=2.0,c=.0))
     # Write a function to return properly dimensioned transformation.
     problem_transformation(p::SDTProblem) =
-         as((d=as(Real,-25, 25),c=as(Real,-25, 25)), )
+         as((d=asℝ,c=asℝ))
     # Use Flux for the gradient.
     P = TransformedLogDensity(problem_transformation(p), p)
     ∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P));
     # FSample from the posterior.
-    chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, nsamples);
+    chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P,Nsamples);
     # Undo the transformation to obtain the posterior from the chain.
     posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));
     # Set varable names, this will be automated using θ

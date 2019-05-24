@@ -13,15 +13,15 @@ turnprogress(false) #not working
 ProjDir = @__DIR__
 cd(ProjDir)
 
-samplers=(CmdStanNUTS(CmdStanConfig,ProjDir),AHMCNUTS(AHMC_SDT,AHMCconfig))
-    #DHMCNUTS(sampleDHMC,2000))#,DNNUTS(DN_SDT,DNconfig))
+samplers=(CmdStanNUTS(CmdStanConfig,ProjDir),
+    AHMCNUTS(AHMC_SDT,AHMCconfig),
+    #DNNUTS(DN_SDT,DNconfig)
+    DHMCNUTS(sampleDHMC,2000))
 
 #Number of data points
 Nd = [10,100,1000]
 #perform the benchmark
 results = benchmark(samplers,simulateSDT,Nd)
-timeDf = by(results,[:Nd,:sampler],:time=>mean)
-
 
 #pyplot()
 cd(pwd)

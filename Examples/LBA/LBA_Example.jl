@@ -29,7 +29,7 @@ Nd = [10, 50, 200]
 Nreps = 50
 
 #perform the benchmark
-results = benchmark(samplers,simulateLBA,Nd,Nreps)
+results = benchmark(samplers,simulateLBA,Nd,Nreps;Nsamples=3000)
 
 #pyplot()
 cd(pwd)
