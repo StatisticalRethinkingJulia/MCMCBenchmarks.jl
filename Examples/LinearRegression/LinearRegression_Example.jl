@@ -3,6 +3,8 @@ using MCMCBenchmarks
 #Model and configuration patterns for each sampler are located in a
 #seperate model file.
 include("../../Models/LinearRegression/lt.jl")
+#load benchmarking configuration
+include("../../benchmark_configurations/Vary_Data_size.jl")
 
 Random.seed!(2202184)
 

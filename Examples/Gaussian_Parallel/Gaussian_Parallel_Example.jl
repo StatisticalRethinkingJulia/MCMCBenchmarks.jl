@@ -5,6 +5,8 @@ addprocs(4)
   #Model and configuration patterns for each sampler are located in a
   #seperate model file.
   include("../../Models/Gaussian/Gaussian_Models.jl")
+  #load benchmarking configuration
+  include("../../benchmark_configurations/Vary_Data_size.jl")
 end
 #run this on primary processor to create tmp folder
 include("../../Models/Gaussian/Gaussian_Models.jl")

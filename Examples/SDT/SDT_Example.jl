@@ -4,7 +4,8 @@ using MCMCBenchmarks
 #seperate model file.
 include("../../Models/SDT/SDT.jl")
 include("../../Models/SDT/SDT_Functions.jl")
-
+#load benchmarking configuration
+include("../../benchmark_configurations/Vary_Data_size.jl")
 Random.seed!(31854025)
 
 turnprogress(false) #not working

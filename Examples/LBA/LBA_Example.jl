@@ -6,6 +6,8 @@ using Revise,MCMCBenchmarks
 Turing.turnprogress(false)
 include("../../Models/LBA/LBA_Models.jl")
 include("../../Models/LBA/LinearBallisticAccumulator.jl")
+#load benchmarking configuration
+include("../../benchmark_configurations/Vary_Data_size.jl")
 
 Random.seed!(551158015)
 

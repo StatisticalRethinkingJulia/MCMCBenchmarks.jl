@@ -69,7 +69,7 @@ end
 function pdf(d::LBA,c,rt)
     @unpack τ,A,k,ν,σ = d
     b=A+k; den = 1.0
-    rt < τ ? (return 1e-10) : nothing 
+    rt < τ ? (return 1e-10) : nothing
     for (i,v) in enumerate(ν)
         if c == i
             den *= dens(d,v,rt)
@@ -113,12 +113,4 @@ function pnegative(d::LBA)
         p*= cdf(Normal(0,1),-v/σ)
     end
     return p
-end
-
-function benchmark(samplers,simulate,Nd,Nreps=100)
-    results = DataFrame()
-    for nd in Nd
-      benchmark!(samplers,results,simulate,Nreps;Nd=nd,Nsamples=2000,Nadapt=1000,delta=.8)
-    end
-    return results
 end
