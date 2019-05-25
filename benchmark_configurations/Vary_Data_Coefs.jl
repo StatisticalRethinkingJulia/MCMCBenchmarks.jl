@@ -24,7 +24,7 @@ Runs the benchmarking procedure and returns the results
  * `Nreps`: number of times the benchmark is repeated for each factor combination
  """
  function pbenchmark(samplers,simulate,Nd,Nc,Nreps=100)
-     pfun(rep) = benchmark(samplers,simulate,Nd,rep)
+     pfun(rep) = benchmark(samplers,simulate,Nd,Nc,rep)
      reps = setreps(Nreps)
      presults = pmap(rep->pfun(rep),reps)
      return vcat(presults...)
