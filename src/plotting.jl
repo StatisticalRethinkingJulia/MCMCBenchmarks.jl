@@ -58,7 +58,7 @@ function plotsummary(df::DataFrame,xvar::Symbol,metric::Symbol,group=(:sampler,)
         !isin(metric,c) ? (continue) : nothing
         summary,yvar = summarize(df,c,[xvar,group...],func)
         grouping = map(x->summary[x],group)
-        p=plot(summary[xvar],summary[yvar],group=grouping,grid=false,xlabel=string(c),
+        p=plot(summary[xvar],summary[yvar],group=grouping,grid=false,xlabel=string(xvar),
             ylabel=string(yvar),layout=layout,width=1.5;options...)
         push!(plots,p)
         save ? savefig(p,string(dir,"summary_",c,".",figfmt)) : nothing
