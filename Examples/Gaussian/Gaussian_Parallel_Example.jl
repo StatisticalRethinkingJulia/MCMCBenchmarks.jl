@@ -8,20 +8,20 @@ cd(ProjDir)
 isdir("tmp") && rm("tmp", recursive=true)
 mkdir("tmp")
 !isdir("results") && mkdir("results")
-
+path = pathof(MCMCBenchmarks)
 @everywhere begin
   using MCMCBenchmarks
   #Model and configuration patterns for each sampler are located in a
   #seperate model file.
-  include(joinpath(pathof(MCMCBenchmarks), "../../Models/Gaussian/Gaussian_Models.jl"))
+  include(joinpath($path, "../../Models/Gaussian/Gaussian_Models.jl"))
   #load benchmarking configuration
-  include(joinpath(pathof(MCMCBenchmarks), "../../benchmark_configurations/Vary_Data_size.jl"))
+  include(joinpath($path, "../../benchmark_configurations/Vary_Data_size.jl"))
 end
 
 #run this on primary processor to create tmp folder
-include(joinpath(pathof(MCMCBenchmarks),
+include(joinpath(path,
   "../../Models/Gaussian/Gaussian_Models.jl"))
-include(joinpath(pathof(MCMCBenchmarks),
+include(joinpath(path,
   "../../benchmark_configurations/Vary_Data_size.jl"))
 
 
@@ -56,7 +56,11 @@ results = pbenchmark(samplers,GaussianGen,Nd,Nreps)
 #pyplot()
 dir = "results/"
 #Plot mean run time as a function of number of data points (Nd) for each sampler
-summaryPlots = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir)
+meantimePlot = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir)
+
+#Plot mean allocations as a function of number of data points (Nd) for each sampler
+meanallocPlot = plotsummary(results,:Nd,:allocations,(:sampler,);save=true,dir=dir,yscale=:log10,
+  ylabel="Allocations (log scale)")
 
 #Plot density of effective sample size as function of number of data points (Nd) for each sampler
 essPlots = plotdensity(results,:ess,(:sampler,:Nd);save=true,dir=dir)
@@ -71,10 +75,11 @@ timePlots = plotdensity(results,:time,(:sampler,:Nd);save=true,dir=dir)
 gcPlots = plotdensity(results,:gcpercent,(:sampler,:Nd);save=true,dir=dir)
 
 #Plot density of memory allocations as function of number of data points (Nd) for each sampler
-gcPlots = plotdensity(results,:allocations,(:sampler,:Nd);save=true,dir=dir)
+memPlots = plotdensity(results,:allocations,(:sampler,:Nd);save=true,dir=dir,xscale=:log10,
+  xlabel="Allocations (log scale)")
 
 #Plot density of megabytes allocated as function of number of data points (Nd) for each sampler
-gcPlots = plotdensity(results,:megabytes,(:sampler,:Nd);save=true,dir=dir)
+megPlots = plotdensity(results,:megabytes,(:sampler,:Nd);save=true,dir=dir)
 
 #Scatter plot of epsilon and effective sample size as function of number of data points (Nd) for each sampler
 scatterPlots = plotscatter(results,:epsilon,:ess,(:sampler,:Nd);save=true,dir=dir)

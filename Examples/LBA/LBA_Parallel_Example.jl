@@ -1,18 +1,39 @@
-using MCMCBenchmarks
+using MCMCBenchmarks, Distributed
 
-#Model and configuration patterns for each sampler are located in a
-#seperate model file.
-include("../../Models/Gaussian/Gaussian_Models.jl")
-#load benchmarking configuration
-include("../../benchmark_configurations/Vary_Data_size.jl")
-
-Random.seed!(2202184)
-
-Turing.turnprogress(false)
+setprocs(4)
 
 ProjDir = @__DIR__
 cd(ProjDir)
 
+isdir("tmp") && rm("tmp", recursive=true)
+mkdir("tmp")
+!isdir("results") && mkdir("results")
+path = pathof(MCMCBenchmarks)
+@everywhere begin
+  using MCMCBenchmarks
+  #Model and configuration patterns for each sampler are located in a
+  #seperate model file.
+  include(joinpath($path,"../../Models/LBA/LBA_Models.jl"))
+  include(joinpath($path,"../../Models/LBA/LinearBallisticAccumulator.jl"))
+  #load benchmarking configuration
+  include(joinpath($path, "../../benchmark_configurations/Vary_Data_size.jl"))
+end
+
+#run this on primary processor to create tmp folder
+include(joinpath(path,"../../Models/LBA/LBA_Models.jl"))
+include(joinpath(path,"../../Models/LBA/LinearBallisticAccumulator.jl"))
+#load benchmarking configuration
+include(joinpath(path, "../../benchmark_configurations/Vary_Data_size.jl"))
+
+setSeeds!(8945205,112585,650054,5502)
+
+@everywhere Turing.turnprogress(false)
+
+stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
+#Initialize model files for each instance of stan
+initStan(stanSampler)
+#Compile stan model
+compileStanModel(stanSampler,simulateLBA)
 #create a sampler object or a tuple of sampler objects
 
 #Note that AHMC and DynamicNUTS do not work together due to an
@@ -20,21 +41,20 @@ cd(ProjDir)
 
 samplers=(
   CmdStanNUTS(CmdStanConfig,ProjDir),
-  AHMCNUTS(AHMCGaussian,AHMCconfig),
+  AHMCNUTS(AHMClba,AHMCconfig),
+  #DNNUTS(DNGaussian,DNconfig),
   DHMCNUTS(sampleDHMC,2000))
-  #DNNUTS(DNGaussian,DNconfig))
+
 
 #Number of data points
-Nd = [10, 100, 1000, 2000]
+Nd = [10,20,50]
 
 #Number of simulations
 Nreps = 50
 
 #perform the benchmark
-results = benchmark(samplers,GaussianGen,Nd, Nreps)
-
+results = pbenchmark(samplers,simulateLBA,Nd,Nreps)
 #pyplot()
-cd(pwd)
 dir = "results/"
 #Plot mean run time as a function of number of data points (Nd) for each sampler
 meantimePlot = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir)
