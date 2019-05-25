@@ -2,16 +2,16 @@ using MCMCBenchmarks
 
 #Model and configuration patterns for each sampler are located in a
 #seperate model file.
-include("../../Models/LinearRegression/lt.jl")
+path = pathof(MCMCBenchmarks)
+include(joinpath(path,"../../Models/LinearRegression/LinearRegression_Models.jl"))
 #load benchmarking configuration
-include("../../benchmark_configurations/Vary_Data_size.jl")
+include(joinpath(path,"../../benchmark_configurations/Vary_Data_Coefs.jl"))
 
 Random.seed!(2202184)
 
 Turing.turnprogress(false)
 
 ProjDir = @__DIR__
-pwd = pwd()
 cd(ProjDir)
 
 #create a sampler object or a tuple of sampler objects
@@ -21,21 +21,23 @@ cd(ProjDir)
 
 samplers=(
   #CmdStanNUTS(CmdStanConfig,ProjDir),
-  #AHMCNUTS(AHMCGaussian,AHMCconfig),
-  DHMCNUTS(sampleDHMC,2000))
-  #DNNUTS(DNGaussian,DNconfig))
+  #DHMCNUTS(sampleDHMC,2000)
+  #DNNUTS(DNregression,DNconfig)
+  AHMCNUTS(AHMCregression,AHMCconfig))
 
 #Number of data points
-Nd = [10, 100, 1000]
+Nd = [10,100]
+
+#Number of coefficients
+Nc = [2,5]
 
 #Number of simulations
 Nreps = 50
 
 #perform the benchmark
-results = benchmark(samplers,GaussianGen,Nd, Nreps)
+results = benchmark(samplers,simulateRegression,Nd,Nc,Nreps)
 
 #pyplot()
-cd(pwd)
 dir = "results/"
 #Plot mean run time as a function of number of data points (Nd) for each sampler
 summaryPlots = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir)
