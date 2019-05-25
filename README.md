@@ -12,11 +12,11 @@
 
 ## Introduction
 
-MCMCBenchmarks (WIP) provides a lightweight yet flexible framework for benchmarking MCMC samplers in terms of runtime, convergence metrics and effective sample size. Currently, MCMCBenchmarks provides out of the box support for benchmarking the [No-U-Turn Sampler](http://jmlr.org/papers/volume15/hoffman14a/hoffman14a.pdf) (NUTS) algorithm as instantiated in [CmdStan](https://github.com/StanJulia/CmdStan.jl), [DynamicHMC](https://github.com/tpapp/DynamicHMC.jl) and [AdvancedHMC](https://github.com/TuringLang/AdvancedHMC.jl) via [Turing](https://github.com/TuringLang/Turing.jl). However, methods can be extended to acommodate other samplers and test models.
+MCMCBenchmarks (WIP) provides a lightweight yet flexible framework for benchmarking MCMC samplers in terms of runtime, memory usage, convergence metrics and effective sample size. Currently, MCMCBenchmarks provides out of the box support for benchmarking the [No-U-Turn Sampler](http://jmlr.org/papers/volume15/hoffman14a/hoffman14a.pdf) (NUTS) algorithm as instantiated in [CmdStan](https://github.com/StanJulia/CmdStan.jl), [DynamicHMC](https://github.com/tpapp/DynamicHMC.jl) and [AdvancedHMC](https://github.com/TuringLang/AdvancedHMC.jl) via [Turing](https://github.com/TuringLang/Turing.jl). However, methods can be extended to acommodate other samplers and test models.
 
 ## Overview of Features
 - Benchmarking Parameters: vary factors such as sample size, data-generating parameters, prior distributions, and target acceptance rate. The use of optional keywords allows other benchmarking parameters to be varied. 
-- Plotting: generate and save plots comparing samplers in terms of run time, convergence diagnostics and effective sample size (see below).
+- Plotting: generate and save plots comparing samplers in terms of run time, memory usage, convergence diagnostics and effective sample size (see below).
 - Test Suite: a suite of test models that span a wide range of difficulty. 
 
 ## Test Suite 
@@ -31,10 +31,10 @@ The table below provides a working list of test models that will be included in 
 | Model                           | Author | Turing  | DynamicHMC       | DynamicNUTS               | CmdStan |
 |---------------------------------|--------|---------|------------------|---------------------------|---------|
 | Gaussian Model                  | Chris  | Working | Working          | Working                   | Working |
-| Signal Detection Theory         | Chris  | Working | Errors out       | Hard crash due  to NaN    | Working |
+| Signal Detection Theory         | Chris  | Working | Working          | Hard crash due  to NaN    | Working |
 | Linear Regression               | Rob    |         |                  |                           |         |
 | Hierarchical Poisson Regression | Rob    |         |                  |                           |         |
-| Linear Ballistic Accumulator    | Chris  | Working | Non-finite error | density start point error | Working |
+| Linear Ballistic Accumulator    | Chris  | Working | Working          | density start point error | Working |
 
 ## Preliminary Results
 
