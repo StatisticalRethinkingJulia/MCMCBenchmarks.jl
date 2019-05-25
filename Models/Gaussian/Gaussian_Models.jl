@@ -69,7 +69,7 @@ CmdStanConfig = Stanmodel(name = "CmdStanGaussian",model=CmdStanGaussian,nchains
 
     # FSample from the posterior.
 
-    chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, nsamples);
+    chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, nsamples,report=ReportSilent());
 
     # Undo the transformation to obtain the posterior from the chain.
 
