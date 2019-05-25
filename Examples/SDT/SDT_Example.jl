@@ -27,6 +27,9 @@ Nreps = 100
 #perform the benchmark
 results = benchmark(samplers,simulateSDT,Nd)
 
+#save results
+save(results)
+
 #pyplot()
 cd(pwd)
 dir = "results/"

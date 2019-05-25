@@ -52,6 +52,10 @@ Nreps = 100
 
 #perform the benchmark
 results = pbenchmark(samplers,simulateSDT,Nd,Nreps)
+
+#save results
+save(results)
+
 #pyplot()
 dir = "results/"
 #Plot mean run time as a function of number of data points (Nd) for each sampler

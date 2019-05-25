@@ -3,9 +3,9 @@ module MCMCBenchmarks
 using Reexport
 
 @reexport using Revise,Turing,MCMCBenchmarks,CmdStan,StatsPlots
-@reexport using Statistics,DataFrames,Random,Parameters,DynamicHMC
-@reexport using LogDensityProblems, TransformVariables, MCMCDiagnostics
-@reexport using BenchmarkTools, AdvancedHMC, ForwardDiff,Distributed
+@reexport using Statistics,DataFrames,Random,Parameters,DynamicHMC,CSV
+@reexport using LogDensityProblems,TransformVariables, MCMCDiagnostics
+@reexport using BenchmarkTools, AdvancedHMC, ForwardDiff,Distributed,Dates
 
 include("plotting.jl")
 include("Utilities.jl")
@@ -322,5 +322,6 @@ export
   plotsummary,
   plotscatter,
   nptochain,
-  setprocs
+  setprocs,
+  save
 end # module

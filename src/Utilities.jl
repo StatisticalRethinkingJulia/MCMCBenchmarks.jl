@@ -47,3 +47,14 @@ function setprocs(n)
     m = max(n-np,0)
     addprocs(m)
 end
+
+function save(results,ProjDir)
+    str = string(round(now(),Dates.Minute))
+    str = replace(str,"-"=>"_")
+    str = replace(str,":"=>"_")
+    dir = string(ProjDir,"/results")
+    !isdir(dir) ? mkdir(dir) : nothing
+    newdir = dir*"/"*str
+    mkdir(newdir)
+    CSV.write(newdir*"/results.csv",results)
+end

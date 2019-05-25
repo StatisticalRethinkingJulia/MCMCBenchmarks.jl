@@ -53,6 +53,10 @@ Nreps = 5
 
 #perform the benchmark
 results = pbenchmark(samplers,GaussianGen,Nd,Nreps)
+
+#save results
+save(results)
+
 #pyplot()
 dir = "results/"
 #Plot mean run time as a function of number of data points (Nd) for each sampler
