@@ -41,3 +41,9 @@ function getnames(post)
     end
     return parm_names
 end
+
+function setprocs(n)
+    np = nprocs()-1
+    m = max(n-np,0)
+    addprocs(m)
+end

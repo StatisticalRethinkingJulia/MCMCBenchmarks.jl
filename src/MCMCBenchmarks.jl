@@ -321,5 +321,6 @@ export
   plotdensity,
   plotsummary,
   plotscatter,
-  nptochain
+  nptochain,
+  setprocs
 end # module

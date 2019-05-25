@@ -1,21 +1,33 @@
-using Distributed
-addprocs(4)
+using MCMCBenchmarks, Distributed
+
+setprocs(4)
+
+ProjDir = @__DIR__
+cd(ProjDir)
+
+isdir("tmp") && rm("tmp", recursive=true)
+mkdir("tmp")
+!isdir("results") && mkdir("results")
+
 @everywhere begin
   using MCMCBenchmarks
   #Model and configuration patterns for each sampler are located in a
   #seperate model file.
-  include("../../Models/Gaussian/Gaussian_Models.jl")
+  include(joinpath(pathof(MCMCBenchmarks), "../../Models/Gaussian/Gaussian_Models.jl"))
   #load benchmarking configuration
-  include("../../benchmark_configurations/Vary_Data_size.jl")
+  include(joinpath(pathof(MCMCBenchmarks), "../../benchmark_configurations/Vary_Data_size.jl"))
 end
+
 #run this on primary processor to create tmp folder
-include("../../Models/Gaussian/Gaussian_Models.jl")
+include(joinpath(pathof(MCMCBenchmarks),
+  "../../Models/Gaussian/Gaussian_Models.jl"))
+include(joinpath(pathof(MCMCBenchmarks),
+  "../../benchmark_configurations/Vary_Data_size.jl"))
+
+
 setSeeds!(545484,54841,844841,18377)
 
 @everywhere Turing.turnprogress(false)
-
-ProjDir = @__DIR__
-cd(ProjDir)
 
 stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
 #Initialize model files for each instance of stan
@@ -34,15 +46,14 @@ samplers=(
   #DNNUTS(DNGaussian,DNconfig))
 
 #Number of data points
-Nd = [10,100,1000]
+Nd = [10, 20]
 
 #Number of simulations
-Nreps = 50
+Nreps = 5
 
 #perform the benchmark
 results = pbenchmark(samplers,GaussianGen,Nd,Nreps)
 #pyplot()
-cd(pwd)
 dir = "results/"
 #Plot mean run time as a function of number of data points (Nd) for each sampler
 summaryPlots = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir)
