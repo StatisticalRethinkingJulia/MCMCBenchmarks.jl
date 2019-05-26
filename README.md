@@ -38,14 +38,14 @@ The table below provides a working list of test models that will be included in 
 
 ## Preliminary Results
 
-In the links below, you will find preliminary results for a simple Gaussian model. 
+Below, we report preliminary benchmark results, comparing CmdStan, DynamicHMC and AdvancedHMC/Turing using the Gaussian Model. In the benchmark, we varied the data sample size (Nd) across the values 10, 100 and 1,000 and repeated the benchmark 100 times.  
 
-[Performance comparison on sample size](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Gaussian/results/Mean%20Time.pdf)
+[Comparison of run time](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Gaussian/results/summary_time.pdf)
 
-[Performance distribution on sample size](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Gaussian/results/Time%20Dist.pdf)
+[Comparison of memory allocations](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Gaussian/results/summary_allocations.pdf)
 
-[Diagnostics comparison of estimated ess values ](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Gaussian/results/Mu%20ESS%20Dist.pdf)
+[Comparison of effective sample size distribution](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Gaussian/results/density_mu_ess.pdf)
 
-[Diagnostics comparison of rhat estimates ](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Gaussian/results/Mu%20rhat%20Dist.pdf)
+[Comparison of r_hat distribution](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Gaussian/results/density_mu_r_hat.pdf)
 
-[Diagnostics comparison leapfrog stepsizes ](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Gaussian/results/Mu%20Epsilon%20Scatter.pdf)
+[Relationship between effective sample size and epsilon](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Gaussian/results/scatter_epsilon_mu_ess.pdf)
