@@ -2,7 +2,7 @@ module MCMCBenchmarks
 
 using Reexport
 
-@reexport using Revise,Turing,MCMCBenchmarks,CmdStan,StatsPlots
+@reexport using Revise,Turing,MCMCBenchmarks,CmdStan,StatsPlots,Pkg
 @reexport using Statistics,DataFrames,Random,Parameters,DynamicHMC,CSV
 @reexport using LogDensityProblems,TransformVariables, MCMCDiagnostics
 @reexport using BenchmarkTools, AdvancedHMC, ForwardDiff,Distributed,Dates

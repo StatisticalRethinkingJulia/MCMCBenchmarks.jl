@@ -1,3 +1,4 @@
+using Base.Sys
 """
 Convert DynamcHMC samples to a chain
 * `posterior`: an array of NamedTuple consisting of mcmcm samples
@@ -57,4 +58,19 @@ function save(results,ProjDir)
     newdir = dir*"/"*str
     mkdir(newdir)
     CSV.write(newdir*"/results.csv",results)
+    metadata = getMetadata()
+    CSV.write(newdir*"/metadata.csv",metadata)
+end
+
+function getMetadata()
+    dict = Pkg.installed()
+    df = DataFrame()
+    pkgs = [:CmdStan,:DynamicHMC,
+        :Turing,:AdvancedHMC]
+    map(x->df[x]=dict[string(x)],pkgs)
+    df[:julia] = VERSION
+    df[:os] = MACHINE
+    cpu = cpu_info()
+    df[:cpu] = cpu[1].model
+    return df
 end

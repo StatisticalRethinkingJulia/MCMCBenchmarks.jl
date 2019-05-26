@@ -48,7 +48,7 @@ CmdStanConfig = Stanmodel(name = "CmdStanGaussian",model=CmdStanGaussian,nchains
   function (problem::GaussianProb)(θ)
       @unpack y = problem   # extract the data
       @unpack mu, sigma = θ
-      loglikelihood(Normal(mu, sigma), y) + logpdf(Normal(0.1), mu) +
+      loglikelihood(Normal(mu, sigma), y) + logpdf(Normal(0,1), mu) +
       logpdf(Truncated(Cauchy(0,5),0,Inf), sigma)
   end;
 
