@@ -33,6 +33,9 @@ Nreps = 50
 #perform the benchmark
 results = benchmark(samplers,GaussianGen,Nd, Nreps)
 
+#save results
+save(results,ProjDir)
+
 #pyplot()
 cd(pwd)
 dir = "results/"

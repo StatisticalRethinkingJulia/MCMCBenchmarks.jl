@@ -46,16 +46,16 @@ samplers=(
   #DNNUTS(DNGaussian,DNconfig))
 
 #Number of data points
-Nd = [10, 20]
+Nd = [10,100,1000]
 
 #Number of simulations
-Nreps = 5
+Nreps = 100
 
 #perform the benchmark
 results = pbenchmark(samplers,GaussianGen,Nd,Nreps)
 
 #save results
-save(results)
+save(results,ProjDir)
 
 #pyplot()
 dir = "results/"

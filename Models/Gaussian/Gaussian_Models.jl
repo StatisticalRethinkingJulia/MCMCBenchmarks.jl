@@ -74,7 +74,7 @@ CmdStanConfig = Stanmodel(name = "CmdStanGaussian",model=CmdStanGaussian,nchains
     # Undo the transformation to obtain the posterior from the chain.
 
     posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));
-    chns = nptochain(posterior)
+    chns = nptochain(posterior,NUTS_tuned)
     return chns
   end
 

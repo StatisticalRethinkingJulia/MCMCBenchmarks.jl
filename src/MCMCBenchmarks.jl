@@ -176,7 +176,8 @@ function updateResults!(s::DHMCNUTS,performance,results;kwargs...)
     addColumns!(newDF,chain,df,:ess)
     addColumns!(newDF,chain,df,:r_hat)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
-    newDF[:epsilon]=missing
+    dfi=describe(chain,sections=[:internals])[1]
+    newDF[:epsilon]=dfi[:lf_eps, :mean][1]
     addPerformance!(newDF,performance)
     newDF[:sampler]=:DHMCNUTS
     addKW!(newDF;kwargs...)

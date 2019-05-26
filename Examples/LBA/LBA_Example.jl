@@ -32,7 +32,7 @@ Nreps = 50
 results = benchmark(samplers,simulateLBA,Nd,Nreps;Nsamples=3000)
 
 #save results
-save(results)
+save(results,ProjDir)
 
 #pyplot()
 cd(pwd)

@@ -28,7 +28,7 @@ Nreps = 100
 results = benchmark(samplers,simulateSDT,Nd)
 
 #save results
-save(results)
+save(results,ProjDir)
 
 #pyplot()
 cd(pwd)

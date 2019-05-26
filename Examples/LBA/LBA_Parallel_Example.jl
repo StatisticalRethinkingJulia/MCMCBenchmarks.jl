@@ -56,7 +56,7 @@ Nreps = 50
 results = pbenchmark(samplers,simulateLBA,Nd,Nreps)
 
 #save results
-save(results)
+save(results,ProjDir)
 
 #pyplot()
 dir = "results/"
