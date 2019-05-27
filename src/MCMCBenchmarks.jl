@@ -92,6 +92,35 @@ function benchmark!(sampler::T,results,simulate,Nreps=100;kwargs...) where {T<:M
 end
 
 """
+Runs the benchmarking procedure and returns the results
+
+* `samplers`: a tuple of samplers or a single sampler object
+* `simulate`: model simulation function with keyword Nd
+* `Nreps`: number of times the benchmark is repeated for each factor combination
+"""
+ function benchmark(samplers,simulate,Nreps=100;kwargs...)
+     results = DataFrame()
+     for p in Permutation(kwargs)
+         benchmark!(samplers,results,simulate,Nreps;p...)
+     end
+     return results
+ end
+
+ """
+ Runs the benchmarking procedure defined in benchmark in parallel and returns the results
+
+ * `samplers`: a tuple of samplers or a single sampler object
+ * `simulate`: model simulation function with keyword Nd
+ * `Nreps`: number of times the benchmark is repeated for each factor combination
+ """
+ function pbenchmark(samplers,simulate,Nreps=100;kwargs...)
+     pfun(rep) = benchmark(samplers,simulate,rep;kwargs...)
+     reps = setreps(Nreps)
+     presults = pmap(rep->pfun(rep),reps)
+     return vcat(presults...)
+ end
+
+"""
 Extracts model and configuration from sampler object and performs
 parameter estimation
 * 's': sampler object
@@ -269,38 +298,6 @@ function createName(p,col)
     return Symbol(string(p,"_",col))
 end
 
-function initStan(s)
-    base = string(s.dir,"/tmp/",s.model.name)
-    for p in procs()
-        stream = open(base*".stan","r")
-        str = read(stream,String)
-        close(stream)
-        stream = open(string(base,p,".stan"),"w")
-        write(stream,str)
-        close(stream)
-    end
-end
-
-function compileStanModel(s,fun)
-    data = fun(;Nd=1)
-    pmap(x->compile(s,data),procs())
-end
-
-function compile(s,data)
-    modifyConfig!(s;Nsamples=10,Nadapt=10,delta=.8)
-    runSampler(s,data)
-    return
-end
-
-function setreps(Nreps)
-    p = nprocs()-1
-    v = Int(floor(Nreps/p))
-    reps = fill(v,p)
-    r = mod(Nreps,p)
-    reps[1:r] .+= 1
-    return reps
-end
-
 export
   modifyConfig!,
   addColumns!,
@@ -314,6 +311,8 @@ export
   updateResults!,
   runSampler,
   benchmark!,
+  benchmark,
+  pbenchmark,
   MCMCSampler,
   AHMCNUTS,
   CmdStanNUTS,

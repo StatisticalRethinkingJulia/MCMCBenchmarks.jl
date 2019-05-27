@@ -15,16 +15,16 @@ path = pathof(MCMCBenchmarks)
   #seperate model file.
   include(joinpath($path, "../../Models/SDT/SDT.jl"))
   include(joinpath($path, "../../Models/SDT/SDT_Functions.jl"))
-  #load benchmarking configuration
-  include(joinpath($path, "../../benchmark_configurations/Vary_Data_size.jl"))
 end
 
 include(joinpath(path, "../../Models/SDT/SDT.jl"))
 include(joinpath(path, "../../Models/SDT/SDT_Functions.jl"))
-#load benchmarking configuration
-include(joinpath(path, "../../benchmark_configurations/Vary_Data_size.jl"))
 
-setSeeds!(545484,54841,844841,18377)
+#set seeds on each processor
+seeds = (939388,39884,28484,495858,544443)
+for (i,seed) in enumerate(seeds)
+    @fetch @spawnat i Random.seed!(seed)
+end
 
 @everywhere Turing.turnprogress(false)
 
@@ -50,8 +50,9 @@ Nd = [10,50,100]
 #Number of simulations
 Nreps = 100
 
+options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 #perform the benchmark
-results = pbenchmark(samplers,simulateSDT,Nd,Nreps)
+results = pbenchmark(samplers,simulateSDT,Nreps;options...)
 
 #save results
 save(results)

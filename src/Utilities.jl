@@ -75,6 +75,9 @@ function getMetadata()
     return df
 end
 
+"""
+Iterates over all permutations of factors in the benchmark simulation.
+"""
 mutable struct Permutation{T1,T2,T3,T4}
     a::T1
     names::T2
@@ -86,16 +89,6 @@ end
 function Permutation(kwargs)
     names = kwargs.itr
     a = values(kwargs.data)
-    idx = fill(1,length(a))
-    N = length.(a)
-    v = [i[1] for i in a]
-    start = NamedTuple{names}(v)
-    return Permutation(a,names,idx,N,start)
-end
-
-function Permutation(kwargs::T) where {T<:NamedTuple}
-    names = keys(kwargs)
-    a = values(kwargs)
     idx = fill(1,length(a))
     N = length.(a)
     v = [i[1] for i in a]
@@ -126,4 +119,36 @@ function Base.iterate(p::Permutation,state=(p.start,0))
     v = [a[i][j] for (i,j) in enumerate(idx)]
     newVal = NamedTuple{names}(v)
     return (element,(newVal,count))
+end
+
+function initStan(s)
+    base = string(s.dir,"/tmp/",s.model.name)
+    for p in procs()
+        stream = open(base*".stan","r")
+        str = read(stream,String)
+        close(stream)
+        stream = open(string(base,p,".stan"),"w")
+        write(stream,str)
+        close(stream)
+    end
+end
+
+function compileStanModel(s,fun)
+    data = fun(;Nd=1)
+    pmap(x->compile(s,data),procs())
+end
+
+function compile(s,data)
+    modifyConfig!(s;Nsamples=10,Nadapt=10,delta=.8)
+    runSampler(s,data)
+    return
+end
+
+function setreps(Nreps)
+    p = nprocs()-1
+    v = Int(floor(Nreps/p))
+    reps = fill(v,p)
+    r = mod(Nreps,p)
+    reps[1:r] .+= 1
+    return reps
 end

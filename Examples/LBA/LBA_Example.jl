@@ -6,8 +6,6 @@ using Revise,MCMCBenchmarks
 Turing.turnprogress(false)
 include("../../Models/LBA/LBA_Models.jl")
 include("../../Models/LBA/LinearBallisticAccumulator.jl")
-#load benchmarking configuration
-include("../../benchmark_configurations/Vary_Data_size.jl")
 
 Random.seed!(55115805)
 
@@ -28,8 +26,9 @@ Nd = [10, 50, 200]
 #Number of simulations
 Nreps = 50
 
+options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 #perform the benchmark
-results = benchmark(samplers,simulateLBA,Nd,Nreps;Nsamples=3000)
+results = benchmark(samplers,simulateLBA,Nreps;options...)
 
 #save results
 save(results,ProjDir)

@@ -1,4 +1,4 @@
-using MCMCBenchmarks, Distributed
+using MCMCBenchmarks,Distributed
 
 setprocs(4)
 
@@ -14,18 +14,17 @@ path = pathof(MCMCBenchmarks)
   #Model and configuration patterns for each sampler are located in a
   #seperate model file.
   include(joinpath($path, "../../Models/Gaussian/Gaussian_Models.jl"))
-  #load benchmarking configuration
-  include(joinpath($path, "../../benchmark_configurations/Vary_Data_size.jl"))
 end
 
 #run this on primary processor to create tmp folder
 include(joinpath(path,
   "../../Models/Gaussian/Gaussian_Models.jl"))
-include(joinpath(path,
-  "../../benchmark_configurations/Vary_Data_size.jl"))
 
-
-setSeeds!(545484,54841,844841,18377)
+#set seeds on each processor
+seeds = (939388,39884,28484,495858,544443)
+for (i,seed) in enumerate(seeds)
+    @fetch @spawnat i Random.seed!(seed)
+end
 
 @everywhere Turing.turnprogress(false)
 
@@ -59,7 +58,7 @@ results = pbenchmark(samplers,GaussianGen,Nreps;options...)
 save(results,ProjDir)
 
 pyplot()
-dir = "results1/"
+dir = "results/"
 #Plot mean run time as a function of number of data points (Nd) for each sampler
 meantimePlot = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir)
 

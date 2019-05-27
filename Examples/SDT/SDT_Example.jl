@@ -4,8 +4,7 @@ using MCMCBenchmarks
 #seperate model file.
 include("../../Models/SDT/SDT.jl")
 include("../../Models/SDT/SDT_Functions.jl")
-#load benchmarking configuration
-include("../../benchmark_configurations/Vary_Data_size.jl")
+
 Random.seed!(31854025)
 
 turnprogress(false)
@@ -24,8 +23,9 @@ Nd = [10,100,1000]
 #Number of simulations
 Nreps = 100
 
+options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 #perform the benchmark
-results = benchmark(samplers,simulateSDT,Nd)
+results = benchmark(samplers,simulateSDT,Nreps;options...)
 
 #save results
 save(results,ProjDir)

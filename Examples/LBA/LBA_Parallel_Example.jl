@@ -15,17 +15,17 @@ path = pathof(MCMCBenchmarks)
   #seperate model file.
   include(joinpath($path,"../../Models/LBA/LBA_Models.jl"))
   include(joinpath($path,"../../Models/LBA/LinearBallisticAccumulator.jl"))
-  #load benchmarking configuration
-  include(joinpath($path, "../../benchmark_configurations/Vary_Data_size.jl"))
 end
 
 #run this on primary processor to create tmp folder
 include(joinpath(path,"../../Models/LBA/LBA_Models.jl"))
 include(joinpath(path,"../../Models/LBA/LinearBallisticAccumulator.jl"))
-#load benchmarking configuration
-include(joinpath(path, "../../benchmark_configurations/Vary_Data_size.jl"))
 
-setSeeds!(8945205,112585,650054,5502)
+#set seeds on each processor
+seeds = (939388,39884,28484,495858,544443)
+for (i,seed) in enumerate(seeds)
+    @fetch @spawnat i Random.seed!(seed)
+end
 
 @everywhere Turing.turnprogress(false)
 
@@ -52,8 +52,9 @@ Nd = [10,20,50]
 #Number of simulations
 Nreps = 50
 
+options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 #perform the benchmark
-results = pbenchmark(samplers,simulateLBA,Nd,Nreps)
+results = pbenchmark(samplers,simulateLBA,Nreps;options...)
 
 #save results
 save(results,ProjDir)
