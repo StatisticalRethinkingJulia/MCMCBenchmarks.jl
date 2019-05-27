@@ -13,10 +13,10 @@ uuid = "79e6a3ab-5dfb-504d-930d-738a2a938a0e"
 version = "0.4.2"
 
 [[AdvancedHMC]]
-deps = ["InplaceOps", "LazyArrays", "LinearAlgebra", "Random", "Statistics", "StatsBase"]
-git-tree-sha1 = "cbc23b9e71eaa4d792ee08da0012fa45a6c5fb3e"
+deps = ["ArgCheck", "InplaceOps", "LazyArrays", "LinearAlgebra", "Parameters", "ProgressMeter", "Random", "Statistics", "StatsBase"]
+git-tree-sha1 = "150c355891d952e563d3d5ec6edfb9f83aec0ef8"
 uuid = "0bf59076-c3b1-5ca4-86bd-e02cd72cde3d"
-version = "0.1.5"
+version = "0.1.6"
 
 [[ArgCheck]]
 deps = ["Random"]
@@ -77,9 +77,9 @@ version = "0.5.2"
 
 [[CSV]]
 deps = ["CategoricalArrays", "DataFrames", "Dates", "Mmap", "Parsers", "PooledArrays", "Profile", "Tables", "Unicode", "WeakRefStrings"]
-git-tree-sha1 = "557a6b534b1ffc40abf7ddf1c4dec3b37ef05959"
+git-tree-sha1 = "239240112fc5f18fb934942a5b6f207a8f9e45d2"
 uuid = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
-version = "0.5.4"
+version = "0.5.5"
 
 [[Calculus]]
 deps = ["Compat"]
@@ -187,9 +187,9 @@ uuid = "8bb1440f-4735-579b-a4ab-409b98df4dab"
 
 [[DiffEqDiffTools]]
 deps = ["LinearAlgebra"]
-git-tree-sha1 = "8af3031742111fe1214d1357b87c8f0f10746797"
+git-tree-sha1 = "07991282c76bcd9331f96f786acbeb1775f1f8d5"
 uuid = "01453d9d-ee7c-5054-8395-0335cb756afa"
-version = "0.9.0"
+version = "0.10.0"
 
 [[DiffResults]]
 deps = ["Compat", "StaticArrays"]
@@ -232,10 +232,10 @@ uuid = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 version = "0.22.4"
 
 [[DynamicHMC]]
-deps = ["ArgCheck", "DataStructures", "DocStringExtensions", "LinearAlgebra", "LogDensityProblems", "Parameters", "Random", "Statistics", "StatsFuns", "Test", "TransformVariables"]
-git-tree-sha1 = "f9c9e6e703afccb02a1179e4886c97134ff20b55"
+deps = ["ArgCheck", "DataStructures", "DocStringExtensions", "LinearAlgebra", "LogDensityProblems", "Parameters", "Random", "Statistics", "StatsFuns", "TransformVariables"]
+git-tree-sha1 = "b1a272a63eebb2b58f5e370f243991244a52aa28"
 uuid = "bbc10e6e-7c05-544b-b16e-64fede858acb"
-version = "1.0.4"
+version = "1.0.5"
 
 [[FFTW]]
 deps = ["AbstractFFTs", "BinaryProvider", "Compat", "Conda", "Libdl", "LinearAlgebra", "Reexport", "Test"]
@@ -600,9 +600,9 @@ version = "0.5.2"
 
 [[Revise]]
 deps = ["CodeTracking", "Distributed", "FileWatching", "JuliaInterpreter", "LibGit2", "LoweredCodeUtils", "OrderedCollections", "Pkg", "REPL", "UUIDs", "Unicode"]
-git-tree-sha1 = "f4cd86477685d5095f8cbce2a47f69ae9cf5c963"
+git-tree-sha1 = "0148fc4b3392778e09eb75c4971ce75424acd1d1"
 uuid = "295af30f-e4ad-537b-8983-00126c2a3abe"
-version = "2.1.4"
+version = "2.1.5"
 
 [[Rmath]]
 deps = ["BinaryProvider", "Libdl", "Random", "Statistics", "Test"]
