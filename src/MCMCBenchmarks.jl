@@ -77,7 +77,7 @@ function benchmark!(samplers,results,simulate,Nreps=100;kwargs...)
           modifyConfig!(s;kwargs...)
           println("\nSampler: $(typeof(s))")
           println("Simulation: $simulate")
-          println("No of obs: $(kwargs[1])")
+          #println("No of obs: $(kwargs[1])")
           println("Repetition: $rep of $Nreps\n")
           performance = @timed runSampler(s,data;kwargs...)
           allowmissing!(results)
@@ -324,5 +324,6 @@ export
   plotscatter,
   nptochain,
   setprocs,
-  save
+  save,
+  Permutation
 end # module

@@ -25,18 +25,19 @@ samplers=(
   #DNNUTS(DNGaussian,DNconfig))
 
 #Number of data points
-Nd = [10, 100, 1000, 2000]
+Nd = [10, 100, 1000]
 
 #Number of simulations
 Nreps = 50
 
+options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 #perform the benchmark
-results = benchmark(samplers,GaussianGen,Nd, Nreps)
+results = benchmark(samplers,GaussianGen,Nreps;options...)
 
 #save results
 save(results,ProjDir)
 
-#pyplot()
+pyplot()
 cd(pwd)
 dir = "results/"
 #Plot mean run time as a function of number of data points (Nd) for each sampler
