@@ -181,7 +181,7 @@ function sampleDHMC(data,N,Nc,nsamples)
     chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P,nsamples,report=ReportSilent());
     # Undo the transformation to obtain the posterior from the chain.
     posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));
-    chns = nptochain(posterior)
+    chns = nptochain(posterior,NUTS_tuned)
     return chns
 end
 
