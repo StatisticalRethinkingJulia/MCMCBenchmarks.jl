@@ -70,25 +70,26 @@ and records the results.
 * `kwargs`: optional keyword arguments that are passed to modifyConfig!, updateResults! and
 runSampler, providing flexibility in benchmark simulations.
 """
-function benchmark!(samplers,results,simulate,Nreps=100;kwargs...)
+function benchmark!(samplers,results,simulate,Nreps,chains;kwargs...)
     for rep in 1:Nreps
       data = simulate(;kwargs...)
       for s in samplers
           modifyConfig!(s;kwargs...)
           println("\nSampler: $(typeof(s))")
           println("Simulation: $simulate")
-          #println("No of obs: $(kwargs[1])")
           println("Repetition: $rep of $Nreps\n")
+          foreach(x->println(x),kwargs)
           performance = @timed runSampler(s,data;kwargs...)
           allowmissing!(results)
           updateResults!(s,performance,results;kwargs...)
+          savechain!(s,chains,performance;kwargs...)
       end
     end
     return results
 end
 
-function benchmark!(sampler::T,results,simulate,Nreps=100;kwargs...) where {T<:MCMCSampler}
-    return benchmark!((sampler,),results,simulate,Nreps;kwargs...)
+function benchmark!(sampler::T,results,simulate,Nreps,chains;kwargs...) where {T<:MCMCSampler}
+    return benchmark!((sampler,),results,simulate,Nreps,chains;kwargs...)
 end
 
 """
@@ -98,10 +99,10 @@ Runs the benchmarking procedure and returns the results
 * `simulate`: model simulation function with keyword Nd
 * `Nreps`: number of times the benchmark is repeated for each factor combination
 """
- function benchmark(samplers,simulate,Nreps=100;kwargs...)
+ function benchmark(samplers,simulate,Nreps,chains=();kwargs...)
      results = DataFrame()
      for p in Permutation(kwargs)
-         benchmark!(samplers,results,simulate,Nreps;p...)
+         benchmark!(samplers,results,simulate,Nreps,chains;p...)
      end
      return results
  end
@@ -113,8 +114,8 @@ Runs the benchmarking procedure and returns the results
  * `simulate`: model simulation function with keyword Nd
  * `Nreps`: number of times the benchmark is repeated for each factor combination
  """
- function pbenchmark(samplers,simulate,Nreps=100;kwargs...)
-     pfun(rep) = benchmark(samplers,simulate,rep;kwargs...)
+ function pbenchmark(samplers,simulate,Nreps;kwargs...)
+     pfun(rep) = benchmark(samplers,simulate,rep,chains;kwargs...)
      reps = setreps(Nreps)
      presults = pmap(rep->pfun(rep),reps)
      return vcat(presults...)
@@ -162,7 +163,7 @@ function updateResults!(s::AHMCNUTS,performance,results;kwargs...)
     dfi=describe(chain,sections=[:internals])[1]
     newDF[:epsilon]=dfi[:lf_eps, :mean][1]
     addPerformance!(newDF,performance)
-    newDF[:sampler]=:AHMCNUTS
+    newDF[:sampler]= gettype(s)
     addKW!(newDF;kwargs...)
     append!(results,newDF)
 end
@@ -177,7 +178,7 @@ function updateResults!(s::CmdStanNUTS,performance,results;kwargs...)
     dfi=describe(chain,sections=[:internals])[1]
     newDF[:epsilon]=dfi[:stepsize__, :mean][1]
     addPerformance!(newDF,performance)
-    newDF[:sampler]=:CmdStanNUTS
+    newDF[:sampler]= gettype(s)
     addKW!(newDF;kwargs...)
     append!(results,newDF)
 end
@@ -192,7 +193,7 @@ function updateResults!(s::DNNUTS,performance,results;kwargs...)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     newDF[:epsilon]=missing
     addPerformance!(newDF,performance)
-    newDF[:sampler]=:DNNUTS
+    newDF[:sampler]= gettype(s)
     addKW!(newDF;kwargs...)
     append!(results,newDF)
 end
@@ -208,7 +209,7 @@ function updateResults!(s::DHMCNUTS,performance,results;kwargs...)
     dfi=describe(chain,sections=[:internals])[1]
     newDF[:epsilon]=dfi[:lf_eps, :mean][1]
     addPerformance!(newDF,performance)
-    newDF[:sampler]=:DHMCNUTS
+    newDF[:sampler]= gettype(s)
     addKW!(newDF;kwargs...)
     append!(results,newDF)
 end
@@ -235,7 +236,6 @@ function addPerformance!(df,p)
     df[:gcpercent] = p[4]/p[2]
     df[:allocations] = p[5].poolalloc + p[5].malloc
 end
-
 
 """
 Modifies MCMC sampler configuration outside of runSampler
@@ -271,6 +271,13 @@ function removeBurnin(chn;Nadapt,kwargs...)
     return chn[(Nadapt+1):end,:,:]
 end
 
+function savechain!(s,chains,performance;savechain=false,kwargs...)
+    if savechain
+        k = gettype(s)
+        push!(chains[k],performance[1])
+    end
+end
+
 """
 adds columns to newDF for each parameter.
 * `newDF`: dataframe that collects results on an iteration
@@ -296,6 +303,34 @@ function createName(p,col)
         p = string(s[1],"[",s[2],"]")
     end
     return Symbol(string(p,"_",col))
+end
+
+function gettype(s)
+    return Symbol(typeof(s).name)
+end
+
+initChains(s::T) where {T<:MCMCSampler} = initChains((s,))
+
+"""
+Initializes NamedTuple of chains
+* s: sampler object
+"""
+function initChains(s)
+    names = gettype.(s)
+    v = map(x->Chains[],1:length(s))
+    return NamedTuple{names}(v)
+end
+
+function importModels(folder,models...)
+    for m in models
+        include(folder*"/"*m*".jl")
+    end
+end
+
+function importModels(folder)
+    files = readdir(folder)
+    filter!(x->occursin(".jl",x),x)
+    importModels(".jl",files...)
 end
 
 export
@@ -324,5 +359,6 @@ export
   nptochain,
   setprocs,
   save,
-  Permutation
+  Permutation,
+  initChains
 end # module
