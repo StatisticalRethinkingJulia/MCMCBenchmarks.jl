@@ -1,4 +1,3 @@
-using Distributed
 
 @model AHMCGaussian(y,N) = begin
     mu ~ Normal(0,1)

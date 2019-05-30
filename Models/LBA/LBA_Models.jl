@@ -175,8 +175,9 @@ function sampleDHMC(data,N,Nc,nsamples)
     problem_transformation(p::LBAProb) =
     as((v=as(Array,asℝ₊,Nc),A=asℝ₊,k=asℝ₊,tau=asℝ₊))
     # Use Flux for the gradient.
+
     P = TransformedLogDensity(problem_transformation(p), p)
-    ∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P));
+    ∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P))
     # FSample from the posterior.
     n = dimension(problem_transformation(p))
     chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, nsamples; 

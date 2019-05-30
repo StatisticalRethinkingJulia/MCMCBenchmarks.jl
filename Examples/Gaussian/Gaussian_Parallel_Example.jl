@@ -48,7 +48,7 @@ samplers=(
 Nd = [10, 100, 1000]
 
 #Number of simulations
-Nreps = 100
+Nreps = 50
 
 options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 #perform the benchmark
