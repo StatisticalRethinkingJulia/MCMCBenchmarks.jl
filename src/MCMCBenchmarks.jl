@@ -159,6 +159,7 @@ function updateResults!(s::AHMCNUTS,performance,results;kwargs...)
     df = describe(chain)[1].df
     addColumns!(newDF,chain,df,:ess)
     addColumns!(newDF,chain,df,:r_hat)
+    addESStime!(newDF,chain,df,performance)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     dfi=describe(chain,sections=[:internals])[1]
     newDF[:epsilon]=dfi[:lf_eps, :mean][1]
@@ -174,6 +175,7 @@ function updateResults!(s::CmdStanNUTS,performance,results;kwargs...)
     df = describe(chain)[1].df
     addColumns!(newDF,chain,df,:ess)
     addColumns!(newDF,chain,df,:r_hat)
+    addESStime!(newDF,chain,df,performance)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     dfi=describe(chain,sections=[:internals])[1]
     newDF[:epsilon]=dfi[:stepsize__, :mean][1]
@@ -190,6 +192,7 @@ function updateResults!(s::DNNUTS,performance,results;kwargs...)
     df = describe(chain)[1].df
     addColumns!(newDF,chain,df,:ess)
     addColumns!(newDF,chain,df,:r_hat)
+    addESStime!(newDF,chain,df,performance)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     newDF[:epsilon]=missing
     addPerformance!(newDF,performance)
@@ -205,6 +208,7 @@ function updateResults!(s::DHMCNUTS,performance,results;kwargs...)
     df = describe(chain)[1].df
     addColumns!(newDF,chain,df,:ess)
     addColumns!(newDF,chain,df,:r_hat)
+    addESStime!(newDF,chain,df,performance)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     dfi=describe(chain,sections=[:internals])[1]
     newDF[:epsilon]=dfi[:lf_eps, :mean][1]
@@ -296,6 +300,17 @@ function addColumns!(newDF,chn,df,col)
         setindex!(newDF,v,colname)
     end
 end
+"""
+Effective Sample Size per second
+"""
+function addESStime!(newDF,chn,df,performance)
+    parms = sort!(chn.name_map.parameters)
+    values = getindex(df,:ess)/performance[2]
+    for (p,v) in zip(parms,values)
+        colname = createName(p)
+        setindex!(newDF,v,colname)
+    end
+end
 
 function createName(p,col)
     if occursin(".",p)
@@ -303,6 +318,14 @@ function createName(p,col)
         p = string(s[1],"[",s[2],"]")
     end
     return Symbol(string(p,"_",col))
+end
+
+function createName(p)
+    if occursin(".",p)
+        s = split(p,".")
+        p = string(s[1],"[",s[2],"]")
+    end
+    return Symbol(string(p,"_","ess_ps"))
 end
 
 function gettype(s)
