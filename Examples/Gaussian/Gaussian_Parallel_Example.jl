@@ -48,14 +48,11 @@ samplers=(
 Nd = [10, 100, 1000]
 
 #Number of simulations
-Nreps = 100
+Nreps = 50
 
-#Optionally save chains for debugging
-chains = initChains(samplers)
-
-options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,savechain=true)
+options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 #perform the benchmark
-results = pbenchmark(samplers,GaussianGen,Nreps,chains;options...)
+results = pbenchmark(samplers,GaussianGen,Nreps;options...)
 
 #save results
 save(results,ProjDir)
