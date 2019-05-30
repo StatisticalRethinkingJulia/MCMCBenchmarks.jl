@@ -158,7 +158,9 @@ function sampleDHMC(data,N,Nc,nsamples)
   #∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P))
   ∇P = ADgradient(:ForwardDiff, P)
   # FSample from the posterior.
-  chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P,nsamples)
+  n = dimension(problem_transformation(p))
+  chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, nsamples; 
+                                          q = zeros(n), p = ones(n))
   # Undo the transformation to obtain the posterior from the chain.
   posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));
   return (posterior, chain, NUTS_tuned)
@@ -170,8 +172,10 @@ end
 dist = LBA(ν=[1.0,1.5,2.0],A=.8,k=.2,τ=.4)
 N = 10
 Nc = 3
-data = rand(dist,N)
-posterior , chain, NUTS_tuned= sampleDHMC(data,N,Nc,2000)
+for i in 1:100
+  data = rand(dist,N)
+  posterior , chain, NUTS_tuned= sampleDHMC(data,N,Nc,2000)
+end
 
 # Effective sample sizes (of untransformed draws)
 
