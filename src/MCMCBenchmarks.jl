@@ -160,6 +160,8 @@ function updateResults!(s::AHMCNUTS,performance,results;kwargs...)
     addColumns!(newDF,chain,df,:ess)
     addColumns!(newDF,chain,df,:r_hat)
     addESStime!(newDF,chain,df,performance)
+    addHPD!(newDF,chain)
+    addMeans!(newDF,df)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     dfi=describe(chain,sections=[:internals])[1]
     newDF[:epsilon]=dfi[:lf_eps, :mean][1]
@@ -176,11 +178,13 @@ function updateResults!(s::CmdStanNUTS,performance,results;kwargs...)
     addColumns!(newDF,chain,df,:ess)
     addColumns!(newDF,chain,df,:r_hat)
     addESStime!(newDF,chain,df,performance)
+    addHPD!(newDF,chain)
+    addMeans!(newDF,df)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     dfi=describe(chain,sections=[:internals])[1]
     newDF[:epsilon]=dfi[:stepsize__, :mean][1]
     addPerformance!(newDF,performance)
-    newDF[:sampler]= gettype(s)
+    newDF[:sampler] = gettype(s)
     addKW!(newDF;kwargs...)
     append!(results,newDF)
 end
@@ -193,10 +197,12 @@ function updateResults!(s::DNNUTS,performance,results;kwargs...)
     addColumns!(newDF,chain,df,:ess)
     addColumns!(newDF,chain,df,:r_hat)
     addESStime!(newDF,chain,df,performance)
+    addHPD!(newDF,chain)
+    addMeans!(newDF,df)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     newDF[:epsilon]=missing
     addPerformance!(newDF,performance)
-    newDF[:sampler]= gettype(s)
+    newDF[:sampler] = gettype(s)
     addKW!(newDF;kwargs...)
     append!(results,newDF)
 end
@@ -209,11 +215,13 @@ function updateResults!(s::DHMCNUTS,performance,results;kwargs...)
     addColumns!(newDF,chain,df,:ess)
     addColumns!(newDF,chain,df,:r_hat)
     addESStime!(newDF,chain,df,performance)
+    addHPD!(newDF,chain)
+    addMeans!(newDF,df)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     dfi=describe(chain,sections=[:internals])[1]
     newDF[:epsilon]=dfi[:lf_eps, :mean][1]
     addPerformance!(newDF,performance)
-    newDF[:sampler]= gettype(s)
+    newDF[:sampler] = gettype(s)
     addKW!(newDF;kwargs...)
     append!(results,newDF)
 end
@@ -300,6 +308,7 @@ function addColumns!(newDF,chn,df,col)
         setindex!(newDF,v,colname)
     end
 end
+
 """
 Effective Sample Size per second
 """
@@ -307,7 +316,30 @@ function addESStime!(newDF,chn,df,performance)
     parms = sort!(chn.name_map.parameters)
     values = getindex(df,:ess)/performance[2]
     for (p,v) in zip(parms,values)
-        colname = createName(p)
+        colname = createName(p,"ess_ps")
+        setindex!(newDF,v,colname)
+    end
+end
+
+"""
+Add highest probability density interval for each parameter
+"""
+function addHPD!(newDF,chain)
+    h = hpd(chain)
+    for r in eachrow(h.df)
+        p,lb,ub = r
+        colname = createName(string(p),"hdp_lb")
+        setindex!(newDF,lb,colname)
+        colname = createName(string(p),"hdp_ub")
+        setindex!(newDF,ub,colname)
+    end
+end
+
+function addMeans!(newDF,df)
+    for r in eachrow(df)
+        p=r[:parameters]
+        v = r[:mean]
+        colname = createName(string(p),"mean")
         setindex!(newDF,v,colname)
     end
 end
@@ -318,14 +350,6 @@ function createName(p,col)
         p = string(s[1],"[",s[2],"]")
     end
     return Symbol(string(p,"_",col))
-end
-
-function createName(p)
-    if occursin(".",p)
-        s = split(p,".")
-        p = string(s[1],"[",s[2],"]")
-    end
-    return Symbol(string(p,"_","ess_ps"))
 end
 
 function gettype(s)
