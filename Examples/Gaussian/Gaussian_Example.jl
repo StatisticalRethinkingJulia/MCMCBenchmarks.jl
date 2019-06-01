@@ -38,7 +38,7 @@ samplers=(
 Nd = [10, 100, 1000]
 
 #Number of simulations
-Nreps = 50
+Nreps = 5
 
 options = (Nchains=Nchains,Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 
@@ -57,6 +57,9 @@ meantimePlot = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir)
 #Plot mean allocations as a function of number of data points (Nd) for each sampler
 meanallocPlot = plotsummary(results,:Nd,:allocations,(:sampler,);save=true,dir=dir,yscale=:log10,
   ylabel="Allocations (log scale)")
+
+#Plot mean ess per second of number of data points (Nd) for each sampler
+meanallocPlot = plotsummary(results,:Nd,:ess_ps,(:sampler,);save=true,dir=dir)
 
 #Plot density of effective sample size as function of number of data points (Nd) for each sampler
 essPlots = plotdensity(results,:ess,(:sampler,:Nd);save=true,dir=dir)

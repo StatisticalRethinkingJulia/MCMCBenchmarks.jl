@@ -132,21 +132,15 @@ function Base.iterate(p::Permutation,state=(p.start,0))
     return (element,(newVal,count))
 end
 
-function compileStanModel(s,fun)
+"""
+remove compile time from benchmarks 
+"""
+function compile(samplers,fun::F;kwargs...) where {F<:Function}
     data = fun(;Nd=1)
-    pmap(x->compile(s,data),procs())
+    map(s->compile(s,data;kwargs...),samplers)
 end
 
-function compile(s,data)
-    modifyConfig!(s;Nsamples=10,Nadapt=10,delta=.8)
-    runSampler(s,data)
-end
-
-function setreps(Nreps)
-    p = nprocs()-1
-    v = Int(floor(Nreps/p))
-    reps = fill(v,p)
-    r = mod(Nreps,p)
-    reps[1:r] .+= 1
-    return reps
+function compile(s,data;kwargs...)
+    modifyConfig!(s;kwargs...)
+    runSampler(s,data;kwargs...)
 end

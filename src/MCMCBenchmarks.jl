@@ -104,6 +104,7 @@ Runs the benchmarking procedure and returns the results
 """
  function benchmark(samplers,simulate,Nreps,chains=();kwargs...)
      results = DataFrame()
+     compile(samplers,simulate;kwargs...)
      for p in Permutation(kwargs)
          benchmark!(samplers,results,simulate,Nreps,chains;p...)
      end
