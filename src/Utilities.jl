@@ -63,16 +63,27 @@ function save(results,ProjDir)
 end
 
 function getMetadata()
-    dict = Pkg.installed()
+    path = getpath()
+    dict = TOML.parsefile(path)
     df = DataFrame()
     pkgs = [:CmdStan,:DynamicHMC,
         :Turing,:AdvancedHMC]
-    map(x->df[x]=dict[string(x)],pkgs)
+    map(p->df[p]=dict[string(p)][1]["version"],pkgs)
     df[:julia] = VERSION
     df[:os] = MACHINE
     cpu = cpu_info()
     df[:cpu] = cpu[1].model
     return df
+end
+
+function getpath()
+    userdir = expanduser("~")
+    str = split(string(VERSION),".")[1:end-1]
+    str1 = [str[s]*"." for s in 1:length(str)-1]
+    push!(str1,str[end])
+    version = string(str1...)
+    path = joinpath(userdir, string(".julia/environments/v",version,"/Manifest.toml"))
+    return path
 end
 
 """

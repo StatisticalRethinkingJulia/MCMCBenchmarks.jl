@@ -6,6 +6,9 @@ using Reexport
 @reexport using Statistics,DataFrames,Random,Parameters,DynamicHMC,CSV
 @reexport using LogDensityProblems,TransformVariables, MCMCDiagnostics
 @reexport using BenchmarkTools, AdvancedHMC, ForwardDiff,Distributed,Dates
+#Pkg.clone("https://github.com/wildart/TOML.jl")
+Pkg.add(PackageSpec(url="https://github.com/wildart/TOML.jl"))
+using TOML
 
 include("plotting.jl")
 include("Utilities.jl")
