@@ -236,7 +236,7 @@ Adds performance metrics to benchmark results
 """
 function addPerformance!(df,p)
     df[:time] = p[2]
-    df[:megabytes] = p[3]/10e6
+    df[:megabytes] = p[3]/1e6
     df[:gctime] = p[4]
     df[:gcpercent] = p[4]/p[2]
     df[:allocations] = p[5].poolalloc + p[5].malloc
