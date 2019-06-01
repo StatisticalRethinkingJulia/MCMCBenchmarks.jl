@@ -132,18 +132,6 @@ function Base.iterate(p::Permutation,state=(p.start,0))
     return (element,(newVal,count))
 end
 
-function initStan(s)
-    base = string(s.dir,"/tmp/",s.model.name)
-    for p in procs()
-        stream = open(base*".stan","r")
-        str = read(stream,String)
-        close(stream)
-        stream = open(string(base,p,".stan"),"w")
-        write(stream,str)
-        close(stream)
-    end
-end
-
 function compileStanModel(s,fun)
     data = fun(;Nd=1)
     pmap(x->compile(s,data),procs())
@@ -152,7 +140,6 @@ end
 function compile(s,data)
     modifyConfig!(s;Nsamples=10,Nadapt=10,delta=.8)
     runSampler(s,data)
-    return
 end
 
 function setreps(Nreps)

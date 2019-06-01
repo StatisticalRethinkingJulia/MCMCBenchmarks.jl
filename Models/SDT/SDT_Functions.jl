@@ -19,11 +19,3 @@ function logpdf(d::SDT,hits,fas,Nd)
 end
 
 pdf(d::SDT,data::Vector{Int64}) = exp(logpdf(d,data...))
-
-function benchmark(samplers,simulate,Nd,Nreps=100)
-    results = DataFrame()
-    for nd in Nd
-        benchmark!(samplers,results,simulate,Nreps;Nd=nd,Nsamples=2000,Nadapt=1000,delta=.8)
-    end
-    return results
-end
