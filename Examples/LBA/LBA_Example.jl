@@ -1,13 +1,28 @@
-using Revise,MCMCBenchmarks
+using MCMCBenchmarks,Distributed
+Nchains=4
+setprocs(Nchains)
 
-#Model and configuration patterns for each sampler are located in a
-#seperate model file.
+ProjDir = @__DIR__
+cd(ProjDir)
 
-Turing.turnprogress(false)
-include("../../Models/LBA/LBA_Models.jl")
-include("../../Models/LBA/LinearBallisticAccumulator.jl")
+path = pathof(MCMCBenchmarks)
+@everywhere begin
+  using MCMCBenchmarks
+  #Model and configuration patterns for each sampler are located in a
+  #seperate model file.
+  include(joinpath($path, "../../Models/LBA/LBA_Models.jl"))
+  include(joinpath($path, "../../Models/LBA/LinearBallisticAccumulator.jl"))
+end
 
-Random.seed!(55115805)
+#run this on primary processor to create tmp folder
+include(joinpath(path, "../../Models/LBA/LBA_Models.jl"))
+
+@everywhere turnprogress(false)
+#set seeds on each processor
+seeds = (939388,39884,28484,495858,544443)
+for (i,seed) in enumerate(seeds)
+    @fetch @spawnat i Random.seed!(seed)
+end
 
 ProjDir = @__DIR__
 cd(ProjDir)
@@ -26,7 +41,8 @@ Nd = [10, 50, 200]
 #Number of simulations
 Nreps = 50
 
-options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
+options = (Nchains=Nchains,Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
+
 #perform the benchmark
 results = benchmark(samplers,simulateLBA,Nreps;options...)
 
