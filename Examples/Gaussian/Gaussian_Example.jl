@@ -38,7 +38,7 @@ samplers=(
 Nd = [10, 100, 1000]
 
 #Number of simulations
-Nreps = 5
+Nreps = 100
 
 options = (Nchains=Nchains,Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 
@@ -51,6 +51,10 @@ save(results,ProjDir)
 pyplot()
 cd(pwd)
 dir = "results/"
+
+#Plot parameter recovery
+recoveryPlots = plotrecovery(results,(mu=0,sigma=1),(:sampler,:Nd);save=true,dir=dir)
+
 #Plot mean run time as a function of number of data points (Nd) for each sampler
 meantimePlot = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir)
 

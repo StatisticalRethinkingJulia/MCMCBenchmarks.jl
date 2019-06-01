@@ -396,6 +396,7 @@ export
   plotdensity,
   plotsummary,
   plotscatter,
+  plotrecovery,
   nptochain,
   setprocs,
   save,

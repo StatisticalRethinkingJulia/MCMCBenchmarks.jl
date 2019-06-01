@@ -96,3 +96,32 @@ function plotscatter(df::DataFrame,xvar::Symbol,metric::Symbol,group=(:sampler,)
     end
     return plots
 end
+
+"""
+Generate plot to assess parameter recovery
+* `df`: dataframe of results
+* `parms`: namedtuple of parameter names and true values
+* `group`: a tuple of grouping factors, e.g. (:sampler,:Nd)
+* `save`: save=true saves each plot
+* `figfmt`: figure format
+* func: a function used to summarize results. Default mean
+* `dir`: directory of saved plot. Default pwd.
+"""
+function plotrecovery(df::DataFrame,parms,group=(:sampler,);save=false,
+    figfmt="pdf",dir="",options...)
+    plots = Plots.Plot[]
+    layout = SetLayout(df,group)
+    grouping = map(x->df[x],group)
+    for (parm,v) in pairs(parms)
+        μ = df[Symbol(string(parm,"_mean"))]
+        lb = μ .- df[Symbol(string(parm,"_hdp_lb"))]
+        ub = df[Symbol(string(parm,"_hdp_ub"))] .- μ
+        p=scatter(μ,group=grouping,grid=false,ylabel=string(parm),layout=layout,
+            leg=false,yerror=(lb,ub),width=1.5;options...)
+        cnt = 0
+        [hline!(p,[v],subplot=cnt+=1) for i in 1:layout[1] for j in 1:layout[2]]
+        push!(plots,p)
+        save ? savefig(p,string(dir,"recovery_",p,".",figfmt)) : nothing
+    end
+    return plots
+end
