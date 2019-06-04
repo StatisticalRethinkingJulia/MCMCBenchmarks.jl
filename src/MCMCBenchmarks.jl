@@ -2,10 +2,10 @@ module MCMCBenchmarks
 
 using Reexport
 
-@reexport using Revise,Turing,MCMCBenchmarks,CmdStan,StatsPlots,Pkg
-@reexport using Statistics,DataFrames,Random,Parameters,DynamicHMC,CSV
-@reexport using LogDensityProblems,TransformVariables, MCMCDiagnostics
-@reexport using BenchmarkTools, AdvancedHMC, ForwardDiff,Distributed,Dates
+@reexport using Turing,MCMCBenchmarks,CmdStan,StatsPlots,Pkg
+@reexport using Statistics,DataFrames,Random,Parameters,DynamicHMC
+@reexport using LogDensityProblems,TransformVariables,Dates
+@reexport using AdvancedHMC, ForwardDiff,Distributed,CSV
 import Base: get
 
 include("plotting.jl")
