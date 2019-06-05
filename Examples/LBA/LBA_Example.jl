@@ -5,6 +5,9 @@ setprocs(Nchains)
 ProjDir = @__DIR__
 cd(ProjDir)
 
+isdir("tmp") && rm("tmp", recursive=true)
+mkdir("tmp")
+!isdir("results") && mkdir("results")
 path = pathof(MCMCBenchmarks)
 @everywhere begin
   using MCMCBenchmarks
@@ -16,6 +19,7 @@ end
 
 #run this on primary processor to create tmp folder
 include(joinpath(path, "../../Models/LBA/LBA_Models.jl"))
+include(joinpath(path, "../../Models/LBA/LinearBallisticAccumulator.jl"))
 
 @everywhere turnprogress(false)
 #set seeds on each processor
@@ -24,8 +28,11 @@ for (i,seed) in enumerate(seeds)
     @fetch @spawnat i Random.seed!(seed)
 end
 
-ProjDir = @__DIR__
-cd(ProjDir)
+@everywhere Turing.turnprogress(false)
+
+stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
+#Initialize model files for each instance of stan
+initStan(stanSampler)
 
 #create a sampler object or a tuple of sampler objects
 samplers=(
@@ -41,10 +48,9 @@ Nd = [10, 50, 200]
 #Number of simulations
 Nreps = 50
 
-options = (Nchains=Nchains,Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
-
+options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 #perform the benchmark
-results = benchmark(samplers,simulateLBA,Nreps;options...)
+results = pbenchmark(samplers,simulateLBA,Nreps;options...)
 
 #save results
 save(results,ProjDir)

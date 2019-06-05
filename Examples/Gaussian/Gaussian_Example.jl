@@ -1,10 +1,13 @@
-using MCMCBenchmarks,Distributed
+using Revise,MCMCBenchmarks,Distributed
 Nchains=4
 setprocs(Nchains)
 
 ProjDir = @__DIR__
 cd(ProjDir)
 
+isdir("tmp") && rm("tmp", recursive=true)
+mkdir("tmp")
+!isdir("results") && mkdir("results")
 path = pathof(MCMCBenchmarks)
 @everywhere begin
   using MCMCBenchmarks
@@ -34,16 +37,20 @@ samplers=(
   DHMCNUTS(sampleDHMC,2000))
   #DNNUTS(DNGaussian,DNconfig))
 
+stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
+#Initialize model files for each instance of stan
+initStan(stanSampler)
+
 #Number of data points
 Nd = [10, 100, 1000]
 
 #Number of simulations
 Nreps = 100
 
-options = (Nchains=Nchains,Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
+options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 
 #perform the benchmark
-results = benchmark(samplers,GaussianGen,Nreps;options...)
+results = pbenchmark(samplers,GaussianGen,Nreps;options...)
 
 #save results
 save(results,ProjDir)

@@ -133,14 +133,37 @@ function Base.iterate(p::Permutation,state=(p.start,0))
 end
 
 """
-remove compile time from benchmarks 
+remove compile time from benchmarks
 """
 function compile(samplers,fun::F;kwargs...) where {F<:Function}
-    data = fun(;Nd=1)
-    map(s->compile(s,data;kwargs...),samplers)
+    data = fun(;Nd=1); N=nprocs()
+    pmap(s->compile(samplers,data;kwargs...),1:N)
 end
 
-function compile(s,data;kwargs...)
-    modifyConfig!(s;kwargs...)
-    runSampler(s,data;kwargs...)
+function compile(samplers,data;kwargs...)
+    for s in samplers
+        modifyConfig!(s;kwargs...)
+        runSampler(s,data;kwargs...)
+    end
+end
+
+function initStan(s)
+    base = string(s.dir,"/tmp/",s.model.name)
+    for p in procs()
+        stream = open(base*".stan","r")
+        str = read(stream,String)
+        close(stream)
+        stream = open(string(base,p,".stan"),"w")
+        write(stream,str)
+        close(stream)
+    end
+end
+
+function setreps(Nreps)
+    p = nprocs()-1
+    v = Int(floor(Nreps/p))
+    reps = fill(v,p)
+    r = mod(Nreps,p)
+    reps[1:r] .+= 1
+    return reps
 end
