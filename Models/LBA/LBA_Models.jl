@@ -144,8 +144,8 @@ model {
 "
 
 CmdStanConfig = Stanmodel(name = "CmdStanLBA",model=CmdStanLBA,nchains=1,
-   Sample(num_samples=2000,num_warmup=1000,adapt=CmdStan.Adapt(delta=0.8),
-   save_warmup = false))
+   Sample(num_samples=1000,num_warmup=1000,adapt=CmdStan.Adapt(delta=0.8),
+   save_warmup = true))
 
    struct LBAProb{T}
       data::T
@@ -180,7 +180,7 @@ function sampleDHMC(data,N,Nc,nsamples)
     ∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P))
     # FSample from the posterior.
     n = dimension(problem_transformation(p))
-    chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, nsamples; 
+    chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, nsamples;
           q = zeros(n), p = ones(n), report=ReportSilent());
     # Undo the transformation to obtain the posterior from the chain.
     posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));

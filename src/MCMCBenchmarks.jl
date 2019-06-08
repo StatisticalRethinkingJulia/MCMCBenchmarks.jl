@@ -7,6 +7,7 @@ using Reexport
 @reexport using LogDensityProblems,TransformVariables,Dates
 @reexport using AdvancedHMC,ForwardDiff,Distributed,CSV
 import Base: get
+import MCMCChains: Chains
 
 include("plotting.jl")
 include("Utilities.jl")
@@ -68,16 +69,16 @@ Primary function that performs mcmc benchmark repeatedly on a set of samplers
 and records the results.
 * 'sampler': tuple of sampler objects
 * `results`: DataFrame containing benchmark results
+* `csr̂`: cross sampler r̂
 * `simulate`: data generating function
 * `Nreps`: number of repetitions for a given set of simulation parameters. Default = 100
 * `kwargs`: optional keyword arguments that are passed to modifyConfig!, updateResults! and
 runSampler, providing flexibility in benchmark simulations.
 """
-function benchmark!(samplers,results,simulate,Nreps,chains;kwargs...)
-    #csr̂ = DataFrame()
+function benchmark!(samplers,results,csr̂,simulate,Nreps,chains;kwargs...)
     for rep in 1:Nreps
       data = simulate(;kwargs...)
-      #schains = Chains[]
+      schains = Chains[]
       for s in samplers
           modifyConfig!(s;kwargs...)
           println("\nSampler: $(typeof(s))")
@@ -85,37 +86,41 @@ function benchmark!(samplers,results,simulate,Nreps,chains;kwargs...)
           println("Repetition: $rep of $Nreps\n")
           foreach(x->println(x),kwargs)
           performance = @timed runSampler(s,data;kwargs...)
-          #push!(schains,performance[1])
+          push!(schains,performance[1])
           allowmissing!(results)
           updateResults!(s,performance,results;kwargs...)
           savechain!(s,chains,performance;kwargs...)
       end
-      #cross_samplerRhat!(schains,csr̂;kwargs...)
+      csr̂=cross_samplerRhat!(schains,csr̂;kwargs...)
     end
-    return results#[results csr̂]
+    return results
+end
+
+function Chains(chain::Chains)
+    parms = String.(chain.name_map.parameters)
+    sort!(parms)
+    v=chain[:,parms,:].value.data
+    return Chains(v,parms)
 end
 
 function cross_samplerRhat!(schains,csr̂;kwargs...)
-    setrange!(schains)
+    schains = Chains.(schains)
     chains = reduce(chainscat,schains)
     chains = removeBurnin(chains;kwargs...)
     df = describe(chains)[1].df
     parms = sort!(chains.name_map.parameters)
     values = getindex(df,:r_hat)
     N = length(schains)
+    newDF = DataFrame()
     for (p,v) in zip(parms,values)
         colname = createName(p,:sampler_rhat)
         V = fill(v,N)
-        setindex!(csr̂,V,colname)
+        setindex!(newDF,V,colname)
     end
+    append!(csr̂,newDF)
 end
 
-function setrange!(schains)
-    rng = schains[1].value[MCMCChains.Axis{:iter}].val
-    map(x->x.value[MCMCChains.Axis{:iter}].val=rng,schains)
-end
-
-function benchmark!(sampler::T,results,simulate,Nreps,chains;kwargs...) where {T<:MCMCSampler}
+function benchmark!(sampler::T,results,csr̂,simulate,Nreps,chains;kwargs...) where {T<:MCMCSampler}
     return benchmark!((sampler,),results,simulate,Nreps,chains;kwargs...)
 end
 
@@ -128,10 +133,11 @@ Runs the benchmarking procedure and returns the results
 """
  function benchmark(samplers,simulate,Nreps,chains=();kwargs...)
      results = DataFrame()
+     csr̂ = DataFrame()
      for p in Permutation(kwargs)
-         benchmark!(samplers,results,simulate,Nreps,chains;p...)
+         benchmark!(samplers,results,csr̂,simulate,Nreps,chains;p...)
      end
-     return results
+     return [results csr̂]
  end
 
  """
@@ -152,8 +158,8 @@ Runs the benchmarking procedure and returns the results
 """
 Extracts model and configuration from sampler object and performs
 parameter estimation
-* 's': sampler object
-* `data': data for benchmarking
+* `s`: sampler object
+* `data`: data for benchmarking
 """
 function runSampler(s::AHMCNUTS,data;kwargs...)
     return sample(s.model(data...),s.config)
@@ -202,6 +208,7 @@ end
 function updateResults!(s::CmdStanNUTS,performance,results;kwargs...)
     chain = performance[1]
     newDF = DataFrame()
+    chain=removeBurnin(chain;kwargs...)
     df = describe(chain)[1].df
     addColumns!(newDF,chain,df,:ess)
     addColumns!(newDF,chain,df,:r_hat)

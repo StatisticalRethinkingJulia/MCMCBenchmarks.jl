@@ -114,17 +114,18 @@ function plotrecovery(df::DataFrame,parms,group=(:sampler,);save=false,
     plots = Plots.Plot[]
     layout = SetLayout(df,group)
     for s in groupby(df,:sampler)
+        sampler = s[:sampler][1]
         grouping = map(x->s[x],group)
         for (parm,v) in pairs(parms)
             μ = s[Symbol(string(parm,"_mean"))]
             lb = μ .- s[Symbol(string(parm,"_hdp_lb"))]
             ub = s[Symbol(string(parm,"_hdp_ub"))] .- μ
             p=scatter(μ,group=grouping,grid=false,ylabel=string(parm),layout=layout,
-                leg=false,yerror=(lb,ub),width=1;options...)
+                leg=false,yerror=(lb,ub),width=1,title=string(sampler);options...)
             cnt = 0
             [hline!(p,[v],subplot=cnt+=1) for i in 1:layout[1] for j in 1:layout[2]]
             push!(plots,p)
-            save ? savefig(p,string(dir,s[:sampler][1],"_recovery_",parm,".",figfmt)) : nothing
+            save ? savefig(p,string(dir,sampler,"_recovery_",parm,".",figfmt)) : nothing
         end
     end
     return plots
