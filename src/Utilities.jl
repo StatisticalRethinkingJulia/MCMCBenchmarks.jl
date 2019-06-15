@@ -136,7 +136,8 @@ end
 remove compile time from benchmarks
 """
 function compile(samplers,fun::F;kwargs...) where {F<:Function}
-    data = fun(;Nd=1); N=nprocs()
+    p=collect(Permutation(kwargs))[1]
+    data = fun(;Nd=1,p...); N=nprocs()
     pmap(s->compile(samplers,data;kwargs...),1:N)
 end
 

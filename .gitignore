@@ -14,5 +14,5 @@ tmp
 .ipynb_checkpoints
 docs/build/
 docs/site/
-#*.pdf
+*.pdf
 #*.svg
