@@ -64,7 +64,7 @@ trueparms = (Symbol("v[1]")=1,Symbol("v[2]")=1.5,Symbol("v[3]")=2.5,A=.8,k=.2,ta
 recoveryPlots = plotrecovery(results,trueparms,(:sampler,:Nd);save=true,dir=dir)
 
 #Plot mean run time as a function of number of data points (Nd) for each sampler
-meantimePlot = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir)
+meantimePlot = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir,yscale=:log10)
 
 #Plot mean allocations as a function of number of data points (Nd) for each sampler
 meanallocPlot = plotsummary(results,:Nd,:allocations,(:sampler,);save=true,dir=dir,yscale=:log10,

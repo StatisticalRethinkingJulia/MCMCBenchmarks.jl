@@ -55,7 +55,7 @@ save(results,ProjDir)
 recoveryPlots = plotrecovery(results,(c=0,d=2),(:sampler,:Nd);save=true,dir=dir)
 
 #Plot mean run time as a function of number of data points (Nd) for each sampler
-meantimePlot = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir)
+meantimePlot = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir,yscale=:log10)
 
 #Plot mean allocations as a function of number of data points (Nd) for each sampler
 meanallocPlot = plotsummary(results,:Nd,:allocations,(:sampler,);save=true,dir=dir,yscale=:log10,

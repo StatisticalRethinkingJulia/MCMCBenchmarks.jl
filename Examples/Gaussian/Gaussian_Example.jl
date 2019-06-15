@@ -45,7 +45,7 @@ initStan(stanSampler)
 Nd = [10, 100, 1000]
 
 #Number of simulations
-Nreps = 100
+Nreps = 2
 
 options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 
@@ -63,10 +63,10 @@ dir = "results/"
 recoveryPlots = plotrecovery(results,(mu=0,sigma=1),(:sampler,:Nd);save=true,dir=dir)
 
 #Plot mean run time as a function of number of data points (Nd) for each sampler
-meantimePlot = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir)
+meantimePlot = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir,yscale=:log10)
 
 #Plot mean allocations as a function of number of data points (Nd) for each sampler
-meanallocPlot = plotsummary(results,:Nd,:allocations,(:sampler,);save=true,dir=dir,yscale=:log10,
+meanallocPlot = plotsummary(results,:Nd,:allocations,(:sampler,);save=false,dir=dir,yscale=:log10,
   ylabel="Allocations (log scale)")
 
 #Plot mean ess per second of number of data points (Nd) for each sampler
