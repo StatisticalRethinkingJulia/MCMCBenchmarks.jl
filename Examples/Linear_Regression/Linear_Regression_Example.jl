@@ -43,16 +43,16 @@ stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
 initStan(stanSampler)
 
 #Number of data points
-Nd = [10, 100, 1000]
+Nd = [10, 100,1000]
 
 #Number of coefficients
-Nc = 3
+Nc = [2,3]
 
 #Number of simulations
 Nreps = 50
 
 options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Nc=Nc)
-
+# options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=10,Nc=3)
 #perform the benchmark
 results = pbenchmark(samplers,simulateRegression,Nreps;options...)
 

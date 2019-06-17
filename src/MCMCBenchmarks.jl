@@ -88,12 +88,12 @@ function benchmark!(samplers,results,csr̂,simulate,Nreps,chains;kwargs...)
           performance = @timed runSampler(s,data;kwargs...)
           push!(schains,performance[1])
           allowmissing!(results)
-          updateResults!(s,performance,results;kwargs...)
+          results = updateResults!(s,performance,results;kwargs...)
           savechain!(s,chains,performance;kwargs...)
       end
       csr̂=cross_samplerRhat!(schains,csr̂;kwargs...)
     end
-    return results
+    return results,csr̂
 end
 
 function Chains(chain::Chains)
@@ -117,7 +117,7 @@ function cross_samplerRhat!(schains,csr̂;kwargs...)
         V = fill(v,N)
         setindex!(newDF,V,colname)
     end
-    append!(csr̂,newDF)
+    return vcat(csr̂,newDF,cols=:union)
 end
 
 function benchmark!(sampler::T,results,csr̂,simulate,Nreps,chains;kwargs...) where {T<:MCMCSampler}
@@ -135,7 +135,7 @@ Runs the benchmarking procedure and returns the results
      results = DataFrame()
      csr̂ = DataFrame()
      for p in Permutation(kwargs)
-         benchmark!(samplers,results,csr̂,simulate,Nreps,chains;p...)
+         results,csr̂=benchmark!(samplers,results,csr̂,simulate,Nreps,chains;p...)
      end
      return [results csr̂]
  end
@@ -152,7 +152,7 @@ Runs the benchmarking procedure and returns the results
      pfun(rep) = benchmark(samplers,simulate,rep,chains;kwargs...)
      reps = setreps(Nreps)
      presults = pmap(rep->pfun(rep),reps)
-     return vcat(presults...)
+     return vcat(presults...,cols=:union)
  end
 
 """
@@ -202,7 +202,7 @@ function updateResults!(s::AHMCNUTS,performance,results;kwargs...)
     addPerformance!(newDF,performance)
     newDF[:sampler]= gettype(s)
     addKW!(newDF;kwargs...)
-    append!(results,newDF)
+    return vcat(results,newDF,cols=:union)
 end
 
 function updateResults!(s::CmdStanNUTS,performance,results;kwargs...)
@@ -221,7 +221,7 @@ function updateResults!(s::CmdStanNUTS,performance,results;kwargs...)
     addPerformance!(newDF,performance)
     newDF[:sampler] = gettype(s)
     addKW!(newDF;kwargs...)
-    append!(results,newDF)
+    return vcat(results,newDF,cols=:union)
 end
 
 function updateResults!(s::DNNUTS,performance,results;kwargs...)
@@ -239,7 +239,7 @@ function updateResults!(s::DNNUTS,performance,results;kwargs...)
     addPerformance!(newDF,performance)
     newDF[:sampler] = gettype(s)
     addKW!(newDF;kwargs...)
-    append!(results,newDF)
+    return vcat(results,newDF,cols=:union)
 end
 
 function updateResults!(s::DHMCNUTS,performance,results;kwargs...)
@@ -258,7 +258,7 @@ function updateResults!(s::DHMCNUTS,performance,results;kwargs...)
     addPerformance!(newDF,performance)
     newDF[:sampler] = gettype(s)
     addKW!(newDF;kwargs...)
-    append!(results,newDF)
+    return vcat(results,newDF,cols=:union)
 end
 
 """
