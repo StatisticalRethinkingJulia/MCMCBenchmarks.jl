@@ -12,7 +12,7 @@
 
 ## Introduction
 
-MCMCBenchmarks (WIP) provides a lightweight yet flexible framework for benchmarking MCMC samplers in terms of runtime, memory usage, convergence metrics and effective sample size. Currently, MCMCBenchmarks provides out of the box support for benchmarking the [No-U-Turn Sampler](http://jmlr.org/papers/volume15/hoffman14a/hoffman14a.pdf) (NUTS) algorithm as instantiated in [CmdStan](https://github.com/StanJulia/CmdStan.jl), [DynamicHMC](https://github.com/tpapp/DynamicHMC.jl) and [AdvancedHMC](https://github.com/TuringLang/AdvancedHMC.jl) via [Turing](https://github.com/TuringLang/Turing.jl). However, methods can be extended to acommodate other samplers and test models.
+MCMCBenchmarks (WIP) provides a lightweight yet flexible framework for benchmarking MCMC samplers in terms of runtime, memory usage, convergence metrics and effective sample size. Currently, MCMCBenchmarks provides out of the box support for benchmarking the [No-U-Turn Sampler](http://jmlr.org/papers/volume15/hoffman14a/hoffman14a.pdf) (NUTS) algorithm as implemented in [CmdStan](https://github.com/StanJulia/CmdStan.jl), [DynamicHMC](https://github.com/tpapp/DynamicHMC.jl) and [AdvancedHMC](https://github.com/TuringLang/AdvancedHMC.jl) via [Turing](https://github.com/TuringLang/Turing.jl). However, methods can be extended to acommodate other samplers and test models.
 
 ## Overview of Features
 - Benchmarking Parameters: vary factors such as sample size, data-generating parameters, prior distributions, and target acceptance rate. The use of optional keywords allows other benchmarking parameters to be varied. 
@@ -28,13 +28,13 @@ The table below provides a working list of test models that will be included in 
 - Hierarchical Poisson Regression
 - [Linear Ballistic Accumulator](https://s3.amazonaws.com/academia.edu.documents/38243618/The_simplest_complete_model_of_choice_response_time-_Linear_Ballistic_Accumulation.pdf?AWSAccessKeyId=AKIAIWOWYYGZ2Y53UL3A&Expires=1558170639&Signature=DucSUdy%2FFW1jFCZcsN%2FvZbAqsrk%3D&response-content-disposition=inline%3B%20filename%3DThe_simplest_complete_model_of_choice_re.pdf): a cognitive model of perception and simple decision making. 
 
-| Model                           | Author | Turing  | DynamicHMC       | DynamicNUTS               | CmdStan |
-|---------------------------------|--------|---------|------------------|---------------------------|---------|
-| Gaussian Model                  | Chris  | Working | Working          | Working                   | Working |
-| Signal Detection Theory         | Chris  | Working | Working          | Hard crash due  to NaN    | Working |
-| Linear Regression               | Rob    |         |                  |                           |         |
-| Hierarchical Poisson Regression | Rob    |         |                  |                           |         |
-| Linear Ballistic Accumulator    | Chris  | Working | Working          | density start point error | Working |
+| Model                           	| Turing  	| DynamicHMC 	| DynamicNUTS               	| CmdStan 	|
+|---------------------------------	|---------	|------------	|---------------------------	|---------	|
+| Gaussian Model                  	| Working 	| Working    	| Working                   	| Working 	|
+| Signal Detection Theory         	| Working 	| Working    	| Hard crash due  to NaN    	| Working 	|
+| Linear Regression               	| Working 	| Working    	| Not Working               	| Working 	|
+| Hierarchical Poisson Regression 	|         	|            	|                           	|         	|
+| Linear Ballistic Accumulator    	| Working 	| Working    	| density start point error 	| Working 	|
 
 ## Preliminary Results
 
