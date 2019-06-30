@@ -43,13 +43,13 @@ stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
 initStan(stanSampler)
 
 #Number of data points per unit
-Nd = [1,2,5]
+Nd = [1,3]
 
 #Number of units in model
-Ns = [10,20,50]
+Ns = [10,30]
 
 #Number of simulations
-Nreps = 1
+Nreps = 50
 
 options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Ns=Ns)
 #perform the benchmark
@@ -63,37 +63,37 @@ cd(pwd)
 dir = "results/"
 
 #Plot parameter recovery
-parms = Dict(:B0=>1,Symbol("B[1]")=>.5,Symbol("B[2]")=>.5,Symbol("B[3]")=>.5,:sigma=>1)
+parms = Dict(:a0=>1,:a1=>.5,:a0_sig=>.5)
 recoveryPlots = plotrecovery(results,parms,(:sampler,:Nd);save=true,dir=dir)
 
 #Plot mean run time as a function of number of data points (Nd) for each sampler
-meantimePlot = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir,yscale=:log10)
+meantimePlot = plotsummary(results,:Nd,:time,(:sampler,:Ns,);save=true,dir=dir,yscale=:log10)
 
 #Plot mean allocations as a function of number of data points (Nd) for each sampler
-meanallocPlot = plotsummary(results,:Nd,:allocations,(:sampler,);save=false,dir=dir,yscale=:log10,
+meanallocPlot = plotsummary(results,:Nd,:allocations,(:sampler,:Ns);save=false,dir=dir,yscale=:log10,
   ylabel="Allocations (log scale)")
 
 #Plot mean ess per second of number of data points (Nd) for each sampler
-essPS = plotsummary(results,:Nd,:ess_ps,(:sampler,);save=true,dir=dir)
+essPS = plotsummary(results,:Nd,:ess_ps,(:sampler,:Ns);save=true,dir=dir)
 
 #Plot density of effective sample size as function of number of data points (Nd) for each sampler
 essPlots = plotdensity(results,:ess,(:sampler,:Nd);save=true,dir=dir)
 
 #Plot density of rhat as function of number of data points (Nd) for each sampler
-rhatPlots = plotdensity(results,:r_hat,(:sampler,:Nd);save=true,dir=dir)
+rhatPlots = plotdensity(results,:r_hat,(:sampler,:Nd,:Ns);save=true,dir=dir)
 
 #Plot density of time as function of number of data points (Nd) for each sampler
-timePlots = plotdensity(results,:time,(:sampler,:Nd);save=true,dir=dir)
+timePlots = plotdensity(results,:time,(:sampler,:Nd,:Ns);save=true,dir=dir)
 
 #Plot density of gc time percent as function of number of data points (Nd) for each sampler
-gcPlots = plotdensity(results,:gcpercent,(:sampler,:Nd);save=true,dir=dir)
+gcPlots = plotdensity(results,:gcpercent,(:sampler,:Nd,:Ns);save=true,dir=dir)
 
 #Plot density of memory allocations as function of number of data points (Nd) for each sampler
-memPlots = plotdensity(results,:allocations,(:sampler,:Nd);save=true,dir=dir,xscale=:log10,
+memPlots = plotdensity(results,:allocations,(:sampler,:Nd,:Ns);save=true,dir=dir,xscale=:log10,
   xlabel="Allocations (log scale)")
 
 #Plot density of megabytes allocated as function of number of data points (Nd) for each sampler
-megPlots = plotdensity(results,:megabytes,(:sampler,:Nd);save=true,dir=dir)
+megPlots = plotdensity(results,:megabytes,(:sampler,:Nd,:Ns);save=true,dir=dir)
 
 #Scatter plot of epsilon and effective sample size as function of number of data points (Nd) for each sampler
-scatterPlots = plotscatter(results,:epsilon,:ess,(:sampler,:Nd);save=true,dir=dir)
+scatterPlots = plotscatter(results,:epsilon,:ess,(:sampler,:Nd,:Ns);save=true,dir=dir)

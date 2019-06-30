@@ -24,7 +24,7 @@ AHMCconfig = Turing.NUTS(2000,1000,.85)
     end
 end
 
-function simulatePoisson(;Nd,Ns,a0,a1,a0_sig,kwargs...)
+function simulatePoisson(;Nd=1,Ns=10,a0=1.0,a1=.5,a0_sig=.3,kwargs...)
     N = Nd*Ns
     y = fill(0,N)
     x = fill(0.0,N)
