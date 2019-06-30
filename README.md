@@ -33,7 +33,7 @@ The table below provides a working list of test models that will be included in 
 | Gaussian Model                  	| Working 	| Working    	| Working                   	| Working 	|
 | Signal Detection Theory         	| Working 	| Working    	| Hard crash due  to NaN    	| Working 	|
 | Linear Regression               	| Working 	| Working    	| Not Working               	| Working 	|
-| Hierarchical Poisson Regression 	|         	|            	|                           	|         	|
+| Hierarchical Poisson Regression 	| Working   | Working    	| Not working                 | Working  	|
 | Linear Ballistic Accumulator    	| Working 	| Working    	| density start point error 	| Working 	|
 
 ## Preliminary Results
