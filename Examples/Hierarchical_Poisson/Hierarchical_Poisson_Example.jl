@@ -18,7 +18,7 @@ path = pathof(MCMCBenchmarks)
 end
 
 #run this on primary processor to create tmp folder
-include(joinpath($path,
+include(joinpath(path,
   "../../Models/Hierarchical_Poisson/Hierarhical_Poisson_Models.jl"))
 
 @everywhere Turing.turnprogress(false)
@@ -42,19 +42,18 @@ stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
 #Initialize model files for each instance of stan
 initStan(stanSampler)
 
-#Number of data points
-Nd = [10, 100,1000]
+#Number of data points per unit
+Nd = [1,2,5]
 
-#Number of coefficients
-Nc = [2,3]
+#Number of units in model
+Ns = [10,20,50]
 
 #Number of simulations
-Nreps = 50
+Nreps = 1
 
-options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Nc=Nc)
-# options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=10,Nc=3)
+options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Ns=Ns)
 #perform the benchmark
-results = pbenchmark(samplers,simulateHierPoisson,Nreps;options...)
+results = pbenchmark(samplers,simulatePoisson,Nreps;options...)
 
 #save results
 save(results,ProjDir)
