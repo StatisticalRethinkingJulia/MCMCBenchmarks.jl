@@ -151,7 +151,8 @@ Runs the benchmarking procedure and returns the results
      compile(samplers,simulate;kwargs...)
      pfun(rep) = benchmark(samplers,simulate,rep,chains;kwargs...)
      reps = setreps(Nreps)
-     presults = pmap(rep->pfun(rep),reps)
+    #  presults = pmap(rep->pfun(rep),reps)
+     presults = map(rep->pfun(rep),reps)
      return vcat(presults...,cols=:union)
  end
 
@@ -162,7 +163,7 @@ parameter estimation
 * `data`: data for benchmarking
 """
 function runSampler(s::AHMCNUTS,data;kwargs...)
-    return sample(s.model(data...),s.config)
+    return sample(s.model(data...),s.config; discard_adapt=false)
 end
 
 function runSampler(s::DNNUTS,data;kwargs...)
@@ -189,7 +190,7 @@ update results on each iteration
 function updateResults!(s::AHMCNUTS,performance,results;kwargs...)
     chain = performance[1]
     newDF = DataFrame()
-    # chain=removeBurnin(chain;kwargs...)
+    chain=removeBurnin(chain;kwargs...)
     df = describe(chain)[1].df
     addColumns!(newDF,chain,df,:ess)
     addColumns!(newDF,chain,df,:r_hat)
