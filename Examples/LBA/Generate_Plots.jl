@@ -1,72 +1,22 @@
-using Revise,MCMCBenchmarks,Distributed
-Nchains=4
-setprocs(Nchains)
+using MCMCBenchmarks,CSV
 
 ProjDir = @__DIR__
 cd(ProjDir)
+folder = "2019_05_30T19_40_00"
+results = CSV.read(string(ProjDir,"/results/",folder*"/results.csv"))
 
-isdir("tmp") && rm("tmp", recursive=true)
-mkdir("tmp")
-!isdir("results") && mkdir("results")
-path = pathof(MCMCBenchmarks)
-@everywhere begin
-  using MCMCBenchmarks
-  #Model and configuration patterns for each sampler are located in a
-  #seperate model file.
-  include(joinpath($path, "../../Models/Gaussian/Gaussian_Models.jl"))
-end
-
-#run this on primary processor to create tmp folder
-include(joinpath(path,
-  "../../Models/Gaussian/Gaussian_Models.jl"))
-
-@everywhere Turing.turnprogress(false)
-#set seeds on each processor
-seeds = (939388,39884,28484,495858,544443)
-for (i,seed) in enumerate(seeds)
-    @fetch @spawnat i Random.seed!(seed)
-end
-#create a sampler object or a tuple of sampler objects
-
-#Note that AHMC and DynamicNUTS do not work together due to an
-# error in MCMCChains: https://github.com/TuringLang/MCMCChains.jl/issues/101
-
-samplers=(
-  CmdStanNUTS(CmdStanConfig,ProjDir),
-  AHMCNUTS(AHMCGaussian,AHMCconfig),
-  DHMCNUTS(sampleDHMC,2000))
-  #DNNUTS(DNGaussian,DNconfig))
-
-stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
-#Initialize model files for each instance of stan
-initStan(stanSampler)
-
-#Number of data points
-Nd = [10, 100, 1000]
-
-#Number of simulations
-Nreps = 50
-
-options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
-
-#perform the benchmark
-results = pbenchmark(samplers,GaussianGen,Nreps;options...)
-
-#save results
-save(results,ProjDir)
-
-pyplot()
-cd(pwd)
 dir = "results/"
 
+
 #Plot parameter recovery
-recoveryPlots = plotrecovery(results,(mu=0,sigma=1),(:sampler,:Nd);save=true,dir=dir)
+trueparms = Dict(Symbol("v[1]")=>1,Symbol("v[2]")=>1.5,Symbol("v[3]")=>2.5,:A=>.8,:k=>.2,:tau=>.4)
+recoveryPlots = plotrecovery(results,trueparms,(:sampler,:Nd);save=true,dir=dir)
 
 #Plot mean run time as a function of number of data points (Nd) for each sampler
 meantimePlot = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir,yscale=:log10)
 
 #Plot mean allocations as a function of number of data points (Nd) for each sampler
-meanallocPlot = plotsummary(results,:Nd,:allocations,(:sampler,);save=false,dir=dir,yscale=:log10,
+meanallocPlot = plotsummary(results,:Nd,:allocations,(:sampler,);save=true,dir=dir,yscale=:log10,
   ylabel="Allocations (log scale)")
 
 #Plot mean ess per second of number of data points (Nd) for each sampler

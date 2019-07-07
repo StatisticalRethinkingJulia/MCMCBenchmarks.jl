@@ -37,7 +37,7 @@ initStan(stanSampler)
 #create a sampler object or a tuple of sampler objects
 samplers=(
   CmdStanNUTS(CmdStanConfig,ProjDir),
-  AHMCNUTS(AHMClba,AHMCconfig),
+  #AHMCNUTS(AHMClba,AHMCconfig),
   DHMCNUTS(sampleDHMC,2000)
   #DNNUTS(DNlba,DNconfig)
   )
@@ -60,7 +60,7 @@ cd(pwd)
 dir = "results/"
 
 #Plot parameter recovery
-trueparms = (Symbol("v[1]")=1,Symbol("v[2]")=1.5,Symbol("v[3]")=2.5,A=.8,k=.2,tau=.4)
+trueparms = Dict(Symbol("v[1]")=>1,Symbol("v[2]")=>1.5,Symbol("v[3]")=>2.5,:A=>.8,:k=>.2,:tau=>.4)
 recoveryPlots = plotrecovery(results,trueparms,(:sampler,:Nd);save=true,dir=dir)
 
 #Plot mean run time as a function of number of data points (Nd) for each sampler
