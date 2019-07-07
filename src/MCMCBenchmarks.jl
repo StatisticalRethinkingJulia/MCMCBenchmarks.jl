@@ -162,7 +162,7 @@ parameter estimation
 * `data`: data for benchmarking
 """
 function runSampler(s::AHMCNUTS,data;kwargs...)
-    return sample(s.model(data...),s.config)
+    return sample(s.model(data...),s.config; discard_adapt=false)
 end
 
 function runSampler(s::DNNUTS,data;kwargs...)
