@@ -151,8 +151,7 @@ Runs the benchmarking procedure and returns the results
      compile(samplers,simulate;kwargs...)
      pfun(rep) = benchmark(samplers,simulate,rep,chains;kwargs...)
      reps = setreps(Nreps)
-    #  presults = pmap(rep->pfun(rep),reps)
-     presults = map(rep->pfun(rep),reps)
+     presults = pmap(rep->pfun(rep),reps)
      return vcat(presults...,cols=:union)
  end
 
