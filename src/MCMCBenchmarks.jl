@@ -189,7 +189,7 @@ update results on each iteration
 function updateResults!(s::AHMCNUTS,performance,results;kwargs...)
     chain = performance[1]
     newDF = DataFrame()
-    chain=removeBurnin(chain;kwargs...)
+    # chain=removeBurnin(chain;kwargs...)
     df = describe(chain)[1].df
     addColumns!(newDF,chain,df,:ess)
     addColumns!(newDF,chain,df,:r_hat)
