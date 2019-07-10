@@ -1,3 +1,16 @@
-# MCMCBenchmarks
+# MCMCBenchmarks.jl Documentation
 
-*Documentation goes here.*
+
+```@contents
+```
+
+## Functions
+
+```@docs
+MCMCBenchmarks.benchmark
+```
+
+## Index
+
+```@index
+```
