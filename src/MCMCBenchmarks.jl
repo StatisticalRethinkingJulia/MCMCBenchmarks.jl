@@ -162,7 +162,7 @@ parameter estimation
 * `data`: data for benchmarking
 """
 function runSampler(s::AHMCNUTS,data;kwargs...)
-    return sample(s.model(data...),s.config; discard_adapt=false)
+    return sample(s.model(data...),s.config;discard_adapt=false)
 end
 
 function runSampler(s::DNNUTS,data;kwargs...)
@@ -296,6 +296,8 @@ function modifyConfig!(s::CmdStanNUTS;Nsamples,Nadapt,delta,kwargs...)
     s.model.num_samples = Nsamples-Nadapt
     s.model.num_warmup = Nadapt
     s.model.method.adapt.delta = delta
+    s.model.method.num_samples = Nsamples-Nadapt
+    s.model.method.num_warmup = Nadapt
     id = myid()
     if id != 1
         s.model.name = string(s.name,id)
