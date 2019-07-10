@@ -2,12 +2,12 @@ using Documenter, MCMCBenchmarks
 
 makedocs(
     modules = [MCMCBenchmarks],
-    format = :html,
     checkdocs = :exports,
-    sitename = "MCMCBenchmarks.jl",
+    authors = "Chris Fisher, Rob J Goedman",
+    sitename = "StatisticalRethinkingJulia/MCMCBenchmarks.jl",
     pages = Any["index.md"]
 )
 
 deploydocs(
-    repo = "github.com/goedman/MCMCBenchmarks.jl.git",
+    repo = "github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl.git",
 )

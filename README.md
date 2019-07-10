@@ -14,6 +14,11 @@
 
 MCMCBenchmarks (WIP) provides a lightweight yet flexible framework for benchmarking MCMC samplers in terms of runtime, memory usage, convergence metrics and effective sample size. Currently, MCMCBenchmarks provides out of the box support for benchmarking the [No-U-Turn Sampler](http://jmlr.org/papers/volume15/hoffman14a/hoffman14a.pdf) (NUTS) algorithm as implemented in [CmdStan](https://github.com/StanJulia/CmdStan.jl), [DynamicHMC](https://github.com/tpapp/DynamicHMC.jl) and [AdvancedHMC](https://github.com/TuringLang/AdvancedHMC.jl) via [Turing](https://github.com/TuringLang/Turing.jl). However, methods can be extended to acommodate other samplers and test models.
 
+## Documentation
+
+- [**STABLE**][docs-stable-url] &mdash; **documentation of the most recently tagged version.**
+- [**DEVEL**][docs-dev-url] &mdash; *documentation of the in-development version.*
+
 ## Overview of Features
 - Benchmarking Parameters: vary factors such as sample size, data-generating parameters, prior distributions, and target acceptance rate. The use of optional keywords allows other benchmarking parameters to be varied. 
 - Plotting: generate and save plots comparing samplers in terms of run time, memory usage, convergence diagnostics and effective sample size (see below).
@@ -49,3 +54,11 @@ Below, we report preliminary benchmark results, comparing CmdStan, DynamicHMC an
 [Comparison of r_hat distribution](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Gaussian/results/density_mu_r_hat.pdf)
 
 [Relationship between effective sample size and epsilon](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Gaussian/results/scatter_epsilon_mu_ess.pdf)
+
+
+[docs-dev-img]: https://img.shields.io/badge/docs-dev-blue.svg
+[docs-dev-url]: https://statisticalrethinkingjulia.github.io/MCMCBenchmarks.jl/latest
+
+[docs-stable-img]: https://img.shields.io/badge/docs-stable-blue.svg
+[docs-stable-url]: https://statisticalrethinkingjulia.github.io/MCMCBenchmarks.jl/stable
+
