@@ -12,18 +12,6 @@ end
 
 AHMCconfig = Turing.NUTS(2000,1000,.85)
 
-@model DNpoisson(y,x,idx,N,Ns) = begin
-    a0 ~ Normal(0, 10)
-    a1 ~ Normal(0, 1)
-    a0_sig ~ Truncated(Cauchy(0, 1), 0, Inf)
-    a0s = Vector{Real}(undef,Ns)
-    a0s ~ [Normal(0, a0_sig)]
-    for i ∈ 1:N
-        λ = exp(a0 + a0s[idx[i]] + a1*x[i])
-        y[i] ~ Poisson(λ)
-    end
-end
-
 function simulatePoisson(;Nd=1,Ns=10,a0=1.0,a1=.5,a0_sig=.3,kwargs...)
     N = Nd*Ns
     y = fill(0,N)

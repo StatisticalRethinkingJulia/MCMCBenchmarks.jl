@@ -35,7 +35,6 @@ samplers=(
   CmdStanNUTS(CmdStanConfig,ProjDir),
   AHMCNUTS(AHMCGaussian,AHMCconfig),
   DHMCNUTS(sampleDHMC,2000))
-  #DNNUTS(DNGaussian,DNconfig))
 
 stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
 #Initialize model files for each instance of stan
