@@ -1,68 +1,19 @@
-using Revise,MCMCBenchmarks,Distributed
-Nchains=4
-setprocs(Nchains)
+using MCMCBenchmarks,CSV
 
 ProjDir = @__DIR__
 cd(ProjDir)
 
-isdir("tmp") && rm("tmp", recursive=true)
-mkdir("tmp")
-!isdir("results") && mkdir("results")
-path = pathof(MCMCBenchmarks)
-@everywhere begin
-  using MCMCBenchmarks
-  #Model and configuration patterns for each sampler are located in a
-  #seperate model file.
-  include(joinpath($path,
-    "../../Models/Hierarchical_Poisson/Hierarhical_Poisson_Models.jl"))
-end
+path = include(joinpath(path, "../../Models/Gaussian/Gaussian_Models.jl"))
 
-#run this on primary processor to create tmp folder
-include(joinpath(path,
-  "../../Models/Hierarchical_Poisson/Hierarhical_Poisson_Models.jl"))
+folder = "2019_06_15T14_20_00/"
+results = CSV.read(path*folder*"results.csv")
 
-@everywhere Turing.turnprogress(false)
-#set seeds on each processor
-seeds = (939388,39884,28484,495858,544443)
-for (i,seed) in enumerate(seeds)
-    @fetch @spawnat i Random.seed!(seed)
-end
-#create a sampler object or a tuple of sampler objects
+results = CSV.read("results.csv")
 
-#Note that AHMC and DynamicNUTS do not work together due to an
-# error in MCMCChains: https://github.com/TuringLang/MCMCChains.jl/issues/101
-
-samplers=(
-  CmdStanNUTS(CmdStanConfig,ProjDir),
-  AHMCNUTS(AHMCpoisson,AHMCconfig),
-  DHMCNUTS(sampleDHMC,2000))
-
-stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
-#Initialize model files for each instance of stan
-initStan(stanSampler)
-
-#Number of data points per unit
-Nd = [1,3]
-
-#Number of units in model
-Ns = [10,30]
-
-#Number of simulations
-Nreps = 50
-
-options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Ns=Ns)
-#perform the benchmark
-results = pbenchmark(samplers,simulatePoisson,Nreps;options...)
-
-#save results
-save(results,ProjDir)
-
-pyplot()
-cd(pwd)
 dir = "results/"
 
 #Plot parameter recovery
-parms = Dict(:a0=>1,:a1=>.5,:a0_sig=>.5)
+parms = parms = Dict(:a0=>1,:a1=>.5,:a0_sig=>.5)
 recoveryPlots = plotrecovery(results,parms,(:sampler,:Nd);save=true,dir=dir)
 
 #Plot mean run time as a function of number of data points (Nd) for each sampler
@@ -73,7 +24,7 @@ meanallocPlot = plotsummary(results,:Nd,:allocations,(:sampler,:Ns);save=false,d
   ylabel="Allocations (log scale)")
 
 #Plot mean ess per second of number of data points (Nd) for each sampler
-essPS = plotsummary(results,:Nd,:ess_ps,(:sampler,:Ns);save=true,dir=dir)
+essPS = plotsummary(results,:Nd,:ess,(:sampler,);save=true,dir=dir)
 
 #Plot density of effective sample size as function of number of data points (Nd) for each sampler
 essPlots = plotdensity(results,:ess,(:sampler,:Nd);save=true,dir=dir)

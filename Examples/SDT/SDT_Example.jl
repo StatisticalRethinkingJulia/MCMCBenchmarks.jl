@@ -35,7 +35,6 @@ initStan(stanSampler)
 
 samplers=(CmdStanNUTS(CmdStanConfig,ProjDir),
     AHMCNUTS(AHMC_SDT,AHMCconfig),
-    #DNNUTS(DN_SDT,DNconfig)
     DHMCNUTS(sampleDHMC,2000))
 
 #Number of data points

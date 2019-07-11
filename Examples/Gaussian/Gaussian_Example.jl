@@ -10,7 +10,7 @@ mkdir("tmp")
 !isdir("results") && mkdir("results")
 path = pathof(MCMCBenchmarks)
 @everywhere begin
-  using MCMCBenchmarks
+  using MCMCBenchmarks,Revise
   #Model and configuration patterns for each sampler are located in a
   #seperate model file.
   include(joinpath($path, "../../Models/Gaussian/Gaussian_Models.jl"))
@@ -35,7 +35,6 @@ samplers=(
   CmdStanNUTS(CmdStanConfig,ProjDir),
   AHMCNUTS(AHMCGaussian,AHMCconfig),
   DHMCNUTS(sampleDHMC,2000))
-  #DNNUTS(DNGaussian,DNconfig))
 
 stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
 #Initialize model files for each instance of stan

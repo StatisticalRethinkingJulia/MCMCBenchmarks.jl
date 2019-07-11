@@ -17,10 +17,6 @@ end
 
 AHMCconfig = Turing.NUTS(2000,1000,.85)
 
-DNlba(choice,rt,N,Nc)=AHMClba(choice,rt,N,Nc)
-
-DNconfig = DynamicNUTS(2000)
-
 CmdStanLBA = "
 functions{
 

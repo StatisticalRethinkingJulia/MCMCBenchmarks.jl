@@ -54,17 +54,6 @@ mutable struct DHMCNUTS{T1,T2} <: MCMCSampler
 end
 
 """
-DynamicNUTS NUTS
-
-* `model`: model function that accepts data
-* `config`: sampler configution settings
-"""
-mutable struct DNNUTS{T1,T2} <: MCMCSampler
-    model::T1
-    config::T2
-end
-
-"""
 Primary function that performs mcmc benchmark repeatedly on a set of samplers
 and records the results.
 * 'sampler': tuple of sampler objects
@@ -162,11 +151,7 @@ parameter estimation
 * `data`: data for benchmarking
 """
 function runSampler(s::AHMCNUTS,data;kwargs...)
-    return sample(s.model(data...),s.config; discard_adapt=false)
-end
-
-function runSampler(s::DNNUTS,data;kwargs...)
-    return sample(s.model(data...),s.config)
+    return sample(s.model(data...),s.config;discard_adapt=false)
 end
 
 function runSampler(s::CmdStanNUTS,data;kwargs...)
@@ -218,24 +203,6 @@ function updateResults!(s::CmdStanNUTS,performance,results;kwargs...)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     dfi=describe(chain,sections=[:internals])[1]
     newDF[:epsilon]=dfi[:stepsize__, :mean][1]
-    addPerformance!(newDF,performance)
-    newDF[:sampler] = gettype(s)
-    addKW!(newDF;kwargs...)
-    return vcat(results,newDF,cols=:union)
-end
-
-function updateResults!(s::DNNUTS,performance,results;kwargs...)
-    chain = performance[1]
-    newDF = DataFrame()
-    chain=removeBurnin(chain;kwargs...)
-    df = describe(chain)[1].df
-    addColumns!(newDF,chain,df,:ess)
-    addColumns!(newDF,chain,df,:r_hat)
-    addESStime!(newDF,chain,df,performance)
-    addHPD!(newDF,chain)
-    addMeans!(newDF,df)
-    permutecols!(newDF,sort!(names(newDF)))#ensure correct order
-    newDF[:epsilon]=missing
     addPerformance!(newDF,performance)
     newDF[:sampler] = gettype(s)
     addKW!(newDF;kwargs...)
@@ -296,14 +263,12 @@ function modifyConfig!(s::CmdStanNUTS;Nsamples,Nadapt,delta,kwargs...)
     s.model.num_samples = Nsamples-Nadapt
     s.model.num_warmup = Nadapt
     s.model.method.adapt.delta = delta
+    s.model.method.num_samples = Nsamples-Nadapt
+    s.model.method.num_warmup = Nadapt
     id = myid()
     if id != 1
         s.model.name = string(s.name,id)
     end
-end
-
-function modifyConfig!(s::DNNUTS;Nsamples,kwargs...)
-    s.config = DynamicNUTS(Nsamples)
 end
 
 function modifyConfig!(s::DHMCNUTS;Nsamples,kwargs...)

@@ -8,10 +8,6 @@ AHMC_SDT(hits,fas,Nd) = SDTmodel((hits,fas,Nd))
 
 AHMCconfig = Turing.NUTS(2000,1000,.85)
 
-DN_SDT(hits,fas,Nd) = SDTmodel((hits,fas,Nd))
-
-DNconfig = DynamicNUTS(2000)
-
 CmdStan_SDT = "
 data {
   int<lower=1> Nd;

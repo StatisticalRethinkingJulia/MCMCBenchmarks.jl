@@ -37,10 +37,8 @@ initStan(stanSampler)
 #create a sampler object or a tuple of sampler objects
 samplers=(
   CmdStanNUTS(CmdStanConfig,ProjDir),
-  #AHMCNUTS(AHMClba,AHMCconfig),
-  DHMCNUTS(sampleDHMC,2000)
-  #DNNUTS(DNlba,DNconfig)
-  )
+  AHMCNUTS(AHMClba,AHMCconfig),
+  DHMCNUTS(sampleDHMC,2000))
 
 #Number of data points
 Nd = [10, 50, 200]
