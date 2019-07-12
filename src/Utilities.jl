@@ -30,7 +30,7 @@ function getnames(post)
     cnt = 0
     for (k,v) in pairs(nt)
         N = length(v)
-        if N > 1
+        if isa(v,Array)
             for i in 1:N
                 cnt += 1
                 parm_names[cnt] = string(k,"[",i,"]")
