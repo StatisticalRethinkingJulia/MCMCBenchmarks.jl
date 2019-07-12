@@ -42,10 +42,8 @@ end
 end
 
 @testset "Signal Detection Generative Model " begin
-    include(joinpath(path,
-    "../../Models/SDT/SDT_Functions.jl"))
-    include(joinpath(path,
-    "../../Models/SDT/SDT.jl"))
+    include(joinpath(path,"../../Models/SDT/SDT_Functions.jl"))
+    include(joinpath(path,"../../Models/SDT/SDT.jl"))
     Nd=10^4
     d = 2.0
     c = 0.0

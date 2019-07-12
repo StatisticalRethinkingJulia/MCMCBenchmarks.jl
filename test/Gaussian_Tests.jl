@@ -1,6 +1,6 @@
 using MCMCBenchmarks,Test
 
-@testset "Turing Gaussian Test " begin
+@testset "Gaussian Tests " begin
     path = pathof(MCMCBenchmarks)
     include(joinpath(path, "../../Models/Gaussian/Gaussian_Models.jl"))
     mu = 0

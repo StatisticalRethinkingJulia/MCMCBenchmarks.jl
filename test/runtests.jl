@@ -1,7 +1,8 @@
 using MCMCBenchmarks,Test
 tests = [
 "generative_model_tests",
-"Gaussian_Tests"
+"Gaussian_Tests",
+"SDT_Tests"
 ]
 
 res = map(tests) do t
