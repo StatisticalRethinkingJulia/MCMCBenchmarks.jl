@@ -94,9 +94,11 @@ end
 
 function cross_samplerRhat!(schains,csr̂;kwargs...)
     schains = Chains.(schains)
+    schains = standardizeNames.(schains)
     chains = reduce(chainscat,schains)
     chains = removeBurnin(chains;kwargs...)
     df = describe(chains)[1].df
+    sort!(df)
     parms = sort!(chains.name_map.parameters)
     values = getindex(df,:r_hat)
     N = length(schains)
@@ -344,11 +346,23 @@ function addMeans!(newDF,df)
     end
 end
 
-function createName(p,col)
+function standardizeNames(chain)
+    nms = names(chain)
+    newNames = standardizeName.(nms)
+    newChain = Chains(chain.value.data,newNames)
+    return newChain
+end
+
+function standardizeName(p)
     if occursin(".",p)
         s = split(p,".")
         p = string(s[1],"[",s[2],"]")
     end
+    return p
+end
+
+function createName(p,col)
+    p = standardizeName(p)
     return Symbol(string(p,"_",col))
 end
 
