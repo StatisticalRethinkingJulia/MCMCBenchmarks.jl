@@ -3,12 +3,11 @@ using MCMCBenchmarks,CSV
 ProjDir = @__DIR__
 cd(ProjDir)
 
-path = include(joinpath(path, "../../Models/Gaussian/Gaussian_Models.jl"))
+path = pathof(MCMCBenchmarks)
+include(joinpath(path, "../../Models/Gaussian/Gaussian_Models.jl"))
 
-folder = "2019_06_15T14_20_00/"
+folder = "2019_07_19T08_28_00/"
 results = CSV.read(path*folder*"results.csv")
-
-results = CSV.read("results.csv")
 
 dir = "results/"
 

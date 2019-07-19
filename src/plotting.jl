@@ -10,10 +10,10 @@ function plotdensity(df::DataFrame,metric::Symbol,group=(:sampler,);save=false,
     figfmt="pdf",dir="",options...)
     plots = Plots.Plot[]
     layout = SetLayout(df,group)
-    grouping = map(x->df[x],group)
+    grouping = map(x->df[!,x],group)
     for c in names(df)
         !isin(metric,c) ? (continue) : nothing
-        p=density(df[c],group=grouping,grid=false,xlabel=string(c),
+        p=density(df[!,c],group=grouping,grid=false,xlabel=string(c),
             ylabel="Density",layout=layout,fill=(0,.5),width=1.5;options...)
         push!(plots,p)
         save ? savefig(p,string(dir,"density_",c,".",figfmt)) : nothing
@@ -36,7 +36,7 @@ function SetLayout(df,group)
     isempty(group) ? (return (1,1)) : nothing
     length(group) == 1 ? (return (1,1)) : nothing
     col = group[end]
-    n = length(unique(df[col]))
+    n = length(unique(df[!,col]))
     return (n,1)
 end
 
@@ -59,9 +59,9 @@ function plotsummary(df::DataFrame,xvar::Symbol,metric::Symbol,group=(:sampler,)
         !isin(metric,c) ? (continue) : nothing
         summary,yvar = summarize(df,c,[xvar,group...],func)
         dfse,yse = summarize(df,c,[xvar,group...],se)
-        grouping = map(x->summary[x],group)
-        p=plot(summary[xvar],summary[yvar],group=grouping,grid=false,xlabel=string(xvar),
-            ylabel=string(yvar),layout=layout,width=1.5,yerror=dfse[yse];options...)
+        grouping = map(x->summary[!,x],group)
+        p=plot(summary[!,xvar],summary[!,yvar],group=grouping,grid=false,xlabel=string(xvar),
+            ylabel=string(yvar),layout=layout,width=1.5,yerror=dfse[!,yse];options...)
         push!(plots,p)
         save ? savefig(p,string(dir,"summary_",c,".",figfmt)) : nothing
     end
@@ -88,10 +88,10 @@ function plotscatter(df::DataFrame,xvar::Symbol,metric::Symbol,group=(:sampler,)
     figfmt="pdf",func=mean,dir="",options...)
     plots = Plots.Plot[]
     layout = SetLayout(df,group)
-    grouping = map(x->df[x],group)
+    grouping = map(x->df[!,x],group)
     for c in names(df)
         !isin(metric,c) ? (continue) : nothing
-        p=scatter(df[xvar],df[c],group=grouping,grid=false,xlabel=string(xvar),
+        p=scatter(df[!,xvar],df[!,c],group=grouping,grid=false,xlabel=string(xvar),
             ylabel=string(c),layout=layout,width=1.5;options...)
         push!(plots,p)
         save ? savefig(p,string(dir,"scatter_",xvar,"_",c,".",figfmt)) : nothing
@@ -114,12 +114,12 @@ function plotrecovery(df::DataFrame,parms,group=(:sampler,);save=false,
     plots = Plots.Plot[]
     layout = SetLayout(df,group)
     for s in groupby(df,:sampler)
-        sampler = s[:sampler][1]
-        grouping = map(x->s[x],group)
+        sampler = s[!,:sampler][1]
+        grouping = map(x->s[!,x],group)
         for (parm,v) in pairs(parms)
-            μ = s[Symbol(string(parm,"_mean"))]
-            lb = μ .- s[Symbol(string(parm,"_hdp_lb"))]
-            ub = s[Symbol(string(parm,"_hdp_ub"))] .- μ
+            μ = s[!,Symbol(string(parm,"_mean"))]
+            lb = μ .- s[!,Symbol(string(parm,"_hdp_lb"))]
+            ub = s[!,Symbol(string(parm,"_hdp_ub"))] .- μ
             p=scatter(μ,group=grouping,grid=false,ylabel=string(parm),layout=layout,
                 leg=false,yerror=(lb,ub),width=1,title=string(sampler);options...)
             cnt = 0

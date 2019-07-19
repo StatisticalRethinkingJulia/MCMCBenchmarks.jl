@@ -68,11 +68,11 @@ function getMetadata()
     df = DataFrame()
     pkgs = [:CmdStan,:DynamicHMC,
         :Turing,:AdvancedHMC]
-    map(p->df[p]=dict[string(p)][1]["version"],pkgs)
-    df[:julia] = VERSION
-    df[:os] = MACHINE
+    map(p->df[!,p]=[dict[string(p)][1]["version"]],pkgs)
+    df[!,:julia] = [VERSION]
+    df[!,:os] = [MACHINE]
     cpu = cpu_info()
-    df[:cpu] = cpu[1].model
+    df[!,:cpu] = [cpu[1].model]
     return df
 end
 

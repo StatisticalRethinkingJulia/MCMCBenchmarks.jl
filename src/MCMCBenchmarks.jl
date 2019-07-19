@@ -100,13 +100,14 @@ function cross_samplerRhat!(schains,csr̂;kwargs...)
     df = describe(chains)[1].df
     sort!(df)
     parms = sort!(chains.name_map.parameters)
-    values = getindex(df,:r_hat)
+    values = df[!,:r_hat]
     N = length(schains)
     newDF = DataFrame()
     for (p,v) in zip(parms,values)
         colname = createName(p,:sampler_rhat)
         V = fill(v,N)
-        setindex!(newDF,V,colname)
+        #setindex!(newDF,V,colname)
+        newDF[!,colname] = V
     end
     return vcat(csr̂,newDF,cols=:union)
 end
@@ -185,9 +186,9 @@ function updateResults!(s::AHMCNUTS,performance,results;kwargs...)
     addMeans!(newDF,df)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     dfi=describe(chain,sections=[:internals])[1]
-    newDF[:epsilon]=dfi[:lf_eps, :mean][1]
+    newDF[!,:epsilon]=[dfi[:lf_eps, :mean][1]]
     addPerformance!(newDF,performance)
-    newDF[:sampler]= gettype(s)
+    newDF[!,:sampler]= [gettype(s)]
     addKW!(newDF;kwargs...)
     return vcat(results,newDF,cols=:union)
 end
@@ -204,9 +205,9 @@ function updateResults!(s::CmdStanNUTS,performance,results;kwargs...)
     addMeans!(newDF,df)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     dfi=describe(chain,sections=[:internals])[1]
-    newDF[:epsilon]=dfi[:stepsize__, :mean][1]
+    newDF[!,:epsilon]=[dfi[:stepsize__, :mean][1]]
     addPerformance!(newDF,performance)
-    newDF[:sampler] = gettype(s)
+    newDF[!,:sampler] = [gettype(s)]
     addKW!(newDF;kwargs...)
     return vcat(results,newDF,cols=:union)
 end
@@ -223,9 +224,9 @@ function updateResults!(s::DHMCNUTS,performance,results;kwargs...)
     addMeans!(newDF,df)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     dfi=describe(chain,sections=[:internals])[1]
-    newDF[:epsilon]=dfi[:lf_eps, :mean][1]
+    newDF[!,:epsilon]=[dfi[:lf_eps, :mean][1]]
     addPerformance!(newDF,performance)
-    newDF[:sampler] = gettype(s)
+    newDF[!,:sampler] = [gettype(s)]
     addKW!(newDF;kwargs...)
     return vcat(results,newDF,cols=:union)
 end
@@ -236,7 +237,8 @@ adds keyword arguments to DataFrame
 """
 function addKW!(df;kwargs...)
     for (k,v) in pairs(kwargs)
-        setindex!(df,v,k)
+        #setindex!(df,v,k)
+        df[!,k] = [v]
     end
 end
 
@@ -246,11 +248,11 @@ Adds performance metrics to benchmark results
 * `p`: performance metrics computed from @timed
 """
 function addPerformance!(df,p)
-    df[:time] = p[2]
-    df[:megabytes] = p[3]/1e6
-    df[:gctime] = p[4]
-    df[:gcpercent] = p[4]/p[2]
-    df[:allocations] = p[5].poolalloc + p[5].malloc
+    df[!,:time] = [p[2]]
+    df[!,:megabytes] = [p[3]/1e6]
+    df[!,:gctime] = [p[4]]
+    df[!,:gcpercent] = [p[4]/p[2]]
+    df[!,:allocations] = [p[5].poolalloc + p[5].malloc]
 end
 
 """
@@ -304,10 +306,11 @@ will be mu_ess and sigma_ess and will contain their respective ess values
 """
 function addColumns!(newDF,chn,df,col)
     parms = sort!(chn.name_map.parameters)
-    values = getindex(df,col)
+    values = df[!,col]
     for (p,v) in zip(parms,values)
         colname = createName(p,col)
-        setindex!(newDF,v,colname)
+        #setindex!(newDF,v,colname)
+        newDF[!,colname] = [v]
     end
 end
 
@@ -316,10 +319,11 @@ Effective Sample Size per second
 """
 function addESStime!(newDF,chn,df,performance)
     parms = sort!(chn.name_map.parameters)
-    values = getindex(df,:ess)/performance[2]
+    values = df[!,:ess]/performance[2]
     for (p,v) in zip(parms,values)
         colname = createName(p,"ess_ps")
-        setindex!(newDF,v,colname)
+        #setindex!(newDF,v,colname)
+        newDF[!,colname] = [v]
     end
 end
 
@@ -331,9 +335,11 @@ function addHPD!(newDF,chain)
     for r in eachrow(h.df)
         p,lb,ub = r
         colname = createName(string(p),"hdp_lb")
-        setindex!(newDF,lb,colname)
+        #setindex!(newDF,lb,colname)
+        newDF[!,colname] = [lb]
         colname = createName(string(p),"hdp_ub")
-        setindex!(newDF,ub,colname)
+        #setindex!(newDF,ub,colname)
+        newDF[!,colname] = [ub]
     end
 end
 
@@ -342,7 +348,8 @@ function addMeans!(newDF,df)
         p=r[:parameters]
         v = r[:mean]
         colname = createName(string(p),"mean")
-        setindex!(newDF,v,colname)
+        #setindex!(newDF,v,colname)
+        newDF[!,colname] = [v]
     end
 end
 
