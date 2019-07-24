@@ -97,7 +97,7 @@ function cross_samplerRhat!(schains,csr̂;kwargs...)
     schains = standardizeNames.(schains)
     chains = reduce(chainscat,schains)
     chains = removeBurnin(chains;kwargs...)
-    df = describe(chains)[1].df
+    df = MCMCChains.describe(chains)[1].df
     sort!(df)
     parms = sort!(chains.name_map.parameters)
     values = df[!,:r_hat]
@@ -178,15 +178,15 @@ function updateResults!(s::AHMCNUTS,performance,results;kwargs...)
     chain = performance[1]
     newDF = DataFrame()
     chain=removeBurnin(chain;kwargs...)
-    df = describe(chain)[1].df
+    df = MCMCChains.describe(chain)[1].df
     addColumns!(newDF,chain,df,:ess)
     addColumns!(newDF,chain,df,:r_hat)
     addESStime!(newDF,chain,df,performance)
     addHPD!(newDF,chain)
     addMeans!(newDF,df)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
-    dfi=describe(chain,sections=[:internals])[1]
-    newDF[!,:epsilon]=[dfi[:lf_eps, :mean][1]]
+    dfi=MCMCChains.describe(chain,sections=[:internals])[1]
+    #newDF[!,:epsilon]=[dfi[:lf_eps, :mean][1]]
     addPerformance!(newDF,performance)
     newDF[!,:sampler]= [gettype(s)]
     addKW!(newDF;kwargs...)
@@ -197,14 +197,14 @@ function updateResults!(s::CmdStanNUTS,performance,results;kwargs...)
     chain = performance[1]
     newDF = DataFrame()
     chain=removeBurnin(chain;kwargs...)
-    df = describe(chain)[1].df
+    df = MCMCChains.describe(chain)[1].df
     addColumns!(newDF,chain,df,:ess)
     addColumns!(newDF,chain,df,:r_hat)
     addESStime!(newDF,chain,df,performance)
     addHPD!(newDF,chain)
     addMeans!(newDF,df)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
-    dfi=describe(chain,sections=[:internals])[1]
+    dfi=MCMCChains.describe(chain,sections=[:internals])[1]
     newDF[!,:epsilon]=[dfi[:stepsize__, :mean][1]]
     addPerformance!(newDF,performance)
     newDF[!,:sampler] = [gettype(s)]
@@ -216,15 +216,15 @@ function updateResults!(s::DHMCNUTS,performance,results;kwargs...)
     chain = performance[1]
     newDF = DataFrame()
     chain=removeBurnin(chain;kwargs...)
-    df = describe(chain)[1].df
+    df = MCMCChains.describe(chain)[1].df
     addColumns!(newDF,chain,df,:ess)
     addColumns!(newDF,chain,df,:r_hat)
     addESStime!(newDF,chain,df,performance)
     addHPD!(newDF,chain)
     addMeans!(newDF,df)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
-    dfi=describe(chain,sections=[:internals])[1]
-    newDF[!,:epsilon]=[dfi[:lf_eps, :mean][1]]
+    dfi=MCMCChains.describe(chain,sections=[:internals])[1]
+    #newDF[!,:epsilon]=[dfi[:lf_eps, :mean][1]]
     addPerformance!(newDF,performance)
     newDF[!,:sampler] = [gettype(s)]
     addKW!(newDF;kwargs...)
