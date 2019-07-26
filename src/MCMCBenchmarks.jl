@@ -99,7 +99,7 @@ end
 Computes r̂ across a set of chains from different samplers.
 * `schains`: a vector of chains from different samplers
 * `csr̂`: A DataFrame containing cross sampler r̂. This is concatonated to the
-results DataFrame 
+results DataFrame
 
 """
 function cross_samplerRhat!(schains,csr̂;kwargs...)
@@ -140,6 +140,7 @@ Runs the benchmarking procedure and returns the results
 
  """
  Runs the benchmarking procedure defined in benchmark in parallel and returns the results
+
 
  * `samplers`: a tuple of samplers or a single sampler object
  * `simulate`: model simulation function with keyword Nd
@@ -185,8 +186,8 @@ function updateResults!(s::AHMCNUTS,performance,results;kwargs...)
     newDF = DataFrame()
     chain=removeBurnin(chain;kwargs...)
     df = MCMCChains.describe(chain)[1].df
-    addColumns!(newDF,chain,df,:ess)
-    addColumns!(newDF,chain,df,:r_hat)
+    addChainSummary!(newDF,chain,df,:ess)
+    addChainSummary!(newDF,chain,df,:r_hat)
     addESStime!(newDF,chain,df,performance)
     addHPD!(newDF,chain)
     addMeans!(newDF,df)
@@ -204,8 +205,8 @@ function updateResults!(s::CmdStanNUTS,performance,results;kwargs...)
     newDF = DataFrame()
     chain=removeBurnin(chain;kwargs...)
     df = MCMCChains.describe(chain)[1].df
-    addColumns!(newDF,chain,df,:ess)
-    addColumns!(newDF,chain,df,:r_hat)
+    addChainSummary!(newDF,chain,df,:ess)
+    addChainSummary!(newDF,chain,df,:r_hat)
     addESStime!(newDF,chain,df,performance)
     addHPD!(newDF,chain)
     addMeans!(newDF,df)
@@ -223,14 +224,14 @@ function updateResults!(s::DHMCNUTS,performance,results;kwargs...)
     newDF = DataFrame()
     chain=removeBurnin(chain;kwargs...)
     df = MCMCChains.describe(chain)[1].df
-    addColumns!(newDF,chain,df,:ess)
-    addColumns!(newDF,chain,df,:r_hat)
+    addChainSummary!(newDF,chain,df,:ess)
+    addChainSummary!(newDF,chain,df,:r_hat)
     addESStime!(newDF,chain,df,performance)
     addHPD!(newDF,chain)
     addMeans!(newDF,df)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     dfi=MCMCChains.describe(chain,sections=[:internals])[1]
-    #newDF[!,:epsilon]=[dfi[:lf_eps, :mean][1]]
+    newDF[!,:epsilon]=[dfi[:lf_eps, :mean][1]]
     addPerformance!(newDF,performance)
     newDF[!,:sampler] = [gettype(s)]
     addKW!(newDF;kwargs...)
@@ -238,31 +239,8 @@ function updateResults!(s::DHMCNUTS,performance,results;kwargs...)
 end
 
 """
-adds keyword arguments to DataFrame
-* 'df': DataFrame containing benchmark results for single iteration
-"""
-function addKW!(df;kwargs...)
-    for (k,v) in pairs(kwargs)
-        #setindex!(df,v,k)
-        df[!,k] = [v]
-    end
-end
-
-"""
-Adds performance metrics to benchmark results
-* `df`: the dataframe to which performance metrics are added
-* `p`: performance metrics computed from @timed
-"""
-function addPerformance!(df,p)
-    df[!,:time] = [p[2]]
-    df[!,:megabytes] = [p[3]/1e6]
-    df[!,:gctime] = [p[4]]
-    df[!,:gcpercent] = [p[4]/p[2]]
-    df[!,:allocations] = [p[5].poolalloc + p[5].malloc]
-end
-
-"""
-Modifies MCMC sampler configuration outside of runSampler
+Modifies MCMC sampler configuration, including number of samples, target
+acceptance rate and others depending on the specific sampler.
 * `s`: sampler object
 """
 function modifyConfig!(s::AHMCNUTS;Nsamples,Nadapt,delta,kwargs...)
@@ -285,6 +263,32 @@ function modifyConfig!(s::DHMCNUTS;Nsamples,kwargs...)
     s.Nsamples = Nsamples
 end
 
+"""
+Adds keyword arguments to the results DataFrame
+* `df`: DataFrame containing benchmark results for single iteration
+* `kwargs`: keyword arguments
+"""
+function addKW!(df;kwargs...)
+    for (k,v) in pairs(kwargs)
+        df[!,k] = [v]
+    end
+end
+
+"""
+Adds performance metrics to benchmark results, which include runtime,
+memory allocations in MB, garbage collection time, percent of time spent in garbage collection,
+and the number of memory allocations
+* `df`: the dataframe to which performance metrics are added
+* `p`: performance metrics computed from @timed
+"""
+function addPerformance!(df,p)
+    df[!,:time] = [p[2]]
+    df[!,:megabytes] = [p[3]/1e6]
+    df[!,:gctime] = [p[4]]
+    df[!,:gcpercent] = [p[4]/p[2]]
+    df[!,:allocations] = [p[5].poolalloc + p[5].malloc]
+end
+
 function toDict(data)
     return Dict(string(k)=>v for (k,v) in pairs(data))
 end
@@ -301,7 +305,7 @@ function savechain!(s,chains,performance;savechain=false,kwargs...)
 end
 
 """
-adds columns to newDF for each parameter.
+Adds chain summary (e.g. rhat,ess) to newDF for each parameter.
 * `newDF`: dataframe that collects results on an iteration
 * `chn`: chain for given iteration
 * `df`: df of chain results
@@ -310,12 +314,11 @@ adds columns to newDF for each parameter.
 e.g. If col = :ess, and parameters are mu and sigma, the new columns
 will be mu_ess and sigma_ess and will contain their respective ess values
 """
-function addColumns!(newDF,chn,df,col)
+function addChainSummary!(newDF,chn,df,col)
     parms = sort!(chn.name_map.parameters)
     values = df[!,col]
     for (p,v) in zip(parms,values)
         colname = createName(p,col)
-        #setindex!(newDF,v,colname)
         newDF[!,colname] = [v]
     end
 end
@@ -328,13 +331,14 @@ function addESStime!(newDF,chn,df,performance)
     values = df[!,:ess]/performance[2]
     for (p,v) in zip(parms,values)
         colname = createName(p,"ess_ps")
-        #setindex!(newDF,v,colname)
         newDF[!,colname] = [v]
     end
 end
 
 """
 Add highest probability density interval for each parameter
+* `newDF`: new DataFrame to be added to results DataFrame
+* `chain`: MCMC chain
 """
 function addHPD!(newDF,chain)
     h = hpd(chain)
@@ -354,7 +358,6 @@ function addMeans!(newDF,df)
         p=r[:parameters]
         v = r[:mean]
         colname = createName(string(p),"mean")
-        #setindex!(newDF,v,colname)
         newDF[!,colname] = [v]
     end
 end
@@ -397,7 +400,7 @@ end
 
 export
   modifyConfig!,
-  addColumns!,
+  addChainSummary!,
   removeBurnin,
   toDict,
   addKW!,
