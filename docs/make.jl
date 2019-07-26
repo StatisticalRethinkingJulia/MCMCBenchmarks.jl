@@ -9,6 +9,5 @@ makedocs(
 )
 
 deploydocs(
-    #repo = "github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl.git",
-    rep = https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/tree/docs_branch,
+    repo = "github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl.git",
 )
