@@ -26,6 +26,8 @@ These functions are overloaded with sampler-specific methods, ensuring that the 
 
 ## Features
 
+## Example 
+
 
 ## Sampler Structs
 
