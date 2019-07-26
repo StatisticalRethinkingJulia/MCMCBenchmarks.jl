@@ -18,7 +18,7 @@ include("TOML/parser.jl")
 abstract type MCMCSampler end
 
 """
-AdvancedHMC NUTS
+MCMC sampler struct for AdvancedHMC NUTS
 
 * `model`: model function that accepts data
 * `config`: sampler configution settings
@@ -29,7 +29,7 @@ mutable struct AHMCNUTS{T1,T2} <: MCMCSampler
 end
 
 """
-CmdStan NUTS
+MCMC sampler struct for CmdStan NUTS
 
 * `model`: model configuration
 * `dir`: probject directory
@@ -37,13 +37,12 @@ CmdStan NUTS
 mutable struct CmdStanNUTS{T1} <: MCMCSampler
     model::T1
     dir::String
-    name::String
 end
 
-CmdStanNUTS(model,dir) = CmdStanNUTS(model,dir,model.name)
+CmdStanNUTS(model,dir) = CmdStanNUTS(model,dir)
 
 """
-DynamicHMC NUTS
+MCMC sampler struct for DynamicHMC NUTS
 
 * `model`: model function that accepts data
 * `config`: sampler configution settings
@@ -85,6 +84,10 @@ function benchmark!(samplers,results,csr̂,simulate,Nreps,chains;kwargs...)
     return results,csr̂
 end
 
+function benchmark!(sampler::T,results,csr̂,simulate,Nreps,chains;kwargs...) where {T<:MCMCSampler}
+    return benchmark!((sampler,),results,simulate,Nreps,chains;kwargs...)
+end
+
 function Chains(chain::Chains)
     parms = String.(chain.name_map.parameters)
     sort!(parms)
@@ -92,6 +95,13 @@ function Chains(chain::Chains)
     return Chains(v,parms)
 end
 
+"""
+Computes r̂ across a set of chains from different samplers.
+* `schains`: a vector of chains from different samplers
+* `csr̂`: A DataFrame containing cross sampler r̂. This is concatonated to the
+results DataFrame 
+
+"""
 function cross_samplerRhat!(schains,csr̂;kwargs...)
     schains = Chains.(schains)
     schains = standardizeNames.(schains)
@@ -110,10 +120,6 @@ function cross_samplerRhat!(schains,csr̂;kwargs...)
         newDF[!,colname] = V
     end
     return vcat(csr̂,newDF,cols=:union)
-end
-
-function benchmark!(sampler::T,results,csr̂,simulate,Nreps,chains;kwargs...) where {T<:MCMCSampler}
-    return benchmark!((sampler,),results,simulate,Nreps,chains;kwargs...)
 end
 
 """
