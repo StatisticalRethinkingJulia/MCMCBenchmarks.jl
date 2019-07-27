@@ -1,4 +1,5 @@
 """
+Plots a desnity of a distribution for a selected metric (e.g. effective sample size)
 * `df`: dataframe of results
 * `metric`: name of metric, such as :ess for effective sample size
 * `group`: a tuple of grouping factors, e.g. (:sampler,:Nd)
@@ -22,26 +23,7 @@ function plotdensity(df::DataFrame,metric::Symbol,group=(:sampler,);save=false,
 end
 
 """
-Test whether column is a metric, e.g. mu_ess for ess.
-"""
-function isin(metric,col)
-    occursin(string(metric),string(col))
-end
-
-"""
-Creates a layout = (n,1) where n is the number of factors
-in the last grouping variable.
-"""
-function SetLayout(df,group)
-    isempty(group) ? (return (1,1)) : nothing
-    length(group) == 1 ? (return (1,1)) : nothing
-    col = group[end]
-    n = length(unique(df[!,col]))
-    return (n,1)
-end
-
-se(x)=std(x)/sqrt(length(x))
-"""
+Plots a summary of a metric computed according to a function, func. func defaults to the mean.
 * `df`: dataframe of results
 * `xvar`: variable assigned to x-axis
 * `metric`: name of metric, such as :ess for effective sample size
@@ -68,13 +50,9 @@ function plotsummary(df::DataFrame,xvar::Symbol,metric::Symbol,group=(:sampler,)
     return plots
 end
 
-function summarize(df,metric,grouping,func)
-    newDF= by(df,grouping,metric=>func)
-    yvar = names(newDF)[end]
-    return newDF,yvar
-end
-
 """
+Generates a scatter plot to visualize the relationship between two
+benchmarking metrics.
 * `df`: dataframe of results
 * `xvar`: variable assigned to x-axis
 * `metric`: name of metric, such as :ess for effective sample size
@@ -100,7 +78,8 @@ function plotscatter(df::DataFrame,xvar::Symbol,metric::Symbol,group=(:sampler,)
 end
 
 """
-Generate plot to assess parameter recovery
+Generates a plot to compare the estimated parameters to true parameter values used to
+generate simulated data.
 * `df`: dataframe of results
 * `parms`: namedtuple of parameter names and true values
 * `group`: a tuple of grouping factors, e.g. (:sampler,:Nd)
@@ -129,4 +108,31 @@ function plotrecovery(df::DataFrame,parms,group=(:sampler,);save=false,
         end
     end
     return plots
+end
+
+"""
+Test whether column is a metric, e.g. mu_ess for ess.
+"""
+function isin(metric,col)
+    occursin(string(metric),string(col))
+end
+
+"""
+Creates a layout = (n,1) where n is the number of factors
+in the last grouping variable.
+"""
+function SetLayout(df,group)
+    isempty(group) ? (return (1,1)) : nothing
+    length(group) == 1 ? (return (1,1)) : nothing
+    col = group[end]
+    n = length(unique(df[!,col]))
+    return (n,1)
+end
+
+se(x)=std(x)/sqrt(length(x))
+
+function summarize(df,metric,grouping,func)
+    newDF= by(df,grouping,metric=>func)
+    yvar = names(newDF)[end]
+    return newDF,yvar
 end

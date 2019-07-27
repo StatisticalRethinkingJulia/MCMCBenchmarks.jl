@@ -1,4 +1,3 @@
-
 @model AHMCGaussian(y,N) = begin
     mu ~ Normal(0,1)
     sigma ~ Truncated(Cauchy(0,5),0,Inf)
@@ -67,7 +66,7 @@ CmdStanConfig = Stanmodel(name = "CmdStanGaussian",model=CmdStanGaussian,nchains
     return chns
   end
 
-function GaussianGen(;μ=0,σ=1,Nd,kwargs...)
+function simulateGaussian(;μ=0,σ=1,Nd,kwargs...)
     data=(y=rand(Normal(μ,σ),Nd),N=Nd)
       return data
  end
