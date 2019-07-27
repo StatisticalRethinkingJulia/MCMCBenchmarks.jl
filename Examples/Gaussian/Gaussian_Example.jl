@@ -8,6 +8,7 @@ cd(ProjDir)
 isdir("tmp") && rm("tmp", recursive=true)
 mkdir("tmp")
 !isdir("results") && mkdir("results")
+
 path = pathof(MCMCBenchmarks)
 @everywhere begin
   using MCMCBenchmarks,Revise
