@@ -25,21 +25,13 @@ MCMCBenchmarks (WIP) provides a lightweight yet flexible framework for benchmark
 - Test Suite: a suite of test models that span a wide range of difficulty. 
 
 ## Test Suite 
-The table below provides a working list of test models that will be included in the test suite as well as their current development status, ordered approximately from easist to most difficult:  
+MCMCBenchmarks includes a test suite of models spanning a wide range of difficulty. Each model is listed below, ordered approximately from easist to most difficult:  
 
 - [Gaussian Model](https://en.wikipedia.org/wiki/Normal_distribution): simple two parameter Gaussian distribution
 - [Signal Detection Model](https://en.wikipedia.org/wiki/Detection_theory): a simple model used in psychophysics and signal processing, which decomposes performance in terms of descriminability and bias
 - [Linear Regession Model](https://en.wikipedia.org/wiki/Linear_regression)
 - Hierarchical Poisson Regression
 - [Linear Ballistic Accumulator](https://s3.amazonaws.com/academia.edu.documents/38243618/The_simplest_complete_model_of_choice_response_time-_Linear_Ballistic_Accumulation.pdf?AWSAccessKeyId=AKIAIWOWYYGZ2Y53UL3A&Expires=1558170639&Signature=DucSUdy%2FFW1jFCZcsN%2FvZbAqsrk%3D&response-content-disposition=inline%3B%20filename%3DThe_simplest_complete_model_of_choice_re.pdf): a cognitive model of perception and simple decision making. 
-
-| Model                           	| Turing  	| DynamicHMC 	| CmdStan 	|
-|---------------------------------	|---------	|------------	|---------	|
-| Gaussian Model                  	| Working 	| Working    	| Working 	|
-| Signal Detection Theory         	| Working 	| Working    	| Working 	|
-| Linear Regression               	| Working 	| Working    	| Working 	|
-| Hierarchical Poisson Regression 	| Working   | Working    	| Working  	|
-| Linear Ballistic Accumulator    	| Working 	| Working    	| Working 	|
 
 ## Preliminary Results
 
