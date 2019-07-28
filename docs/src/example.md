@@ -24,7 +24,7 @@ In order to perform a benchmark, the user must define the following:
 * Sampler specific struct and methods defined for updateResults!, modifyConfig!, and runSampler. Structs and methods for NUTS in CmdStan, AdvancedHMC/Turing, and DynamicHMC are provided by MCMCBenchmarks.
 
 
-Walk through the components top level code
+We will walk through the code in the top-level script named Gaussian_Example.jl. In the first snippet, we call the required packages, set the number of chains to 4, set the file directory as the project directory, remove old the old CmdStan output director tmp and create a new one, then create a results folder if one does not already exist.  
 
 ```julia
 using Revise,MCMCBenchmarks,Distributed
@@ -39,6 +39,7 @@ mkdir("tmp")
 !isdir("results") && mkdir("results")
 ```
 
+In the following code snippet, we set the path to the Gaussian model file and load them on each of the workers. Next, we suppress the printing of Turing's progress and set a seed on each worker.
 
 ```julia
 path = pathof(MCMCBenchmarks)
@@ -59,8 +60,9 @@ seeds = (939388,39884,28484,495858,544443)
 for (i,seed) in enumerate(seeds)
     @fetch @spawnat i Random.seed!(seed)
 end
-
 ```
+
+The follow snippet creates a tuple of samplers and initializes a CmdStan output folder for each worker.
 
 ```julia
 #create a sampler object or a tuple of sampler objects
@@ -74,6 +76,14 @@ stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
 initStan(stanSampler)
 ```
 
+At this point, we can define the benchmark design. The design configuration is collected in the `NamedTuple` called options. MCMCBenchmarks will perform `Nrep = 50` repetitions for each combinations of factors defined in options. The number of combinations is computed as: `prod(length.(values(options)))`. In this example, there are three combinations:
+
+* (Nsamples=2000,Nadapt=1000,delta=.8,Nd=10)
+* (Nsamples=2000,Nadapt=1000,delta=.8,Nd=100)
+* (Nsamples=2000,Nadapt=1000,delta=.8,Nd=1000)
+
+If we set `delta = [.65, .80]` instead of `delta = .80`, there would be 6 combinations.
+
 ```julia
 #Number of data points
 Nd = [10, 100, 1000]
@@ -82,20 +92,25 @@ Nd = [10, 100, 1000]
 Nreps = 50
 
 options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
+```
 
+The function `pbenchmark` performs the benchmarks in parallel, by dividing the jobs across the available processors. `pbenchmark` accepts the tuple of samplers, the data generating function, the number of repetitions, and the design options. Upon completion, a `DataFrame` containing the benchmarks and configuration information is returned. 
+
+```julia  
 #perform the benchmark
 results = pbenchmark(samplers,simulateGaussian,Nreps;options...)
 ```
 
-
-
-### Output  
+After the benchmark has completed, the results are saved in the results as a csv file. In addition, relevant package version information and system information is saved in a seperate csv file.
 
 ```julia
 #save results
 save(results,ProjDir)
-
-pyplot()
-cd(pwd)
-dir = "results/"
 ```
+### Results Output
+The following information is stored in the results `DataFrame`:
+
+* Each parameter is associated with a column for each of the following quantities: Effective Sample Size, Effective Sample Size per second, cross-sampler r̂
+* A sampler name column
+* The column for each design element in the options `NamedTuple`
+* A column for each of following performance metrics: run time, % garbage collection time, number of memory allocations, the amount of memory allocated in MB
