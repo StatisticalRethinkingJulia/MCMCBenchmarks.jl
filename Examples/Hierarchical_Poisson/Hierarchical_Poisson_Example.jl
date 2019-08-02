@@ -42,13 +42,13 @@ stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
 initStan(stanSampler)
 
 #Number of data points per unit
-Nd = [1,3]
+Nd = 1
 
 #Number of units in model
-Ns = [10,30]
+Ns = [10,20]
 
 #Number of simulations
-Nreps = 50
+Nreps = 20
 
 options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Ns=Ns)
 #perform the benchmark
