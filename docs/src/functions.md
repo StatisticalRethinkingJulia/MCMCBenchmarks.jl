@@ -24,6 +24,12 @@ DHMCNUTS
 
 ```@docs
 benchmark
+
+```julia
+benchmark!(samplers,results,csr̂,simulate,Nreps,chains;kwargs...)
+
+benchmark!(sampler::T,results,csr̂,simulate,Nreps,chains;kwargs...) where {T<:MCMCSampler}
+```
 ```
 
 ```@docs
