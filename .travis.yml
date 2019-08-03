@@ -6,8 +6,8 @@ dist: xenial
 os:
   - linux
 
-# env:
-#   - JULIA_CMDSTAN_HOME="$HOME/cmdstan-2.19.1/"
+ env:
+   - JULIA_CMDSTAN_HOME="$HOME/cmdstan-2.19.1/"
 
 julia:
   - 1.1
