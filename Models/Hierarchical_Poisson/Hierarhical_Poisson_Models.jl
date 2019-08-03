@@ -95,8 +95,8 @@ CmdStanConfig = Stanmodel(name = "CmdStanPoisson",model=CmdStanPoisson,nchains=1
     as( (a0 = asℝ,a1 = asℝ, a0s = as(Array, Ns), a0_sig = asℝ₊) )
     # Use Flux for the gradient.
     P = TransformedLogDensity(problem_transformation(p), p)
-    #∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P))
-    ∇P = ADgradient(:ForwardDiff, P)
+    ∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P))
+    #∇P = ADgradient(:ForwardDiff, P)
     # FSample from the posterior.
     chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, nsamples,report=ReportSilent());
     # Undo the transformation to obtain the posterior from the chain.
