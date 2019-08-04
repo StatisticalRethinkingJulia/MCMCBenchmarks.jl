@@ -23,7 +23,7 @@ end
     mu = 0
     sigma = 1
     Nd = 10^5
-    data = GaussianGen(;Nd=Nd,μ=mu,σ=sigma)
+    data = simulateGaussian(;Nd=Nd,μ=mu,σ=sigma)
     @test typeof(data) == NamedTuple{(:y, :N),Tuple{Array{Float64,1},Int64}}
     @test mu ≈ mean(data.y) atol=1e-1
     @test sigma ≈ std(data.y) atol=1e-1

@@ -24,10 +24,10 @@ MCMC sampler struct for CmdStan NUTS
 mutable struct CmdStanNUTS{T1} <: MCMCSampler
     model::T1
     dir::String
+    name::String
 end
 
-CmdStanNUTS(model,dir) = CmdStanNUTS(model,dir)
-
+CmdStanNUTS(model,dir) = CmdStanNUTS(model,dir,model.name)
 """
 MCMC sampler struct for DynamicHMC NUTS
 
@@ -144,7 +144,7 @@ function updateResults!(s::AHMCNUTS,performance,results;kwargs...)
     addMeans!(newDF,df)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     dfi=MCMCChains.describe(chain,sections=[:internals])[1]
-    newDF[!,:epsilon]=[dfi[:lf_eps, :mean][1]]
+    newDF[!,:epsilon]=[dfi[:step_size,:mean][1]]
     addPerformance!(newDF,performance)
     newDF[!,:sampler]= [gettype(s)]
     addKW!(newDF;kwargs...)

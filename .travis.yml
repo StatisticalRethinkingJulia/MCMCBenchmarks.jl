@@ -5,13 +5,13 @@ dist: xenial
 
 os:
   - linux
-  
-env:
-  - JULIA_CMDSTAN_HOME="$HOME/cmdstan-2.19.1/"
-  
+
+ env:
+   - JULIA_CMDSTAN_HOME="$HOME/cmdstan-2.19.1/"
+
 julia:
   - 1.1
-  
+
 before_install:
   - OLDWD=`pwd`
   - cd ~
@@ -19,13 +19,13 @@ before_install:
   - tar -xzpf cmdstan-2.19.1.tar.gz
   - make -C $JULIA_CMDSTAN_HOME build
   - cd $OLDWD
-  
+
 notifications:
   email: false
-  
+
 git:
   depth: 99999999
-  
+
 jobs:
   include:
     - stage: Test
