@@ -2,10 +2,9 @@
     a0 ~ Normal(0, 10)
     a1 ~ Normal(0, 1)
     a0_sig ~ Truncated(Cauchy(0, 1), 0, Inf)
-    a0s = Vector{Real}(undef,Ns)
-    a0s ~ [Normal(0, a0_sig)]
+    a0s ~ MvNormal(zeros(Ns), a0_sig)
     for i ∈ 1:N
-        λ = exp(a0 + a0s[idx[i]] + a1*x[i])
+        λ = exp(a0 + a0s[idx[i]] + a1 * x[i])
         y[i] ~ Poisson(λ)
     end
 end
