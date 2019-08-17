@@ -149,7 +149,7 @@ function compile(samplers,data;kwargs...)
 end
 
 function initStan(s)
-    base = string(s.dir,"/tmp/",s.model.id)
+    base = string(s.dir,"/tmp/",s.model.name)
     for p in procs()
         stream = open(base*".stan","r")
         str = read(stream,String)

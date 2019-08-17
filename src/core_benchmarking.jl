@@ -217,7 +217,7 @@ function modifyConfig!(s::CmdStanNUTS;Nsamples,Nadapt,delta,kwargs...)
     s.model.method.num_warmup = Nadapt
     id = myid()
     if id != 1
-        s.model.name = string(s.name,id)
+        s.model.name = string(s.id,id)
     end
 end
 
