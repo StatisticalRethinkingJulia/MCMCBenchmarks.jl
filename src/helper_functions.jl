@@ -60,7 +60,7 @@ end
 
 function savechain!(s,chains,performance;savechain=false,kwargs...)
     if savechain
-        k = gettype(s)
+        k = s.name
         push!(chains[k],performance[1])
     end
 end
@@ -162,7 +162,7 @@ Initializes NamedTuple of chains
 * s: sampler object
 """
 function initChains(s)
-    names = gettype.(s)
+    names = map(x->x.name,s)
     v = map(x->Chains[],1:length(s))
     return NamedTuple{names}(v)
 end

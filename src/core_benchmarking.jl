@@ -13,7 +13,10 @@ MCMC sampler struct for AdvancedHMC NUTS
 mutable struct AHMCNUTS{T1,T2} <: MCMCSampler
     model::T1
     config::T2
+    name::Symbol
 end
+
+AHMCNUTS(model,config)=AHMCNUTS(model,config,:AHMCNUTS)
 
 """
 MCMC sampler struct for CmdStan NUTS
@@ -24,10 +27,12 @@ MCMC sampler struct for CmdStan NUTS
 mutable struct CmdStanNUTS{T1} <: MCMCSampler
     model::T1
     dir::String
-    name::String
+    id::String
+    name::Symbol
 end
 
-CmdStanNUTS(model,dir) = CmdStanNUTS(model,dir,model.name)
+CmdStanNUTS(model,dir) = CmdStanNUTS(model,dir,model.name,:CmdStanNUTS)
+
 """
 MCMC sampler struct for DynamicHMC NUTS
 
@@ -37,7 +42,10 @@ MCMC sampler struct for DynamicHMC NUTS
 mutable struct DHMCNUTS{T1,T2} <: MCMCSampler
     model::T1
     Nsamples::T2
+    name::Symbol
 end
+
+DHMCNUTS(model,Nsamples) = DHMCNUTS(model,Nsamples,:DHMCNUTS)
 
 """
 Primary function that performs mcmc benchmark repeatedly on a set of samplers
@@ -146,7 +154,7 @@ function updateResults!(s::AHMCNUTS,performance,results;kwargs...)
     dfi=MCMCChains.describe(chain,sections=[:internals])[1]
     newDF[!,:epsilon]=[dfi[:step_size,:mean][1]]
     addPerformance!(newDF,performance)
-    newDF[!,:sampler]= [gettype(s)]
+    newDF[!,:sampler]= [s.name]
     addKW!(newDF;kwargs...)
     return vcat(results,newDF,cols=:union)
 end
@@ -165,7 +173,7 @@ function updateResults!(s::CmdStanNUTS,performance,results;kwargs...)
     dfi=MCMCChains.describe(chain,sections=[:internals])[1]
     newDF[!,:epsilon]=[dfi[:stepsize__, :mean][1]]
     addPerformance!(newDF,performance)
-    newDF[!,:sampler] = [gettype(s)]
+    newDF[!,:sampler] = [s.name]
     addKW!(newDF;kwargs...)
     return vcat(results,newDF,cols=:union)
 end
@@ -184,7 +192,7 @@ function updateResults!(s::DHMCNUTS,performance,results;kwargs...)
     dfi=MCMCChains.describe(chain,sections=[:internals])[1]
     newDF[!,:epsilon]=[dfi[:lf_eps, :mean][1]]
     addPerformance!(newDF,performance)
-    newDF[!,:sampler] = [gettype(s)]
+    newDF[!,:sampler] = [s.name]
     addKW!(newDF;kwargs...)
     return vcat(results,newDF,cols=:union)
 end
