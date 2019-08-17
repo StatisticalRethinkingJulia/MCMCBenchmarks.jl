@@ -1,16 +1,28 @@
+import Distributions: logpdf,DiscreteUnivariateDistribution
+
+"""
+Numerically stable Poisson log likelihood function. Accepts log of rate parameter.
+"""
+struct LogPoisson{T<:Real} <: DiscreteUnivariateDistribution
+    logλ::T
+end
+
+function logpdf(lp::LogPoisson, k::Int)
+    return k * lp.logλ - exp(lp.logλ) - lgamma(k + 1)
+end
+
 @model AHMCpoisson(y,x,idx,N,Ns) = begin
     a0 ~ Normal(0, 10)
     a1 ~ Normal(0, 1)
     a0_sig ~ Truncated(Cauchy(0, 1), 0, Inf)
-    a0s = Vector{Real}(undef,Ns)
-    a0s ~ [Normal(0, a0_sig)]
+    a0s ~ MvNormal(zeros(Ns), a0_sig)
     for i ∈ 1:N
-        λ = exp(a0 + a0s[idx[i]] + a1*x[i])
-        y[i] ~ Poisson(λ)
+        λ = a0 + a0s[idx[i]] + a1 * x[i]
+        y[i] ~ LogPoisson(λ)
     end
 end
 
-AHMCconfig = Turing.NUTS(2000,1000,.85)
+AHMCconfig = Turing.NUTS(2000,1000,.80)
 
 function simulatePoisson(;Nd=1,Ns=10,a0=1.0,a1=.5,a0_sig=.3,kwargs...)
     N = Nd*Ns
@@ -75,13 +87,13 @@ CmdStanConfig = Stanmodel(name = "CmdStanPoisson",model=CmdStanPoisson,nchains=1
       @unpack y,x,idx,N,Ns = problem   # extract the data
       @unpack a0,a1,a0s,a0_sig = θ
       LL = 0.0
-      LL += logpdf(Cauchy(0, 1),a0_sig)
-      LL += sum(logpdf.(Normal(0,a0_sig),a0s))
+      LL += logpdf(Truncated(Cauchy(0, 1),0,Inf),a0_sig)
+      LL += sum(logpdf(MvNormal(zeros(Ns),a0_sig),a0s))
       LL += logpdf.(Normal(0, 10),a0)
       LL += logpdf.(Normal(0, 1),a1)
       for i in 1:N
-         λ = exp(a0 + a0s[idx[i]] + a1*x[i])
-         LL += logpdf(Poisson(λ),y[i])
+         λ = a0 + a0s[idx[i]] + a1*x[i]
+         LL += logpdf(LogPoisson(λ),y[i])
       end
       return LL
   end
