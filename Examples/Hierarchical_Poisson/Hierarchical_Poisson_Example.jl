@@ -27,19 +27,19 @@ seeds = (939388,39884,28484,495858,544443)
 for (i,seed) in enumerate(seeds)
     @fetch @spawnat i Random.seed!(seed)
 end
+
 #create a sampler object or a tuple of sampler objects
 
-#Note that AHMC and DynamicNUTS do not work together due to an
-# error in MCMCChains: https://github.com/TuringLang/MCMCChains.jl/issues/101
-
 samplers=(
-  CmdStanNUTS(CmdStanConfig,ProjDir),
-  AHMCNUTS(AHMCpoisson,AHMCconfig),
-  DHMCNUTS(sampleDHMC,2000))
+  AHMCNUTS(AHMCpoissonG,AHMCconfigG,:TuringG),
+  AHMCNUTS(AHMCpoissonMVG,AHMCconfigMVG,:TuringMVG),
+  AHMCNUTS(AHMCpoissonGSyntax,AHMCconfigGSyntax,:TuringGSyntax),
+  DHMCNUTS(sampleDHMCMVG,2000,:DHMCMVG),
+  DHMCNUTS(sampleDHMCG,2000,:DHMCG))
 
-stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
-#Initialize model files for each instance of stan
-initStan(stanSampler)
+# stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
+# #Initialize model files for each instance of stan
+# initStan(stanSampler)
 
 #Number of data points per unit
 Nd = [1,2,5]
@@ -75,8 +75,11 @@ meanallocPlot = plotsummary(results,:Nd,:allocations,(:sampler,);save=false,dir=
 #Plot mean ess per second of number of data points (Nd) for each sampler
 essPS = plotsummary(results,:Nd,:ess_ps,(:sampler,);save=true,dir=dir)
 
+#Plot mean ess per second of number of data points (Nd) for each sampler
+essPlots = plotsummary(results,:Nd,:ess,(:sampler,);save=true,dir=dir)
+
 #Plot density of effective sample size as function of number of data points (Nd) for each sampler
-essPlots = plotdensity(results,:ess,(:sampler,:Nd);save=true,dir=dir)
+essDensityPlots = plotdensity(results,:ess,(:sampler,:Nd);save=true,dir=dir)
 
 #Plot density of rhat as function of number of data points (Nd) for each sampler
 rhatPlots = plotdensity(results,:r_hat,(:sampler,:Nd);save=true,dir=dir)
@@ -88,7 +91,11 @@ timePlots = plotdensity(results,:time,(:sampler,:Nd);save=true,dir=dir)
 gcPlots = plotdensity(results,:gcpercent,(:sampler,:Nd);save=true,dir=dir)
 
 #Plot density of memory allocations as function of number of data points (Nd) for each sampler
-memPlots = plotdensity(results,:allocations,(:sampler,:Nd);save=true,dir=dir,xscale=:log10,
+memDensityPlots = plotdensity(results,:allocations,(:sampler,:Nd);save=true,dir=dir,xscale=:log10,
+  xlabel="Allocations (log scale)")
+
+#Plot mean memory allocations as function of data points (Nd) for each sampler
+memPlots = plotsummary(results,:Nd,:allocations,(:sampler,);save=true,dir=dir,xscale=:log10,
   xlabel="Allocations (log scale)")
 
 #Plot density of megabytes allocated as function of number of data points (Nd) for each sampler

@@ -1,15 +1,51 @@
-@model AHMCpoisson(y,x,idx,N,Ns) = begin
+struct LogPoisson{T<:Real} <: Distributions.DiscreteUnivariateDistribution
+    logλ::T
+end
+
+function Distributions.logpdf(lp::LogPoisson, k::Int)
+    return k * lp.logλ - exp(lp.logλ) - lgamma(k + 1)
+end
+
+@model AHMCpoissonMVG(y,x,idx,N,Ns) = begin
     a0 ~ Normal(0, 10)
     a1 ~ Normal(0, 1)
     a0_sig ~ Truncated(Cauchy(0, 1), 0, Inf)
     a0s ~ MvNormal(zeros(Ns), a0_sig)
     for i ∈ 1:N
-        λ = exp(a0 + a0s[idx[i]] + a1 * x[i])
-        y[i] ~ Poisson(λ)
+        λ = a0 + a0s[idx[i]] + a1 * x[i]
+        y[i] ~ LogPoisson(λ)
     end
 end
 
-AHMCconfig = Turing.NUTS(2000,1000,.80)
+AHMCconfigMVG = Turing.NUTS(2000,1000,.80)
+
+@model AHMCpoissonGSyntax(y,x,idx,N,Ns,::Type{T}=Vector{Float64}) where {T} = begin
+    a0 ~ Normal(0, 10)
+    a1 ~ Normal(0, 1)
+    a0_sig ~ Truncated(Cauchy(0, 1), 0, Inf)
+    a0s = T(undef,Ns)
+    a0s ~ [Normal(0, a0_sig)]
+    for i ∈ 1:N
+        λ = a0 + a0s[idx[i]] + a1*x[i]
+        y[i] ~ LogPoisson(λ)
+    end
+end
+
+AHMCconfigGSyntax = Turing.NUTS(2000,1000,.80)
+
+@model AHMCpoissonG(y,x,idx,N,Ns) = begin
+    a0 ~ Normal(0, 10)
+    a1 ~ Normal(0, 1)
+    a0_sig ~ Truncated(Cauchy(0, 1), 0, Inf)
+    a0s = Array{Real,1}(undef,Ns)
+    a0s ~ [Normal(0, a0_sig)]
+    for i ∈ 1:N
+        λ = a0 + a0s[idx[i]] + a1*x[i]
+        y[i] ~ LogPoisson(λ)
+    end
+end
+
+AHMCconfigG = Turing.NUTS(2000,1000,.80)
 
 function simulatePoisson(;Nd=1,Ns=10,a0=1.0,a1=.5,a0_sig=.3,kwargs...)
     N = Nd*Ns
@@ -62,7 +98,7 @@ CmdStanConfig = Stanmodel(name = "CmdStanPoisson",model=CmdStanPoisson,nchains=1
    Sample(num_samples=1000,num_warmup=1000,adapt=CmdStan.Adapt(delta=0.8),
    save_warmup=true))
 
-   struct PoissonProb
+   struct PoissonProbG
       y::Array{Int64,1}
       x::Array{Float64,1}
       idx::Array{Int64,1}
@@ -70,7 +106,7 @@ CmdStanConfig = Stanmodel(name = "CmdStanPoisson",model=CmdStanPoisson,nchains=1
       Ns::Int64
   end
 
-  function (problem::PoissonProb)(θ)
+  function (problem::PoissonProbG)(θ)
       @unpack y,x,idx,N,Ns = problem   # extract the data
       @unpack a0,a1,a0s,a0_sig = θ
       LL = 0.0
@@ -79,18 +115,60 @@ CmdStanConfig = Stanmodel(name = "CmdStanPoisson",model=CmdStanPoisson,nchains=1
       LL += logpdf.(Normal(0, 10),a0)
       LL += logpdf.(Normal(0, 1),a1)
       for i in 1:N
-         λ = exp(a0 + a0s[idx[i]] + a1*x[i])
-         LL += logpdf(Poisson(λ),y[i])
+         λ = a0 + a0s[idx[i]] + a1*x[i]
+         LL += logpdf(LogPoisson(λ),y[i])
       end
       return LL
   end
 
   # Define problem with data and inits.
-  function sampleDHMC(y,x,idx,N,Ns,nsamples)
-    p = PoissonProb(y,x,idx,N,Ns)
+  function sampleDHMCG(y,x,idx,N,Ns,nsamples)
+    p = PoissonProbG(y,x,idx,N,Ns)
     p((a0=0.0,a1=0.0,a0s=fill(0.0,Ns),a0_sig=.3))
     # Write a function to return properly dimensioned transformation.
-    problem_transformation(p::PoissonProb) =
+    problem_transformation(p::PoissonProbG) =
+    as( (a0 = asℝ,a1 = asℝ, a0s = as(Array, Ns), a0_sig = asℝ₊) )
+    # Use Flux for the gradient.
+    P = TransformedLogDensity(problem_transformation(p), p)
+    ∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P))
+    #∇P = ADgradient(:ForwardDiff, P)
+    # FSample from the posterior.
+    chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, nsamples,report=ReportSilent());
+    # Undo the transformation to obtain the posterior from the chain.
+    posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));
+    chns = nptochain(posterior,NUTS_tuned)
+    return chns
+  end
+
+  struct PoissonProbMVG
+     y::Array{Int64,1}
+     x::Array{Float64,1}
+     idx::Array{Int64,1}
+     N::Int64
+     Ns::Int64
+ end
+
+  function (problem::PoissonProbMVG)(θ)
+      @unpack y,x,idx,N,Ns = problem   # extract the data
+      @unpack a0,a1,a0s,a0_sig = θ
+      LL = 0.0
+      LL += logpdf(Truncated(Cauchy(0, 1),0,Inf),a0_sig)
+      LL += sum(logpdf(MvNormal(zeros(Ns),a0_sig),a0s))
+      LL += logpdf.(Normal(0, 10),a0)
+      LL += logpdf.(Normal(0, 1),a1)
+      for i in 1:N
+         λ = a0 + a0s[idx[i]] + a1*x[i]
+         LL += logpdf(LogPoisson(λ),y[i])
+      end
+      return LL
+  end
+
+  # Define problem with data and inits.
+  function sampleDHMCMVG(y,x,idx,N,Ns,nsamples)
+    p = PoissonProbMVG(y,x,idx,N,Ns)
+    p((a0=0.0,a1=0.0,a0s=fill(0.0,Ns),a0_sig=.3))
+    # Write a function to return properly dimensioned transformation.
+    problem_transformation(p::PoissonProbMVG) =
     as( (a0 = asℝ,a1 = asℝ, a0s = as(Array, Ns), a0_sig = asℝ₊) )
     # Use Flux for the gradient.
     P = TransformedLogDensity(problem_transformation(p), p)
