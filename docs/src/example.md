@@ -6,7 +6,7 @@ In this detailed example, we will guide users through the process of developing 
 
 
 ```math
-\\mu ~ Normal(0,1)
+\mu ~ Normal(0,1)
 
 \sigma ~ TCauchy(0,5,0,\infty)
 
