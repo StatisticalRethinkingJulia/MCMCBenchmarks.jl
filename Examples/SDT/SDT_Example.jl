@@ -38,7 +38,7 @@ samplers=(CmdStanNUTS(CmdStanConfig,ProjDir),
     DHMCNUTS(sampleDHMC,2000))
 
 #Number of data points
-Nd = [10,50,100]
+Nd = [10,100,1000]
 
 #Number of simulations
 Nreps = 100
@@ -49,6 +49,10 @@ results = pbenchmark(samplers,simulateSDT,Nreps;options...)
 
 #save results
 save(results,ProjDir)
+
+pyplot()
+cd(pwd)
+dir = "results/"
 
 #Plot parameter recovery
 recoveryPlots = plotrecovery(results,(c=0,d=2),(:sampler,:Nd);save=true,dir=dir)

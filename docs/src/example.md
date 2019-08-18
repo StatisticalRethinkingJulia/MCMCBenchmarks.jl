@@ -7,21 +7,13 @@ In this detailed example, we will guide users through the process of developing 
 
 ```math
 \mu ~ Normal(0,1)
-
+```
+```math
 \sigma ~ TCauchy(0,5,0,\infty)
-
+```
+```math
 Y ~ Normal(\mu,\sigma)
 ```
-
-"""
-Here's some inline maths: ``\\sqrt[n]{1 + x + x^2 + \\ldots}``.
-
-Here's an equation:
-
-``\\frac{n!}{k!(n - k)!} = \\binom{n}{k}``
-
-This is the binomial coefficient.
-"""
 
 ### Benchmark Design
 

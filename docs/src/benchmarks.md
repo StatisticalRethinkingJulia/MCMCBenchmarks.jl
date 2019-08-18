@@ -1,8 +1,14 @@
 ## Benchmark Results
+In this section, we report key benchmark results comparing Turing, CmdStan, and DynamicHMC for a variety of models. The code for each of the benchmarks can be found in the Examples folder, including corresponding code for the models in folder named Models. The benchmarks were performed with the following software and hardware:
 
-* speed
-* allocations
-* effective sample size
+* Julia 1.1.1
+* CmdStan 5.1.1
+* Turing 0.6.23
+* DynamicHMC 1.0.6
+* Ubuntu 18.04
+* Intel(R) Core(TM) i7-4790K CPU @ 4.00GHz
+
+Before proceeding to the results, a few caveates should be noted. (1) Turing and DynamicHMC are under active development. Consequentially, their performance may improve over time. (2) Memory allocations and garbage collection time is not applicable for CmdStan because the heavy lifting is performed in C++. (3) Performance scaling is poor for Turing and DynamicHMC because they use forward mode autodifferentiation where as CmdStan uses reverse mode autodifferentiation.
 
 ### Gaussian
 
@@ -10,14 +16,32 @@
 
 ```math
 \mu \sim Normal(0,1)
+```
+```math
 \sigma \sim TCauchy(0,5,0,\infty)
+```
+```math
 Y \sim Normal(\mu,\sigma)
 ```
 
 * benchmark design
 
+```julia
+#Number of data points
+Nd = [10, 100, 1000]
+#Number of simulations
+Nreps = 50
+options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
+```
+
 * speed
+
+![Gaussian_Speed](../Examples/Gaussian/results/summary_time.pdf)
+
 * allocations
+
+![Gaussian_Allocations(../Examples/Gaussian/results/summary_allocations.pdf)
+
 * effective sample size
 
 ### Signal Detection Theory
@@ -26,16 +50,32 @@ Y \sim Normal(\mu,\sigma)
 
 ```math
 d \sim Normal(0,1/\sqrt(2))
+```
+```math
 c \sim Normal(0,1/\sqrt(2))
-
+```
+```math
 \theta_{hits} = ϕ(d/2-c)
+```
+```math
 \theta_{fas} = ϕ(-d/2-c)
-
+```
+```math
 n_{hits} \sim Normal(\mu,\theta_{hits})
+```
+```math
 n_{fas} \sim Binomial(N,\theta_{fas})
 ```
 
 * benchmark design
+
+```julia
+#Number of data points
+Nd = [10,100,1000]
+#Number of simulations
+Nreps = 100
+options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
+```
 
 * speed
 * allocations
@@ -43,14 +83,17 @@ n_{fas} \sim Binomial(N,\theta_{fas})
 
 ### Linear Regression
 
-
 * Model
 
 ```math
 \mu \sim Normal(0,1)
-\sigma \sim TCauchy(0,5,0,\infty)
-Y \sim Normal(\mu,\sigma)
 ```
+```math
+\sigma \sim TCauchy(0,5,0,\infty)
+```
+```math
+Y \sim Normal(\mu,\sigma)
+````
 
 * benchmark design
 
@@ -93,11 +136,11 @@ s = 1
 LBA(A,b,v,s,\tau) = f_c(t)\prod_{j \neq c} (1-F_j(t))
 ```
 ```math
-f_c(t) = \fract{1}{A} \left[-v_c \Phi\left( \fract{b-A-tv_c}{ts} \right) + \phi\left( \fract{b-A-tv_c}{ts} \right) +
-+ v_c \Phi\left( \fract{b-tv_c}{ts} \right) + s \phi\left( \fract{b-tv_c}{ts} \right) \right]
+f_c(t) = \frac{1}{A} \left[-v_c \Phi\left( \frac{b-A-tv_c}{ts} \right) + \phi\left( \frac{b-A-tv_c}{ts} \right) +
++ v_c \Phi\left( \frac{b-tv_c}{ts} \right) + s \phi\left( \frac{b-tv_c}{ts} \right) \right]
 ```
 ```math
-F_c(t) = 1 + \fract{b-A-tv_i}{A}  \Phi\left \fract{b-A-tv_c}{ts} \right) - \fract{b-tv_i}{A}  \Phi\left \fract{b-tv_c}{ts} \right) + \fract{ts}{A} \phi \left(\fract{b-A-tv_c}{ts} \right) - \fract{ts}{A} \phi \left(\fract{b-tv_c}{ts} \right)
+F_c(t) = 1 + \frac{b-A-tv_i}{A}  \Phi\left \frac{b-A-tv_c}{ts} \right) - \frac{b-tv_i}{A}  \Phi\left \frac{b-tv_c}{ts} \right) + \frac{ts}{A} \phi \left(\frac{b-A-tv_c}{ts} \right) - \frac{ts}{A} \phi \left(\frac{b-tv_c}{ts} \right)
 ```
 ```math
 Y = {y_1,...,y_n}
@@ -114,19 +157,38 @@ y_{min} = min{Y}
 
 ### Poisson Regression
 
-
 * Model
 
 ```math
 a_0 \sim Normal(0,10)
+```
+```math
 a_1 \sim Normal(0,1)
+```
+```math
 \sigma_{a0} \sim TCauchy(0,1,0,\infty)
+```
+```math
 a_{0i} ~ \sim Normal(0,\sigma_{a0})
+```
+```math
 \lambda = e^(a_0 + a_{0i} + a_1*x_i)
+```
+```math
 y_i \sim Poisson(\lambda)
 ```
 
 * benchmark design
+
+```julia
+#Number of data points per unit
+Nd = [1,2,5]
+#Number of units in model
+Ns = 10
+#Number of simulations
+Nreps = 25
+options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Ns=Ns)
+```
 
 * speed
 * allocations
