@@ -5,7 +5,7 @@ makedocs(
     checkdocs = :exports,
     authors = "Christopher R. Fisher, Rob J Goedman",
     sitename = "StatisticalRethinkingJulia/MCMCBenchmarks.jl",
-    pages = Any["index.md","purose.md","design.md","example.md",
+    pages = Any["index.md","purpose.md","design.md","example.md",
     "benchmarks.md"]
 )
 
