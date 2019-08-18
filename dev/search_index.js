@@ -13,31 +13,7 @@ var documenterSearchIndex = {"docs": [
     "page": "MCMCBenchmarks.jl Documentation",
     "title": "MCMCBenchmarks.jl Documentation",
     "category": "section",
-    "text": ""
-},
-
-{
-    "location": "#Purpose-1",
-    "page": "MCMCBenchmarks.jl Documentation",
-    "title": "Purpose",
-    "category": "section",
-    "text": "Bayesian inference is a flexible and popular statistical framework that is used in numerous fields of science, engineering, and machine learning. The goal of Bayesian inference is to learn about likely parameter values of a model through observed data. The end product of Bayesian inference is a posterior distribution over the parameter space P(Θ|Y), which quantifies uncertainty in the parameter values. Because real-world models do not have analytical solutions for P(Θ|Y), computational methods, such as MCMC sampling algorithms, are used to approximate analytical solutions, and form the basis of Bayesian inference.Given the ubiquity of Bayesian inference, it is important to understand the features and performance of available MCMC sampler packages. MCMCBenchmarks.jl aims to accomplish three goals: (1) help Julia users decide which MCMC samplers to use on the basis of performance, (2) help Julia developers identify performance issues, and (3) provide a flexible framework for benchmarking models and samplers aside from those included in the package."
-},
-
-{
-    "location": "#Benchmarking-Challenges-1",
-    "page": "MCMCBenchmarks.jl Documentation",
-    "title": "Benchmarking Challenges",
-    "category": "section",
-    "text": "One of the challenges with benchmarking MCMC samplers is the lack of uniform interface. Some samplers may require different arguments or configurations because they function differently or are associated with different packages. In addition, models used for benchmarking differ in terms of parameters, data structure, and function arguments. Without a unifying framework, benchmarking MCMC samplers can be cumbersome, resulting one-off scripts and inflexible code. Our goal in developing MCMCBenchmarks was to fulfill this need for a unifying framework."
-},
-
-{
-    "location": "#Basic-Design-1",
-    "page": "MCMCBenchmarks.jl Documentation",
-    "title": "Basic Design",
-    "category": "section",
-    "text": "MCMCBenchmarks uses a combination of multiple dispatch and optional keyword arguments to satisfy the differing requirements of MCMC samplers and models. Benchmark routines are performed with three primary overloaded functions:runSampler: passes necessary arguments to sampler and runs the sampler\nupdateResults: adds benchmark performance data to a results DataFrame\nmodifyConfig: modifies the configuration of the samplerThese functions are overloaded with sampler-specific methods, ensuring that the requirements for each sampler are satisfied. Additional flexibility is gained through the use of optional keyword arguments. Each method captures relevant keyword arguments and collects irrelevant arguments in kwargs... where they are ignored."
+    "text": "A flexible package for benchmarking MCMC samplers in Julia."
 },
 
 {
@@ -49,6 +25,14 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "#Outline-1",
+    "page": "MCMCBenchmarks.jl Documentation",
+    "title": "Outline",
+    "category": "section",
+    "text": "Pages = [\n    \"src/purpose.md\",\n    \"src/design.md\",\n    \"src/example.md\",\n    \"src/functions.md\",\n    \"src/benchmarks.md\",\n]\nDepth = 1"
+},
+
+{
     "location": "#Index-1",
     "page": "MCMCBenchmarks.jl Documentation",
     "title": "Index",
@@ -57,7 +41,7 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "functions/#",
+    "location": "purpose/#",
     "page": "-",
     "title": "-",
     "category": "page",
@@ -65,195 +49,35 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "functions/#MCMCBenchmarks.MCMCSampler",
+    "location": "purpose/#Background-1",
     "page": "-",
-    "title": "MCMCBenchmarks.MCMCSampler",
-    "category": "type",
-    "text": "Abstract MCMC sampler type\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.CmdStanNUTS",
-    "page": "-",
-    "title": "MCMCBenchmarks.CmdStanNUTS",
-    "category": "type",
-    "text": "MCMC sampler struct for CmdStan NUTS\n\nmodel: model configuration\ndir: probject directory\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.AHMCNUTS",
-    "page": "-",
-    "title": "MCMCBenchmarks.AHMCNUTS",
-    "category": "type",
-    "text": "MCMC sampler struct for AdvancedHMC NUTS\n\nmodel: model function that accepts data\nconfig: sampler configution settings\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.DHMCNUTS",
-    "page": "-",
-    "title": "MCMCBenchmarks.DHMCNUTS",
-    "category": "type",
-    "text": "MCMC sampler struct for DynamicHMC NUTS\n\nmodel: model function that accepts data\nconfig: sampler configution settings\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#Sampler-Structs-1",
-    "page": "-",
-    "title": "Sampler Structs",
+    "title": "Background",
     "category": "section",
-    "text": "Each sampler is associated with a MCMC sampler struct, which is a subtype of MCMCSampler. In MCMCBenchmarks, we define subtypes of MCMCSampler for three popular NUTS MCMC samplers in Julia: CmdStan, AdvancedHMC via Turing, and DynamicHMC.MCMCSamplerCmdStanNUTSAHMCNUTSDHMCNUTS"
+    "text": "Bayesian inference is a flexible and popular statistical framework that is used in numerous fields of science, engineering, and machine learning. The goal of Bayesian inference is to learn about likely parameter values of a model through observed data. The end product of Bayesian inference is a posterior distribution over the parameter space P(Θ|Y), which quantifies uncertainty in the parameter values. Because real-world models do not have analytical solutions for P(Θ|Y), computational methods, such as MCMC sampling algorithms, are used to approximate analytical solutions, and form the basis of Bayesian inference.Given the ubiquity of Bayesian inference, it is important to understand the features and performance of available MCMC sampler packages. MCMCBenchmarks.jl aims to accomplish three goals: (1) help Julia users decide which MCMC samplers to use on the basis of performance, (2) help Julia developers identify performance issues, and (3) provide developers with a flexible framework for benchmarking models and samplers aside from those included in the package."
 },
 
 {
-    "location": "functions/#Functions-1",
+    "location": "purpose/#Benchmarking-Challenges-1",
     "page": "-",
-    "title": "Functions",
+    "title": "Benchmarking Challenges",
     "category": "section",
+    "text": "One of the most significant challenges with benchmarking MCMC samplers is the lack of uniform interface. Some samplers may require different arguments or configurations because they function differently or are associated with different packages. In addition, models used for benchmarking differ in terms of parameters, data structure, and function arguments. Without a unifying framework, benchmarking MCMC samplers can be cumbersome, resulting one-off scripts and inflexible code. Our goal in developing MCMCBenchmarks was to fulfill this need for a unifying framework."
+},
+
+{
+    "location": "design/#",
+    "page": "-",
+    "title": "-",
+    "category": "page",
     "text": ""
 },
 
 {
-    "location": "functions/#MCMCBenchmarks.benchmark",
+    "location": "design/#Basic-Design-1",
     "page": "-",
-    "title": "MCMCBenchmarks.benchmark",
-    "category": "function",
-    "text": "Runs the benchmarking procedure and returns the results\n\nsamplers: a tuple of samplers or a single sampler object\nsimulate: model simulation function with keyword Nd\nNreps: number of times the benchmark is repeated for each factor combination\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.pbenchmark",
-    "page": "-",
-    "title": "MCMCBenchmarks.pbenchmark",
-    "category": "function",
-    "text": "Runs the benchmarking procedure defined in benchmark in parallel and returns the results\n\nsamplers: a tuple of samplers or a single sampler object\nsimulate: model simulation function with keyword Nd\nNreps: number of times the benchmark is repeated for each factor combination\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.benchmark!",
-    "page": "-",
-    "title": "MCMCBenchmarks.benchmark!",
-    "category": "function",
-    "text": "Primary function that performs mcmc benchmark repeatedly on a set of samplers and records the results.\n\n\'sampler\': tuple of sampler objects\nresults: DataFrame containing benchmark results\ncsr̂: cross sampler r̂\nsimulate: data generating function\nNreps: number of repetitions for a given set of simulation parameters. Default = 100\nkwargs: optional keyword arguments that are passed to modifyConfig!, updateResults! and\n\nrunSampler, providing flexibility in benchmark simulations.\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#Top-level-Benchmark-Routines-1",
-    "page": "-",
-    "title": "Top-level Benchmark Routines",
+    "title": "Basic Design",
     "category": "section",
-    "text": "benchmarkpbenchmarkbenchmark!"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.modifyConfig!",
-    "page": "-",
-    "title": "MCMCBenchmarks.modifyConfig!",
-    "category": "function",
-    "text": "Modifies MCMC sampler configuration, including number of samples, target acceptance rate and others depending on the specific sampler.\n\ns: sampler object\nNsamples: total number of MCMC samples\nNadapt: number of adaption samples during warm up\ndelta: target acceptance rate.\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.updateResults!",
-    "page": "-",
-    "title": "MCMCBenchmarks.updateResults!",
-    "category": "function",
-    "text": "Update the results DataFrame on each iteration\n\ns: MCMC sampler object\nperformance: includes MCMC Chain, execution time, and memory measurements\nresults: DataFrame containing benchmark results\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.runSampler",
-    "page": "-",
-    "title": "MCMCBenchmarks.runSampler",
-    "category": "function",
-    "text": "Extracts model and configuration from sampler object and performs parameter estimation\n\ns: sampler object\ndata: data for benchmarking\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#Overloaded-Benchmark-Functions-1",
-    "page": "-",
-    "title": "Overloaded Benchmark Functions",
-    "category": "section",
-    "text": "modifyConfig!updateResults!runSampler"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.addPerformance!",
-    "page": "-",
-    "title": "MCMCBenchmarks.addPerformance!",
-    "category": "function",
-    "text": "Adds performance metrics to benchmark results, which include runtime, memory allocations in MB, garbage collection time, percent of time spent in garbage collection, and the number of memory allocations\n\ndf: the dataframe to which performance metrics are added\np: a collection of performance metrics including run time,\n\nmemory allocations and garbage collection time\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.addKW!",
-    "page": "-",
-    "title": "MCMCBenchmarks.addKW!",
-    "category": "function",
-    "text": "Adds keyword arguments to the results DataFrame\n\ndf: DataFrame containing benchmark results for single iteration\nkwargs: keyword arguments\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.addChainSummary!",
-    "page": "-",
-    "title": "MCMCBenchmarks.addChainSummary!",
-    "category": "function",
-    "text": "Adds chain summary (e.g. rhat,ess) to newDF for each parameter.\n\nnewDF: dataframe that collects results on an iteration\nchn: chain for given iteration\ndf: df of chain results\ncol: name of column\n\ne.g. If col = :ess, and parameters are mu and sigma, the new columns will be muess and sigmaess and will contain their respective ess values\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#Helper-Functions-1",
-    "page": "-",
-    "title": "Helper Functions",
-    "category": "section",
-    "text": "addPerformance!addKW!addChainSummary!addHPD!addMeans!"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.plotdensity",
-    "page": "-",
-    "title": "MCMCBenchmarks.plotdensity",
-    "category": "function",
-    "text": "Plots a desnity of a distribution for a selected metric (e.g. effective sample size)\n\ndf: dataframe of results\nmetric: name of metric, such as :ess for effective sample size\ngroup: a tuple of grouping factors, e.g. (:sampler,:Nd)\nsave: save=true saves each plot\nfigfmt: figure format\ndir: directory of saved plot. Default pwd.\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.plotsummary",
-    "page": "-",
-    "title": "MCMCBenchmarks.plotsummary",
-    "category": "function",
-    "text": "Plots a summary of a metric computed according to a function, func. func defaults to the mean.\n\ndf: dataframe of results\nxvar: variable assigned to x-axis\nmetric: name of metric, such as :ess for effective sample size\ngroup: a tuple of grouping factors, e.g. (:sampler,:Nd)\nsave: save=true saves each plot\nfigfmt: figure format\nfunc: a function used to summarize results. Default mean\ndir: directory of saved plot. Default pwd.\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.plotscatter",
-    "page": "-",
-    "title": "MCMCBenchmarks.plotscatter",
-    "category": "function",
-    "text": "Generates a scatter plot to visualize the relationship between two benchmarking metrics.\n\ndf: dataframe of results\nxvar: variable assigned to x-axis\nmetric: name of metric, such as :ess for effective sample size\ngroup: a tuple of grouping factors, e.g. (:sampler,:Nd)\nsave: save=true saves each plot\nfigfmt: figure format\nfunc: a function used to summarize results. Default mean\ndir: directory of saved plot. Default pwd.\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.plotrecovery",
-    "page": "-",
-    "title": "MCMCBenchmarks.plotrecovery",
-    "category": "function",
-    "text": "Generates a plot to compare the estimated parameters to true parameter values used to generate simulated data.\n\ndf: dataframe of results\nparms: namedtuple of parameter names and true values\ngroup: a tuple of grouping factors, e.g. (:sampler,:Nd)\nsave: save=true saves each plot\nfigfmt: figure format\nfunc: a function used to summarize results. Default mean\ndir: directory of saved plot. Default pwd.\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#Plotting-1",
-    "page": "-",
-    "title": "Plotting",
-    "category": "section",
-    "text": "plotdensityplotsummaryplotscatterplotrecovery"
-},
-
-{
-    "location": "functions/#Results-DataFrame-1",
-    "page": "-",
-    "title": "Results DataFrame",
-    "category": "section",
-    "text": ""
+    "text": "MCMCBenchmarks uses a combination of multiple dispatch and optional keyword arguments to satisfy the differing requirements of MCMC samplers and models. Benchmark routines are performed with three primary overloaded functions:runSampler: passes necessary arguments to sampler and runs the sampler\nupdateResults: adds benchmark performance data to a results DataFrame\nmodifyConfig: modifies the configuration of the samplerThese functions are overloaded with sampler-specific methods, ensuring that the requirements for each sampler are satisfied. Additional flexibility is gained through the use of optional keyword arguments. Each method captures relevant keyword arguments and collects irrelevant arguments in kwargs... where they are ignored."
 },
 
 {
