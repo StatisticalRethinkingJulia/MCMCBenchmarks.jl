@@ -12,6 +12,17 @@ In this detailed example, we will guide users through the process of developing 
 
 Y ~ Normal(\mu,\sigma)
 ```
+
+@doc raw"""
+Here's some inline maths: ``\sqrt[n]{1 + x + x^2 + \ldots}``.
+
+Here's an equation:
+
+``\frac{n!}{k!(n - k)!} = \binom{n}{k}``
+
+This is the binomial coefficient.
+"""
+
 ### Benchmark Design
 
 In this example, we will generate data from a Gaussian distribution with parameters μ = 0 and σ = 1 for three sample sizes Nd = [10, 100, 1000]. Each sampler will run for Nsamples = 2000 iterations, Nadapt = 1000 of which are adaption or warmup iterations. The target acceptance rate is set to delta = .8. The benchmark will be repeated 50 times with a different sample of simulated data to ensure that the results are robust across datasets. This will result in 450 benchmarks, (3 (samplers) X 3 (sample sizes) X 50 (repetitions)).
