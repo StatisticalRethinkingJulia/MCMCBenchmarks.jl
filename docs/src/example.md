@@ -5,9 +5,11 @@
 In this detailed example, we will guide users through the process of developing a benchmark within MCMCBenchmarks. To make matters as simple as possible, we will benchmark CmdnStan, AdvancedHMC, and DynamicHMC with a simple Gaussian model. Assume that a vector of observations Y follows a Gaussian distribution with parameters μ and σ, which have Gaussian and Truncated Cauchy prior distributions, respectively. Formally, the Gaussian model is defined as follows:
 
 """
-\\mu ~ Normal(0,1)
-\\sigma ~ TCauchy(0,5,0,\infty)
-\Y ~ Normal(\mu,\sigma)
+``\\mu ~ Normal(0,1)``
+
+``\\sigma ~ TCauchy(0,5,0,\infty)``
+
+``\Y ~ Normal(\mu,\sigma)``
 """
 ### Benchmark Design
 
@@ -94,7 +96,7 @@ Nreps = 50
 options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 ```
 
-The function `pbenchmark` performs the benchmarks in parallel, by dividing the jobs across the available processors. `pbenchmark` accepts the tuple of samplers, the data generating function, the number of repetitions, and the design options. Upon completion, a `DataFrame` containing the benchmarks and configuration information is returned. 
+The function `pbenchmark` performs the benchmarks in parallel, by dividing the jobs across the available processors. `pbenchmark` accepts the tuple of samplers, the data generating function, the number of repetitions, and the design options. Upon completion, a `DataFrame` containing the benchmarks and configuration information is returned.
 
 ```julia  
 #perform the benchmark
