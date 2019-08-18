@@ -9,6 +9,7 @@ MCMC sampler struct for AdvancedHMC NUTS
 
 * `model`: model function that accepts data
 * `config`: sampler configution settings
+* `name`: a unique identifer given to each sampler
 """
 mutable struct AHMCNUTS{T1,T2} <: MCMCSampler
     model::T1
@@ -23,6 +24,8 @@ MCMC sampler struct for CmdStan NUTS
 
 * `model`: model configuration
 * `dir`: probject directory
+* `id`: a unique identifier for each instance of CmdStan in parallel applications
+* `name`: a unique identifer given to each sampler
 """
 mutable struct CmdStanNUTS{T1} <: MCMCSampler
     model::T1
@@ -38,6 +41,7 @@ MCMC sampler struct for DynamicHMC NUTS
 
 * `model`: model function that accepts data
 * `config`: sampler configution settings
+* `name`: a unique identifer given to each sampler
 """
 mutable struct DHMCNUTS{T1,T2} <: MCMCSampler
     model::T1
