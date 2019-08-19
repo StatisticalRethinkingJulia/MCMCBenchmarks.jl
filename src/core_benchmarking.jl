@@ -145,6 +145,7 @@ function updateResults!(s::AHMCNUTS,performance,results;kwargs...)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     dfi=MCMCChains.describe(chain,sections=[:internals])[1]
     newDF[!,:epsilon]=[dfi[:step_size,:mean][1]]
+    newDF[!,:tree_depth]=[dfi[:tree_depth, :mean][1]]
     addPerformance!(newDF,performance)
     newDF[!,:sampler]= [gettype(s)]
     addKW!(newDF;kwargs...)
@@ -164,6 +165,7 @@ function updateResults!(s::CmdStanNUTS,performance,results;kwargs...)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     dfi=MCMCChains.describe(chain,sections=[:internals])[1]
     newDF[!,:epsilon]=[dfi[:stepsize__, :mean][1]]
+    newDF[!,:tree_depth]=[dfi[:treedepth__, :mean][1]]
     addPerformance!(newDF,performance)
     newDF[!,:sampler] = [gettype(s)]
     addKW!(newDF;kwargs...)
