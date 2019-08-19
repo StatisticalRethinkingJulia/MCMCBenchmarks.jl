@@ -93,7 +93,7 @@ var documenterSearchIndex = {"docs": [
     "page": "-",
     "title": "Model",
     "category": "section",
-    "text": "In this detailed example, we will guide users through the process of developing a benchmark within MCMCBenchmarks. To make matters as simple as possible, we will benchmark CmdnStan, AdvancedHMC, and DynamicHMC with a simple Gaussian model. Assume that a vector of observations Y follows a Gaussian distribution with parameters μ and σ, which have Gaussian and Truncated Cauchy prior distributions, respectively. Formally, the Gaussian model is defined as follows:mu  Normal(01)\n\nsigma  TCauchy(050infty)\n\nY  Normal(musigma)\"\"\" Here\'s some inline maths: sqrtn1 + x + x^2 + ldots.Here\'s an equation:fracnk(n - k) = binomnkThis is the binomial coefficient. \"\"\""
+    "text": "In this detailed example, we will guide users through the process of developing a benchmark within MCMCBenchmarks. To make matters as simple as possible, we will benchmark CmdnStan, AdvancedHMC, and DynamicHMC with a simple Gaussian model. Assume that a vector of observations Y follows a Gaussian distribution with parameters μ and σ, which have Gaussian and Truncated Cauchy prior distributions, respectively. Formally, the Gaussian model is defined as follows:mu  Normal(01)sigma  TCauchy(050infty)Y  Normal(musigma)"
 },
 
 {
@@ -133,7 +133,7 @@ var documenterSearchIndex = {"docs": [
     "page": "-",
     "title": "Benchmark Results",
     "category": "section",
-    "text": "speed\nallocations\neffective sample size"
+    "text": "In this section, we report key benchmark results comparing Turing, CmdStan, and DynamicHMC for a variety of models. The code for each of the benchmarks can be found in the Examples folder, including corresponding code for the models in folder named Models. The benchmarks were performed with the following software and hardware:Julia 1.1.1\nCmdStan 5.1.1\nTuring 0.6.23\nDynamicHMC 1.0.6\nUbuntu 18.04\nIntel(R) Core(TM) i7-4790K CPU @ 4.00GHzBefore proceeding to the results, a few caveates should be noted. (1) Turing and DynamicHMC are under active development. Consequentially, their performance may improve over time. (2) Memory allocations and garbage collection time is not applicable for CmdStan because the heavy lifting is performed in C++. (3) Performance scaling is poor for Turing and DynamicHMC because they use forward mode autodifferentiation where as CmdStan uses reverse mode autodifferentiation."
 },
 
 {
@@ -141,7 +141,7 @@ var documenterSearchIndex = {"docs": [
     "page": "-",
     "title": "Gaussian",
     "category": "section",
-    "text": "Modelmu sim Normal(01)\nsigma sim TCauchy(050infty)\nY sim Normal(musigma)benchmark design\nspeed\nallocations\neffective sample size"
+    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design#Number of data points\nNd = [10, 100, 1000]\n#Number of simulations\nNreps = 50\noptions = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)speed(Image: Gaussian_Speed)allocations![GaussianAllocations(../Examples/Gaussian/results/summaryallocations.pdf)effective sample size"
 },
 
 {
@@ -149,7 +149,7 @@ var documenterSearchIndex = {"docs": [
     "page": "-",
     "title": "Signal Detection Theory",
     "category": "section",
-    "text": "Modeld sim Normal(01sqrt(2))\nc sim Normal(01sqrt(2))\n\ntheta_hits = ϕ(d2-c)\ntheta_fas = ϕ(-d2-c)\n\nn_hits sim Normal(mutheta_hits)\nn_fas sim Binomial(Ntheta_fas)benchmark design\nspeed\nallocations\neffective sample size"
+    "text": "Modeld sim Normal(01sqrt(2))c sim Normal(01sqrt(2))theta_hits = ϕ(d2-c)theta_fas = ϕ(-d2-c)n_hits sim Normal(mutheta_hits)n_fas sim Binomial(Ntheta_fas)benchmark design#Number of data points\nNd = [10,100,1000]\n#Number of simulations\nNreps = 100\noptions = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)speed\nallocations\neffective sample size"
 },
 
 {
@@ -157,23 +157,7 @@ var documenterSearchIndex = {"docs": [
     "page": "-",
     "title": "Linear Regression",
     "category": "section",
-    "text": "Modelmu sim Normal(01)\nsigma sim TCauchy(050infty)\nY sim Normal(musigma)benchmark design\nspeed\nallocations\neffective sample size"
-},
-
-{
-    "location": "benchmarks/#Linear-Ballistic-Accumulator-(LBA)-1",
-    "page": "-",
-    "title": "Linear Ballistic Accumulator (LBA)",
-    "category": "section",
-    "text": "Modeltau sim TNormal(410y_min)A sim TNormal(840infty)k sim TNormal(230infty)v sim Normal(03)(tc) sim LBA(Abvstau)wheret = y_i - t_erb = A + ks = 1LBA(Abvstau) = f_c(t)prod_j neq c (1-F_j(t))f_c(t) = fract1A left-v_c Phileft( fractb-A-tv_cts right) + phileft( fractb-A-tv_cts right) +\n+ v_c Phileft( fractb-tv_cts right) + s phileft( fractb-tv_cts right) rightF_c(t) = 1 + fractb-A-tv_iA  Phileft fractb-A-tv_cts right) - fractb-tv_iA  Phileft fractb-tv_cts right) + fracttsA phi left(fractb-A-tv_cts right) - fracttsA phi left(fractb-tv_cts right)Y = y_1y_ny_min = minYbenchmark design\nspeed\nallocations\neffective sample size"
-},
-
-{
-    "location": "benchmarks/#Poisson-Regression-1",
-    "page": "-",
-    "title": "Poisson Regression",
-    "category": "section",
-    "text": "Modela_0 sim Normal(010)\na_1 sim Normal(01)\nsigma_a0 sim TCauchy(010infty)\na_0i  sim Normal(0sigma_a0)\nlambda = e^(a_0 + a_0i + a_1*x_i)\ny_i sim Poisson(lambda)benchmark design\nspeed\nallocations\neffective sample size"
+    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)\n\n\n* benchmark design\n\n* speed\n* allocations\n* effective sample size\n\n Linear Ballistic Accumulator (LBA)\n\n* Model\nmath \\tau \\sim TNormal(.4,.1,0,y_{min})math A \\sim TNormal(.8,.4,0,\\infty)math k \\sim TNormal(.2,.3,0,\\infty)math v \\sim Normal(0,3)math (t,c) \\sim LBA(A,b,v,s,\\tau)\nwhere\nmath t = yi - t{er}math b = A + kmath s = 1math LBA(A,b,v,s,\\tau) = fc(t)\\prod{j \\neq c} (1-F_j(t))math fc(t) = \\frac{1}{A} \\left[-vc \\Phi\\left( \\frac{b-A-tvc}{ts} \\right) + \\phi\\left( \\frac{b-A-tvc}{ts} \\right) +vc \\Phi\\left( \\frac{b-tvc}{ts} \\right) + s \\phi\\left( \\frac{b-tv_c}{ts} \\right) \\right]math Fc(t) = 1 + \\frac{b-A-tvi}{A}  \\Phi\\left \\frac{b-A-tvc}{ts} \\right) - \\frac{b-tvi}{A}  \\Phi\\left \\frac{b-tvc}{ts} \\right) + \\frac{ts}{A} \\phi \\left(\\frac{b-A-tvc}{ts} \\right) - \\frac{ts}{A} \\phi \\left(\\frac{b-tv_c}{ts} \\right)math Y = {y1,...,yn}math y_{min} = min{Y}\n* benchmark design\n\n* speed\n* allocations\n* effective sample size\n\n### Poisson Regression\n\n* Model\nmath a_0 \\sim Normal(0,10)math a_1 \\sim Normal(0,1)math \\sigma_{a0} \\sim TCauchy(0,1,0,\\infty)math a{0i} ~ \\sim Normal(0,\\sigma{a0})math \\lambda = e^(a0 + a{0i} + a1*xi)math y_i \\sim Poisson(\\lambda)\n* benchmark design\njulia #Number of data points per unit Nd = [1,2,5] #Number of units in model Ns = 10 #Number of simulations Nreps = 25 options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Ns=Ns) ```speed\nallocations\neffective sample size"
 },
 
 ]}
