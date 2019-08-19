@@ -9,4 +9,4 @@ results = CSV.read(folder * "results.csv", copycols=true)
 allowmissing!(results)
 
 # Make plots
-include("Plotting.jl")
+include("plotting.jl")
