@@ -46,3 +46,10 @@ megPlots = plotdensity(results, :megabytes, (:sampler, :Nd); save=true, dir=dir)
 
 # Scatter plot of epsilon and effective sample size as function of number of data points (Nd) for each sampler
 scatterPlots = plotscatter(results, :epsilon, :ess, (:sampler, :Nd); save=true, dir=dir)
+
+# Density plot for tree_depth 
+depthPlots = plotdensity(results, :tree_depth,(:sampler, :Nd); save=true, dir=dir)
+epsPlots = plotdensity(results, :epsilon,(:sampler, :Nd); save=true, dir=dir)
+
+# Plot mean ess per second of number of data points (Nd) for each sampler
+ess = plotsummary(results, :Nd, :ess, (:sampler,); save=true, dir=dir)
