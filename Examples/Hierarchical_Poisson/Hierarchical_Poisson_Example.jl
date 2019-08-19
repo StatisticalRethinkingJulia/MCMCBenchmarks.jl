@@ -60,4 +60,4 @@ results = pbenchmark(samplers, simulatePoisson, Nreps; options...)
 save(results, ProjDir)
 
 # Make plots
-include("Plotting.jl")
+include("plotting.jl")
