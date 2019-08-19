@@ -4,11 +4,17 @@
 
 In this detailed example, we will guide users through the process of developing a benchmark within MCMCBenchmarks. To make matters as simple as possible, we will benchmark CmdnStan, AdvancedHMC, and DynamicHMC with a simple Gaussian model. Assume that a vector of observations Y follows a Gaussian distribution with parameters μ and σ, which have Gaussian and Truncated Cauchy prior distributions, respectively. Formally, the Gaussian model is defined as follows:
 
-"""
-\\mu ~ Normal(0,1)
-\\sigma ~ TCauchy(0,5,0,\infty)
-\Y ~ Normal(\mu,\sigma)
-"""
+
+```math
+\mu ~ Normal(0,1)
+```
+```math
+\sigma ~ TCauchy(0,5,0,\infty)
+```
+```math
+Y ~ Normal(\mu,\sigma)
+```
+
 ### Benchmark Design
 
 In this example, we will generate data from a Gaussian distribution with parameters μ = 0 and σ = 1 for three sample sizes Nd = [10, 100, 1000]. Each sampler will run for Nsamples = 2000 iterations, Nadapt = 1000 of which are adaption or warmup iterations. The target acceptance rate is set to delta = .8. The benchmark will be repeated 50 times with a different sample of simulated data to ensure that the results are robust across datasets. This will result in 450 benchmarks, (3 (samplers) X 3 (sample sizes) X 50 (repetitions)).
@@ -94,7 +100,7 @@ Nreps = 50
 options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 ```
 
-The function `pbenchmark` performs the benchmarks in parallel, by dividing the jobs across the available processors. `pbenchmark` accepts the tuple of samplers, the data generating function, the number of repetitions, and the design options. Upon completion, a `DataFrame` containing the benchmarks and configuration information is returned. 
+The function `pbenchmark` performs the benchmarks in parallel, by dividing the jobs across the available processors. `pbenchmark` accepts the tuple of samplers, the data generating function, the number of repetitions, and the design options. Upon completion, a `DataFrame` containing the benchmarks and configuration information is returned.
 
 ```julia  
 #perform the benchmark

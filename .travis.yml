@@ -6,19 +6,20 @@ dist: xenial
 os:
   - linux
 
- env:
-   - JULIA_CMDSTAN_HOME="$HOME/cmdstan-2.19.1/"
-
-julia:
-  - 1.1
-
+env:
+  - JULIA_CMDSTAN_HOME="$HOME/cmdstan-2.20.0/"
+  
 before_install:
   - OLDWD=`pwd`
   - cd ~
-  - wget https://github.com/stan-dev/cmdstan/releases/download/v2.19.1/cmdstan-2.19.1.tar.gz
-  - tar -xzpf cmdstan-2.19.1.tar.gz
+  - wget https://github.com/stan-dev/cmdstan/releases/download/v2.20.0/cmdstan-2.20.0.tar.gz
+  - tar -xzpf cmdstan-2.20.0.tar.gz
   - make -C $JULIA_CMDSTAN_HOME build
   - cd $OLDWD
+  
+
+julia:
+  - 1.1
 
 notifications:
   email: false

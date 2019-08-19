@@ -29,9 +29,6 @@ for (i,seed) in enumerate(seeds)
 end
 #create a sampler object or a tuple of sampler objects
 
-#Note that AHMC and DynamicNUTS do not work together due to an
-# error in MCMCChains: https://github.com/TuringLang/MCMCChains.jl/issues/101
-
 samplers=(
   CmdStanNUTS(CmdStanConfig,ProjDir),
   AHMCNUTS(AHMCregression,AHMCconfig),
@@ -42,7 +39,7 @@ stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
 initStan(stanSampler)
 
 #Number of data points
-Nd = [10, 100,1000]
+Nd = [10,100,1000]
 
 #Number of coefficients
 Nc = [2,3]

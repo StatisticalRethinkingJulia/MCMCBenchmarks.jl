@@ -27,11 +27,8 @@ seeds = (939388,39884,28484,495858,544443)
 for (i,seed) in enumerate(seeds)
     @fetch @spawnat i Random.seed!(seed)
 end
+
 #create a sampler object or a tuple of sampler objects
-
-#Note that AHMC and DynamicNUTS do not work together due to an
-# error in MCMCChains: https://github.com/TuringLang/MCMCChains.jl/issues/101
-
 samplers=(
   CmdStanNUTS(CmdStanConfig,ProjDir),
   AHMCNUTS(AHMCpoisson,AHMCconfig),

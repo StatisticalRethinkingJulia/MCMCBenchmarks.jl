@@ -55,7 +55,6 @@ save(results,ProjDir)
 pyplot()
 cd(pwd)
 dir = "results/"
-
 #Plot parameter recovery
 recoveryPlots = plotrecovery(results,(mu=0,sigma=1),(:sampler,:Nd);save=true,dir=dir)
 
@@ -66,8 +65,11 @@ meantimePlot = plotsummary(results,:Nd,:time,(:sampler,);save=true,dir=dir,yscal
 meanallocPlot = plotsummary(results,:Nd,:allocations,(:sampler,);save=false,dir=dir,yscale=:log10,
   ylabel="Allocations (log scale)")
 
-#Plot mean ess per second of number of data points (Nd) for each sampler
-meanallocPlot = plotsummary(results,:Nd,:ess_ps,(:sampler,);save=true,dir=dir)
+#Plot mean ess per second as a function of number of data points (Nd) for each sampler
+meanESSPSPlot = plotsummary(results,:Nd,:ess_ps,(:sampler,);save=true,dir=dir)
+
+#Plot mean ess as a function of data points (Nd) for each sampler
+meanESSPlot = plotsummary(results,:Nd,:ess,(:sampler,);save=true,dir=dir)
 
 #Plot density of effective sample size as function of number of data points (Nd) for each sampler
 essPlots = plotdensity(results,:ess,(:sampler,:Nd);save=true,dir=dir)
@@ -80,6 +82,10 @@ timePlots = plotdensity(results,:time,(:sampler,:Nd);save=true,dir=dir)
 
 #Plot density of gc time percent as function of number of data points (Nd) for each sampler
 gcPlots = plotdensity(results,:gcpercent,(:sampler,:Nd);save=true,dir=dir)
+
+#Plot density of memory allocations as function of number of data points (Nd) for each sampler
+memPlots = plotsummary(results,:Nd,:allocations,(:sampler,);save=true,dir=dir,xscale=:log10,
+  xlabel="Allocations (log scale)")
 
 #Plot density of memory allocations as function of number of data points (Nd) for each sampler
 memPlots = plotdensity(results,:allocations,(:sampler,:Nd);save=true,dir=dir,xscale=:log10,
