@@ -1,10 +1,11 @@
+using FillArrays
+
 @model lbaModel(data,N,Nc) = begin
     mn=minimum(x->x[2],data)
     tau ~ TruncatedNormal(.4,.1,0.0,mn)
     A ~ TruncatedNormal(.8,.4,0.0,Inf)
     k ~ TruncatedNormal(.2,.3,0.0,Inf)
-    v = Vector{Real}(undef,Nc)
-    v ~ [Normal(0,3)]
+    v ~ MvNormal(Fill(0, Nc), 3)
     for i in 1:N
         data[i] ~ LBA(;ν=v,τ=tau,A=A,k=k)
     end
