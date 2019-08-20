@@ -1,9 +1,9 @@
+using FillArrays
+
 @model AHMCGaussian(y, N) = begin
     mu ~ Normal(0, 1)
     sigma ~ Truncated(Cauchy(0, 5), 0, Inf)
-    for n = 1:N
-        y[n] ~ Normal(mu, sigma)
-    end
+    y ~ MvNormal(Fill(mu, N), sigma)  # use `Fill(mu, N)` is memory freiendly
 end
 
 AHMCconfig = Turing.NUTS(2000, 1000, .85)
