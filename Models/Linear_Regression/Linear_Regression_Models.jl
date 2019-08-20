@@ -1,15 +1,12 @@
-@model AHMCregression(x,y,Nd,Nc) = begin
-    B = Array{Real}(undef,Nc)
-    B ~ [Normal(0,10)]
-    B0 ~ Normal(0,10)
-    sigma ~ Truncated(Cauchy(0,5),0,Inf)
-    mu = B0 .+ x*B
-    for n = 1:Nd
-        y[n] ~ Normal(mu[n],sigma)
-    end
+@model AHMCregression(x, y, Nd, Nc) = begin
+    B ~ MvNormal(zeros(Nc), 10)
+    B0 ~ Normal(0, 10)
+    sigma ~ Truncated(Cauchy(0, 5), 0, Inf)
+    mu = B0 .+ x * B
+    y ~ MvNormal(mu, sigma)
 end
 
-AHMCconfig = Turing.NUTS(2000,1000,.85)
+AHMCconfig = Turing.NUTS(2000, 1000, .85)
 
 CmdStanRegression = "
 data {
