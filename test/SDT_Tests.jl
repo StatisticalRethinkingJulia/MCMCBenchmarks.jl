@@ -4,7 +4,7 @@ using MCMCBenchmarks,Test
     path = pathof(MCMCBenchmarks)
     include(joinpath(path,"../../Models/SDT/SDT_Functions.jl"))
     include(joinpath(path,"../../Models/SDT/SDT.jl"))
-    Nd=10^4
+    Nd = 10^4
     d = 2.0
     c = 0.0
     Nreps = 1
