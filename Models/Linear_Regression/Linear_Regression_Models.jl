@@ -45,7 +45,7 @@ CmdStanConfig = Stanmodel(name = "CmdStanRegression",model=CmdStanRegression,nch
       @unpack x,y,Nd,Nc = problem   # extract the data
       @unpack B0,B,sigma = θ
       μ = B0 .+x*B
-      sum(logpdf.(Normal.(μ,sigma),y)) + logpdf(Normal(0,10),B0) +
+      logpdf(MvNormal(μ, sigma), y)  + logpdf(Normal(0,10),B0) +
       loglikelihood(Normal(0,10),B) + logpdf(Truncated(Cauchy(0,5),0,Inf),sigma)
   end
 

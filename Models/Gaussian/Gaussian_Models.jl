@@ -40,9 +40,10 @@ end
 function (problem::GaussianProb)(θ)
     @unpack y = problem   # extract the data
     @unpack mu, sigma = θ
-    loglikelihood(Normal(mu, sigma), y) + logpdf(Normal(0, 1), mu) +
+    N = length(y)
+    logpdf(MvNormal(Fill(mu, N), sigma), y) + logpdf(Normal(0, 1), mu) +
       logpdf(Truncated(Cauchy(0, 5), 0, Inf), sigma)
-end;
+end
 
 # Define problem with data and inits.
 function sampleDHMC(obs,N,nsamples)
