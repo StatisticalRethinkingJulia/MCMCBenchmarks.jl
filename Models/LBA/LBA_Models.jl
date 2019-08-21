@@ -1,5 +1,3 @@
-using FillArrays
-
 @model lbaModel(data, N, Nc, ::Type{T}=Float64) where {T} = begin
      mn = minimum(x -> x[2], data)
      tau ~ TruncatedNormal(0.4, 0.1, 0, mn)
