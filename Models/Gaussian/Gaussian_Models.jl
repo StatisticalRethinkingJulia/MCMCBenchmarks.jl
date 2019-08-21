@@ -1,5 +1,3 @@
-using FillArrays
-
 @model AHMCGaussian(y, N) = begin
     mu ~ Normal(0, 1)
     sigma ~ Truncated(Cauchy(0, 5), 0, Inf)
