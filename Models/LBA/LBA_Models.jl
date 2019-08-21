@@ -1,14 +1,15 @@
 using FillArrays
 
-@model lbaModel(data,N,Nc) = begin
-    mn=minimum(x->x[2],data)
-    tau ~ TruncatedNormal(.4,.1,0.0,mn)
-    A ~ TruncatedNormal(.8,.4,0.0,Inf)
-    k ~ TruncatedNormal(.2,.3,0.0,Inf)
-    v ~ MvNormal(Fill(0, Nc), 3)
-    for i in 1:N
-        data[i] ~ LBA(;ν=v,τ=tau,A=A,k=k)
-    end
+@model lbaModel(data, N, Nc, ::Type{T}=Float64) where {T} = begin
+     mn = minimum(x -> x[2], data)
+     tau ~ TruncatedNormal(0.4, 0.1, 0, mn)
+     A ~ TruncatedNormal(0.8, 0.4, 0, Inf)
+     k ~ TruncatedNormal(0.2, 0.3, 0, Inf)
+     v = Vector{T}(undef, Nc)
+     for i in 1:Nc
+          v[i] ~ TruncatedNormal(0, 3, 0, Inf)
+     end
+     data ~ [LBA(; ν=v, τ=tau, A=A, k=k)]
 end
 
 function AHMClba(choice,rt,N,Nc)
