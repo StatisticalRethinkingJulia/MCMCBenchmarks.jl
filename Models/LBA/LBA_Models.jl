@@ -155,7 +155,7 @@ CmdStanConfig = Stanmodel(name = "CmdStanLBA",model=CmdStanLBA,nchains=1,
       @unpack data=problem
       @unpack v,A,k,tau=θ
       d=LBA(ν=v,A=A,k=k,τ=tau)
-      minRT = minimum(data.rt)
+      minRT = minimum(x->x[2],data)
       logpdf(d,data)+sum(logpdf.(TruncatedNormal(0,3,0,Inf),v)) +
       logpdf(TruncatedNormal(.8,.4,0,Inf),A)+logpdf(TruncatedNormal(.2,.3,0,Inf),k)+
       logpdf(TruncatedNormal(.4,.1,0,minRT),tau)
