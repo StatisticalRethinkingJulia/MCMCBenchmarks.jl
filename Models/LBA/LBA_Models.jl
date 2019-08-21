@@ -126,15 +126,17 @@ parameters {
 
 model {
      real s;
+     real minRT;
      matrix[N,2] RT;
      s=1;
+     minRT = min(rt);
      RT[:,1] = rt;
      RT[:,2] = choice;
-     k ~ normal(.5,1)T[0,];
-     A ~ normal(.5,1)T[0,];
-     tau ~ normal(.5,.5)T[0,];
+     k ~ normal(.2,.3)T[0,];
+     A ~ normal(.8,.4)T[0,];
+     tau ~ normal(.4,.1)T[0,minRT];
      for(n in 1:Nc){
-          v[n] ~ normal(2,1)T[0,];
+          v[n] ~ normal(0,3)T[0,];
      }
      RT ~ lba(k,A,v,s,tau);
 }
@@ -154,9 +156,10 @@ CmdStanConfig = Stanmodel(name = "CmdStanLBA",model=CmdStanLBA,nchains=1,
       @unpack data=problem
       @unpack v,A,k,tau=θ
       d=LBA(ν=v,A=A,k=k,τ=tau)
+      minRT = minimum(data.rt)
       logpdf(d,data)+sum(logpdf.(TruncatedNormal(0,3,0,Inf),v)) +
       logpdf(TruncatedNormal(.8,.4,0,Inf),A)+logpdf(TruncatedNormal(.2,.3,0,Inf),k)+
-      logpdf(TruncatedNormal(.4,.1,0,Inf),tau)
+      logpdf(TruncatedNormal(.4,.1,0,minRT),tau)
   end
 
 function sampleDHMC(choice,rt,N,Nc,nsamples)

@@ -1,9 +1,7 @@
 @model AHMCGaussian(y, N) = begin
     mu ~ Normal(0, 1)
     sigma ~ Truncated(Cauchy(0, 5), 0, Inf)
-    for n = 1:N
-        y[n] ~ Normal(mu, sigma)
-    end
+    y ~ MvNormal(Fill(mu, N), sigma)  # use `Fill(mu, N)` is memory freiendly
 end
 
 AHMCconfig = Turing.NUTS(2000, 1000, .85)
@@ -40,9 +38,10 @@ end
 function (problem::GaussianProb)(θ)
     @unpack y = problem   # extract the data
     @unpack mu, sigma = θ
-    loglikelihood(Normal(mu, sigma), y) + logpdf(Normal(0, 1), mu) +
+    N = length(y)
+    logpdf(MvNormal(Fill(mu, N), sigma), y) + logpdf(Normal(0, 1), mu) +
       logpdf(Truncated(Cauchy(0, 5), 0, Inf), sigma)
-end;
+end
 
 # Define problem with data and inits.
 function sampleDHMC(obs,N,nsamples)
