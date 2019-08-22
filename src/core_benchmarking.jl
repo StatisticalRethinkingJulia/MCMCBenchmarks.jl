@@ -124,18 +124,21 @@ Extracts model and configuration from sampler object and performs
 parameter estimation
 * `s`: sampler object
 * `data`: data for benchmarking
+* `Nchains`: number of chains ran serially. Default =  1
 """
-function runSampler(s::AHMCNUTS,data;kwargs...)
-    return sample(s.model(data...),s.config;discard_adapt=false)
+function runSampler(s::AHMCNUTS,data;Nchains=1,kwargs...)
+    f() = sample(s.model(data...),s.config;discard_adapt=false)
+    return reduce(chainscat, map(x->f(),1:Nchains))
 end
 
-function runSampler(s::CmdStanNUTS,data;kwargs...)
-    rc, chns, cnames = stan(s.model,toDict(data),summary=false,s.dir)
-    return chns
+function runSampler(s::CmdStanNUTS,data;Nchains=1,kwargs...)
+    f() = stan(s.model,toDict(data),summary=false,s.dir)[2]
+    return reduce(chainscat, map(x->f(),1:Nchains))
 end
 
-function runSampler(s::DHMCNUTS,data;kwargs...)
-    return s.model(data...,s.Nsamples)
+function runSampler(s::DHMCNUTS,data;Nchains=1,kwargs...)
+    f() = s.model(data...,s.Nsamples)
+    return reduce(chainscat, map(x->f(),1:Nchains))
 end
 
 """
