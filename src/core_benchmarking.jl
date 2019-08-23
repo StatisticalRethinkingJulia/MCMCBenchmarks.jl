@@ -200,6 +200,7 @@ function updateResults!(s::DHMCNUTS,performance,results;kwargs...)
     permutecols!(newDF,sort!(names(newDF)))#ensure correct order
     dfi=MCMCChains.describe(chain,sections=[:internals])[1]
     newDF[!,:epsilon]=[dfi[:lf_eps, :mean][1]]
+    newDF[!,:tree_depth]=[dfi[:tree_depth, :mean][1]]
     addPerformance!(newDF,performance)
     newDF[!,:sampler] = [s.name]
     addKW!(newDF;kwargs...)

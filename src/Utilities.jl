@@ -3,23 +3,25 @@ using Base.Sys
 Convert DynamcHMC samples to a chain
 * `posterior`: an array of NamedTuple consisting of mcmcm samples
 """
-function nptochain(posterior,tune)
-    Np = length(vcat(posterior[1]...))+1 #include lf_eps
+function nptochain(posterior,chain,tune)
+    Np = length(vcat(posterior[1]...))+2 #include lf_eps
     Ns = length(posterior)
     a3d = Array{Float64,3}(undef,Ns,Np,1)
     ϵ=tune.ϵ
-    for (i,post) in enumerate(posterior)
+    i = 0
+    for (post,ch) in zip(posterior,chain)
+        i += 1
         temp = Float64[]
         for p in post
             push!(temp,values(p)...)
         end
-        push!(temp,ϵ)
+        push!(temp,ϵ,ch.depth)
         a3d[i,:,1] = temp'
     end
     parameter_names = getnames(posterior)
-    push!(parameter_names,"lf_eps")
+    push!(parameter_names,"lf_eps","tree_depth")
     chns = MCMCChains.Chains(a3d,parameter_names,
-        Dict(:internals => ["lf_eps"]))
+        Dict(:internals => ["lf_eps","tree_depth"]))
     return chns
 end
 

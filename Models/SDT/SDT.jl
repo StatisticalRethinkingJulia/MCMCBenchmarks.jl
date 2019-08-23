@@ -66,7 +66,7 @@ CmdStanConfig = Stanmodel(name = "CmdStan_SDT",model=CmdStan_SDT,nchains=1,
     chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P,Nsamples,report=ReportSilent());
     # Undo the transformation to obtain the posterior from the chain.
     posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));
-    chns = nptochain(posterior,NUTS_tuned)
+    chns = nptochain(posterior, chain, NUTS_tuned)
     return chns
   end
 

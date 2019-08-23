@@ -58,11 +58,11 @@ function sampleDHMC(obs,N,nsamples)
   ∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P));
 
   # FSample from the posterior.
-  chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, nsamples,report=ReportSilent());
+  chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, 2000,report=ReportSilent());
 
   # Undo the transformation to obtain the posterior from the chain.
   posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));
-  chns = nptochain(posterior, NUTS_tuned)
+  chns = nptochain(posterior, chain, NUTS_tuned)
   return chns
 end
 

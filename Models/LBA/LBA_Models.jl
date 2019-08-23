@@ -183,7 +183,7 @@ function sampleDHMC(data,N,Nc,nsamples)
           q = zeros(n), p = ones(n), report=ReportSilent());
     # Undo the transformation to obtain the posterior from the chain.
     posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));
-    chns = nptochain(posterior,NUTS_tuned)
+    chns = nptochain(posterior, chain, NUTS_tuned)
     return chns
 end
 
