@@ -43,11 +43,6 @@ Below, we report preliminary benchmark results, comparing CmdStan, DynamicHMC an
 
 [Comparison of effective sample size distribution](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Gaussian/results/density_mu_ess.pdf)
 
-[Comparison of r_hat distribution](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Gaussian/results/density_mu_r_hat.pdf)
-
-[Relationship between effective sample size and epsilon](https://github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl/blob/master/Examples/Gaussian/results/scatter_epsilon_mu_ess.pdf)
-
-
 [docs-dev-img]: https://img.shields.io/badge/docs-dev-blue.svg
 [docs-dev-url]: https://statisticalrethinkingjulia.github.io/MCMCBenchmarks.jl/latest
 
