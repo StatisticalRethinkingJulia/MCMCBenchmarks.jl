@@ -7,7 +7,7 @@ tests = [
     "Poisson_Test",
     "Regression_Tests",
     "Plot_Tests",
-    "LBA_Tests"
+    #"LBA_Tests"
 ]
 
 res = map(tests) do t
