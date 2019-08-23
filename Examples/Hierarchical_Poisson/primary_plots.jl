@@ -6,7 +6,7 @@ dir = "results/"
 meantimePlot = plotsummary(results, :Nd, :time, (:sampler,); save=true, dir=dir, yscale=:log10)
 
 # Plot mean allocations as a function of number of data points (Nd) for each sampler
-meanallocPlot = plotsummary(results, :Nd, :allocations, (:sampler,); save=false, dir=dir, yscale=:log10,
+meanallocPlot = plotsummary(results, :Nd, :allocations, (:sampler,); save=true, dir=dir, yscale=:log10,
   ylabel="Allocations (log scale)"
 )
 
