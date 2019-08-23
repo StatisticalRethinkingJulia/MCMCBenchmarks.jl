@@ -55,4 +55,4 @@ results = pbenchmark(samplers,simulateLBA,Nreps;options...)
 save(results,ProjDir)
 
 # Make plots
-include("plotting.jl")
+include("primary_plots.jl")
