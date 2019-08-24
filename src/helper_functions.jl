@@ -189,4 +189,5 @@ function run_all_benchmarks()
         @eval module $(Symbol("Test_", m))
             include(joinpath($path, "../../Models/"*$t * ".jl"))
         end
+    end
  end
