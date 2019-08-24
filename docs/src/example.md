@@ -6,13 +6,13 @@ In this detailed example, we will guide users through the process of developing 
 
 
 ```math
-\mu ~ Normal(0,1)
+\mu \sim Normal(0,1)
 ```
 ```math
-\sigma ~ TCauchy(0,5,0,\infty)
+\sigma \sim TCauchy(0,5,0,\infty)
 ```
 ```math
-Y ~ Normal(\mu,\sigma)
+Y \sim Normal(\mu,\sigma)
 ```
 
 ### Benchmark Design

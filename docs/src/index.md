@@ -10,7 +10,7 @@
 * Performance Metrics: r̂,effective sample size, effective sample size per second, run time, percentage of time in garbage collection, MBs of memory allocated, number of memory allocations.
 * Plots: density plots, summary plots, scatter plots, parameter recovery plots
 
-<!-- ## Outline
+
 
 ```@contents
 Pages = [
@@ -21,7 +21,7 @@ Pages = [
     "src/benchmarks.md",
 ]
 Depth = 1
-``` -->
+
 
 ## Index
 

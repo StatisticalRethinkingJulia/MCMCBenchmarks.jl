@@ -173,3 +173,20 @@ function Chains(chain::Chains)
     v=chain[:,parms,:].value.data
     return Chains(v,parms)
 end
+
+function run_all_benchmarks()
+    path = pathof(MCMCBenchmarks)
+    models = [
+        "generative_model_tests",
+        "Gaussian_Tests",
+        "SDT_Tests",
+        "Poisson_Test",
+        "Regression_Tests",
+        "Plot_Tests",
+        #"LBA_Tests"
+    ]
+    res = map(models) do m
+        @eval module $(Symbol("Test_", m))
+            include(joinpath($path, "../../Models/"*$t * ".jl"))
+        end
+ end

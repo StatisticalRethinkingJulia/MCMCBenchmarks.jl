@@ -36,13 +36,17 @@ options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 
 * speed
 
-![Gaussian_Speed](../Examples/Gaussian/results/summary_time.pdf)
+![Gaussian_Speed](../../Examples/Gaussian/results/summary_time.pdf)
 
 * allocations
 
-![Gaussian_Allocations(../Examples/Gaussian/results/summary_allocations.pdf)
+![Gaussian_Allocations](../../Examples/Gaussian/results/summary_allocations.pdf)
 
 * effective sample size
+
+![Gaussian_MuESS](../../Examples/Gaussian/results/density_mu_ess.pdf)
+
+![Gaussian_SigmaESS](../../Examples/Gaussian/results/density_sigma_ess.pdf)
 
 ### Signal Detection Theory
 
@@ -61,7 +65,7 @@ c \sim Normal(0,1/\sqrt(2))
 \theta_{fas} = ϕ(-d/2-c)
 ```
 ```math
-n_{hits} \sim Normal(\mu,\theta_{hits})
+n_{hits} \sim Binomial(N,\theta_{hits})
 ```
 ```math
 n_{fas} \sim Binomial(N,\theta_{fas})
