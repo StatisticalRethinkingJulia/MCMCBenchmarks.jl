@@ -36,7 +36,9 @@ options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 
 * speed
 
-![Gaussian_Speed](../../Examples/Gaussian/results/summary_time.pdf)
+![summary_time](../../Examples/Gaussian/results/summary_time.pdf)
+
+![plot](../../Examples/Gaussian/results/plot.png)
 
 * allocations
 
@@ -97,7 +99,7 @@ options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 ```
 ```math
 Y \sim Normal(\mu,\sigma)
-````
+```
 
 * benchmark design
 

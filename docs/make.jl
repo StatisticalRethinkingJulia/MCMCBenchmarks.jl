@@ -9,6 +9,7 @@ makedocs(
         "Home"=>"index.md",
         "Purpose"=>"purpose.md",
         "Design"=>"design.md",
+        "Functions"=>"functions.md"
         "Example"=>"example.md",
         "Benchmark Results"=>"benchmarks.md"
         ]
