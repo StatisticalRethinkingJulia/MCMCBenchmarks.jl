@@ -17,11 +17,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "#Introduction-1",
+    "page": "Home",
+    "title": "Introduction",
+    "category": "section",
+    "text": "Welcome to the documentation for MCMCBenchmarks, a benchmarking package for MCMC samplers written in the Julia language. Below, you will find an overview of features, the outline of the documentation, and an index of functions provided within MCMCBenchmarks. Use the navigation panel to your left to find more detailed information, including a fully annotated example for creating a benchmark, and results from our benchmark suite.Please report bugs, issues and feature requests using the GitHub issue tracker. Be sure to describe the nature of the problem and include a minimum working example if possible. We also welcome models to add to the benchmark suite, which can be submitted via a pull request."
+},
+
+{
     "location": "#Features-1",
     "page": "Home",
     "title": "Features",
     "category": "section",
-    "text": "Flexible: specify factors to vary in your benchmark, such as number of MCMC samples, MCMC configuration, the size of datasets, and data generating parameters\nParallel: distribute your benchmark over multiple processors to produce efficient benchmarks\nExtendable: use multiple dispatch to benchmark new samplers\nPerformance Metrics: r̂,effective sample size, effective sample size per second, run time, percentage of time in garbage collection, MBs of memory allocated, number of memory allocations.\nPlots: density plots, summary plots, scatter plots, parameter recovery plotsPages = [\n    \"src/purpose.md\",\n    \"src/design.md\",\n    \"src/example.md\",\n    \"src/functions.md\",\n    \"src/benchmarks.md\",\n]\nDepth = 1\n\n\n## Index\n@index ```"
+    "text": "Flexible: specify factors to vary in your benchmark, such as number of MCMC samples, MCMC configuration, the size of datasets, and data generating parameters\nParallel: distribute your benchmark over multiple processors to produce efficient benchmarks\nExtendable: use multiple dispatch to benchmark new samplers\nPerformance Metrics: r̂, effective sample size, effective sample size per second, run time, percentage of time in garbage collection, MBs of memory allocated, number of memory allocations.\nPlots: density plots, summary plots, scatter plots, parameter recovery plotsPages = [\n    \"src/index.md\",\n    \"src/purpose.md\",\n    \"src/design.md\",\n    \"src/example.md\",\n    \"src/functions.md\",\n    \"src/benchmarks.md\",\n]\nDepth = 1"
+},
+
+{
+    "location": "#Index-1",
+    "page": "Home",
+    "title": "Index",
+    "category": "section",
+    "text": ""
 },
 
 {
@@ -62,6 +78,206 @@ var documenterSearchIndex = {"docs": [
     "title": "Basic Design",
     "category": "section",
     "text": "MCMCBenchmarks uses a combination of multiple dispatch and optional keyword arguments to satisfy the differing requirements of MCMC samplers and models. Benchmark routines are performed with three primary overloaded functions:runSampler: passes necessary arguments to sampler and runs the sampler\nupdateResults: adds benchmark performance data to a results DataFrame\nmodifyConfig: modifies the configuration of the samplerThese functions are overloaded with sampler-specific methods, ensuring that the requirements for each sampler are satisfied. Additional flexibility is gained through the use of optional keyword arguments. Each method captures relevant keyword arguments and collects irrelevant arguments in kwargs... where they are ignored."
+},
+
+{
+    "location": "functions/#",
+    "page": "Functions",
+    "title": "Functions",
+    "category": "page",
+    "text": ""
+},
+
+{
+    "location": "functions/#MCMCBenchmarks.MCMCSampler",
+    "page": "Functions",
+    "title": "MCMCBenchmarks.MCMCSampler",
+    "category": "type",
+    "text": "Abstract MCMC sampler type\n\n\n\n\n\n"
+},
+
+{
+    "location": "functions/#MCMCBenchmarks.CmdStanNUTS",
+    "page": "Functions",
+    "title": "MCMCBenchmarks.CmdStanNUTS",
+    "category": "type",
+    "text": "MCMC sampler struct for CmdStan NUTS\n\nmodel: model configuration\ndir: probject directory\nid: a unique identifier for each instance of CmdStan in parallel applications\nname: a unique identifer given to each sampler\n\n\n\n\n\n"
+},
+
+{
+    "location": "functions/#MCMCBenchmarks.AHMCNUTS",
+    "page": "Functions",
+    "title": "MCMCBenchmarks.AHMCNUTS",
+    "category": "type",
+    "text": "MCMC sampler struct for AdvancedHMC NUTS\n\nmodel: model function that accepts data\nconfig: sampler configution settings\nname: a unique identifer given to each sampler\n\n\n\n\n\n"
+},
+
+{
+    "location": "functions/#MCMCBenchmarks.DHMCNUTS",
+    "page": "Functions",
+    "title": "MCMCBenchmarks.DHMCNUTS",
+    "category": "type",
+    "text": "MCMC sampler struct for DynamicHMC NUTS\n\nmodel: model function that accepts data\nconfig: sampler configution settings\nname: a unique identifer given to each sampler\n\n\n\n\n\n"
+},
+
+{
+    "location": "functions/#Sampler-Structs-1",
+    "page": "Functions",
+    "title": "Sampler Structs",
+    "category": "section",
+    "text": "Each sampler is associated with a MCMC sampler struct, which is a subtype of MCMCSampler. In MCMCBenchmarks, we define subtypes of MCMCSampler for three popular NUTS MCMC samplers in Julia: CmdStan, AdvancedHMC via Turing, and DynamicHMC.MCMCSamplerCmdStanNUTSAHMCNUTSDHMCNUTS"
+},
+
+{
+    "location": "functions/#Functions-1",
+    "page": "Functions",
+    "title": "Functions",
+    "category": "section",
+    "text": ""
+},
+
+{
+    "location": "functions/#MCMCBenchmarks.benchmark",
+    "page": "Functions",
+    "title": "MCMCBenchmarks.benchmark",
+    "category": "function",
+    "text": "Runs the benchmarking procedure and returns the results\n\nsamplers: a tuple of samplers or a single sampler object\nsimulate: model simulation function with keyword Nd\nNreps: number of times the benchmark is repeated for each factor combination\n\n\n\n\n\n"
+},
+
+{
+    "location": "functions/#MCMCBenchmarks.pbenchmark",
+    "page": "Functions",
+    "title": "MCMCBenchmarks.pbenchmark",
+    "category": "function",
+    "text": "Runs the benchmarking procedure defined in benchmark in parallel and returns the results\n\nsamplers: a tuple of samplers or a single sampler object\nsimulate: model simulation function with keyword Nd\nNreps: number of times the benchmark is repeated for each factor combination\n\n\n\n\n\n"
+},
+
+{
+    "location": "functions/#MCMCBenchmarks.benchmark!",
+    "page": "Functions",
+    "title": "MCMCBenchmarks.benchmark!",
+    "category": "function",
+    "text": "Primary function that performs mcmc benchmark repeatedly on a set of samplers and records the results.\n\n\'sampler\': tuple of sampler objects\nresults: DataFrame containing benchmark results\ncsr̂: cross sampler r̂\nsimulate: data generating function\nNreps: number of repetitions for a given set of simulation parameters. Default = 100\nkwargs: optional keyword arguments that are passed to modifyConfig!, updateResults! and\n\nrunSampler, providing flexibility in benchmark simulations.\n\n\n\n\n\n"
+},
+
+{
+    "location": "functions/#Top-level-Benchmark-Routines-1",
+    "page": "Functions",
+    "title": "Top-level Benchmark Routines",
+    "category": "section",
+    "text": "benchmark\njulia benchmark!(samplers,results,csr̂,simulate,Nreps,chains;kwargs...)benchmark!(sampler::T,results,csr̂,simulate,Nreps,chains;kwargs...) where {T<:MCMCSampler}pbenchmark\njulia pbenchmark(samplers,simulate,Nreps;kwargs...)benchmark!\njulia benchmark!(samplers,results,csr̂,simulate,Nreps,chains;kwargs...)"
+},
+
+{
+    "location": "functions/#MCMCBenchmarks.modifyConfig!",
+    "page": "Functions",
+    "title": "MCMCBenchmarks.modifyConfig!",
+    "category": "function",
+    "text": "Modifies MCMC sampler configuration, including number of samples, target acceptance rate and others depending on the specific sampler.\n\ns: sampler object\nNsamples: total number of MCMC samples\nNadapt: number of adaption samples during warm up\ndelta: target acceptance rate.\n\n\n\n\n\n"
+},
+
+{
+    "location": "functions/#MCMCBenchmarks.updateResults!",
+    "page": "Functions",
+    "title": "MCMCBenchmarks.updateResults!",
+    "category": "function",
+    "text": "Update the results DataFrame on each iteration\n\ns: MCMC sampler object\nperformance: includes MCMC Chain, execution time, and memory measurements\nresults: DataFrame containing benchmark results\n\n\n\n\n\n"
+},
+
+{
+    "location": "functions/#MCMCBenchmarks.runSampler",
+    "page": "Functions",
+    "title": "MCMCBenchmarks.runSampler",
+    "category": "function",
+    "text": "Extracts model and configuration from sampler object and performs parameter estimation\n\ns: sampler object\ndata: data for benchmarking\nNchains: number of chains ran serially. Default =  1\n\n\n\n\n\n"
+},
+
+{
+    "location": "functions/#Overloaded-Benchmark-Functions-1",
+    "page": "Functions",
+    "title": "Overloaded Benchmark Functions",
+    "category": "section",
+    "text": "modifyConfig!\njulia modifyConfig!(s::AHMCNUTS;Nsamples,Nadapt,delta,kwargs...)updateResults!\njulia updateResults!(s::CmdStanNUTS,performance,results;kwargs...)runSampler\njulia  runSampler(s::AHMCNUTS,data;kwargs...)"
+},
+
+{
+    "location": "functions/#MCMCBenchmarks.addPerformance!",
+    "page": "Functions",
+    "title": "MCMCBenchmarks.addPerformance!",
+    "category": "function",
+    "text": "Adds performance metrics to benchmark results, which include runtime, memory allocations in MB, garbage collection time, percent of time spent in garbage collection, and the number of memory allocations\n\ndf: the dataframe to which performance metrics are added\np: a collection of performance metrics including run time,\n\nmemory allocations and garbage collection time\n\n\n\n\n\n"
+},
+
+{
+    "location": "functions/#MCMCBenchmarks.addKW!",
+    "page": "Functions",
+    "title": "MCMCBenchmarks.addKW!",
+    "category": "function",
+    "text": "Adds keyword arguments to the results DataFrame\n\ndf: DataFrame containing benchmark results for single iteration\nkwargs: keyword arguments\n\n\n\n\n\n"
+},
+
+{
+    "location": "functions/#MCMCBenchmarks.addChainSummary!",
+    "page": "Functions",
+    "title": "MCMCBenchmarks.addChainSummary!",
+    "category": "function",
+    "text": "Adds chain summary (e.g. rhat,ess) to newDF for each parameter.\n\nnewDF: dataframe that collects results on an iteration\nchn: chain for given iteration\ndf: df of chain results\ncol: name of column\n\ne.g. If col = :ess, and parameters are mu and sigma, the new columns will be muess and sigmaess and will contain their respective ess values\n\n\n\n\n\n"
+},
+
+{
+    "location": "functions/#Helper-Functions-1",
+    "page": "Functions",
+    "title": "Helper Functions",
+    "category": "section",
+    "text": "addPerformance!\njulia addPerformance!(df,p)addKW!\njulia addKW!(df;kwargs...)addChainSummary!\njulia addChainSummary!(newDF,chn,df,col)addHPD!\njulia addHPD!(newDF,chain)addMeans!\njulia addMeans!(newDF,df)"
+},
+
+{
+    "location": "functions/#MCMCBenchmarks.plotdensity",
+    "page": "Functions",
+    "title": "MCMCBenchmarks.plotdensity",
+    "category": "function",
+    "text": "Plots a desnity of a distribution for a selected metric (e.g. effective sample size)\n\ndf: dataframe of results\nmetric: name of metric, such as :ess for effective sample size\ngroup: a tuple of grouping factors, e.g. (:sampler,:Nd)\nsave: save=true saves each plot\nfigfmt: figure format\ndir: directory of saved plot. Default pwd.\n\n\n\n\n\n"
+},
+
+{
+    "location": "functions/#MCMCBenchmarks.plotsummary",
+    "page": "Functions",
+    "title": "MCMCBenchmarks.plotsummary",
+    "category": "function",
+    "text": "Plots a summary of a metric computed according to a function, func. func defaults to the mean.\n\ndf: dataframe of results\nxvar: variable assigned to x-axis\nmetric: name of metric, such as :ess for effective sample size\ngroup: a tuple of grouping factors, e.g. (:sampler,:Nd)\nsave: save=true saves each plot\nfigfmt: figure format\nfunc: a function used to summarize results. Default mean\ndir: directory of saved plot. Default pwd.\n\n\n\n\n\n"
+},
+
+{
+    "location": "functions/#MCMCBenchmarks.plotscatter",
+    "page": "Functions",
+    "title": "MCMCBenchmarks.plotscatter",
+    "category": "function",
+    "text": "Generates a scatter plot to visualize the relationship between two benchmarking metrics.\n\ndf: dataframe of results\nxvar: variable assigned to x-axis\nmetric: name of metric, such as :ess for effective sample size\ngroup: a tuple of grouping factors, e.g. (:sampler,:Nd)\nsave: save=true saves each plot\nfigfmt: figure format\nfunc: a function used to summarize results. Default mean\ndir: directory of saved plot. Default pwd.\n\n\n\n\n\n"
+},
+
+{
+    "location": "functions/#MCMCBenchmarks.plotrecovery",
+    "page": "Functions",
+    "title": "MCMCBenchmarks.plotrecovery",
+    "category": "function",
+    "text": "Generates a plot to compare the estimated parameters to true parameter values used to generate simulated data.\n\ndf: dataframe of results\nparms: namedtuple of parameter names and true values\ngroup: a tuple of grouping factors, e.g. (:sampler,:Nd)\nsave: save=true saves each plot\nfigfmt: figure format\nfunc: a function used to summarize results. Default mean\ndir: directory of saved plot. Default pwd.\n\n\n\n\n\n"
+},
+
+{
+    "location": "functions/#Plotting-1",
+    "page": "Functions",
+    "title": "Plotting",
+    "category": "section",
+    "text": "plotdensity\njulia plotdensity(df::DataFrame,metric::Symbol,group=(:sampler,);save=false,     figfmt=\"pdf\",dir=\"\",options...)plotsummary\njulia plotsummary(df::DataFrame,xvar::Symbol,metric::Symbol,group=(:sampler,);save=false,     figfmt=\"pdf\",func=mean,dir=\"\",options...)plotscatter\njulia plotscatter(df::DataFrame,xvar::Symbol,metric::Symbol,group=(:sampler,);save=false,     figfmt=\"pdf\",func=mean,dir=\"\",options...)plotrecovery\njulia plotrecovery(df::DataFrame,parms,group=(:sampler,);save=false,     figfmt=\"pdf\",dir=\"\",options...)`"
+},
+
+{
+    "location": "functions/#Results-DataFrame-1",
+    "page": "Functions",
+    "title": "Results DataFrame",
+    "category": "section",
+    "text": ""
 },
 
 {
@@ -109,7 +325,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Example",
     "title": "Results Output",
     "category": "section",
-    "text": "The following information is stored in the results DataFrame:Each parameter is associated with a column for each of the following quantities: Effective Sample Size, Effective Sample Size per second, cross-sampler r̂\nA sampler name column\nThe column for each design element in the options NamedTuple\nA column for each of following performance metrics: run time, % garbage collection time, number of memory allocations, the amount of memory allocated in MB"
+    "text": "The following information is stored in the results DataFrame:Each parameter is associated with a column for each of the following quantities: Effective Sample Size, Effective Sample Size per second, cross-sampler r̂\nA sampler name column\nThe column for each design element in the options NamedTuple\nA column for each of following performance metrics: run time, % garbage collection time, number of memory allocations, the amount of memory allocated in MB\n│ Row │ mu_ess  │ mu_ess_ps │ mu_hdp_lb  │ mu_hdp_ub │ mu_mean    │ mu_r_hat │ sigma_ess │ sigma_ess_ps │ sigma_hdp_lb │ sigma_hdp_ub │ sigma_mean │ sigma_r_hat │\n│     │ Float64 │ Float64   │ Float64    │ Float64   │ Float64    │ Float64  │ Float64   │ Float64      │ Float64      │ Float64      │ Float64    │ Float64     │\n├─────┼─────────┼───────────┼────────────┼───────────┼────────────┼──────────┼───────────┼──────────────┼──────────────┼──────────────┼────────────┼─────────────┤\n│ 1   │ 453.183 │ 1101.93   │ -0.439951  │ 1.01233   │ 0.335121   │ 1.01192  │ 561.67    │ 1365.72      │ 0.694345     │ 1.85464      │ 1.20432    │ 0.999773    │\n│ 2   │ 439.956 │ 1197.47   │ -0.345675  │ 1.05657   │ 0.29728    │ 1.01183  │ 349.387   │ 950.962      │ 0.680205     │ 1.96625      │ 1.2538     │ 0.999099    │\n│ 3   │ 750.97  │ 6877.37   │ -0.418789  │ 0.98444   │ 0.315015   │ 1.00147  │ 436.824   │ 4000.43      │ 0.685377     │ 1.88949      │ 1.20968    │ 1.00001     │\n│ 4   │ 627.599 │ 1585.39   │ -0.465991  │ 0.419506  │ -0.0264066 │ 1.00156  │ 687.419   │ 1736.51      │ 0.41708      │ 1.11226      │ 0.723098   │ 1.0025      │\n│ 5   │ 310.065 │ 762.221   │ -0.48833   │ 0.46412   │ -0.0270623 │ 0.999198 │ 375.669   │ 923.491      │ 0.354449     │ 1.16472      │ 0.747474   │ 0.99918     │\n│ 6   │ 627.462 │ 4769.92   │ -0.516661  │ 0.409657  │ -0.0253033 │ 0.999118 │ 388.73    │ 2955.1       │ 0.406456     │ 1.11744      │ 0.743553   │ 0.999008    │\n│ 7   │ 635.731 │ 1587.98   │ -0.271512  │ 0.854006  │ 0.275059   │ 1.0016   │ 576.698   │ 1440.52      │ 0.537828     │ 1.43556      │ 0.953825   │ 0.999986    │\n⋮\n│ 443 │ 987.146 │ 979.354   │ -0.107562  │ 0.0177224 │ -0.0454973 │ 0.999009 │ 916.509   │ 909.275      │ 0.960226     │ 1.04749      │ 1.00635    │ 0.999703    │\n│ 444 │ 971.496 │ 1761.29   │ -0.105877  │ 0.0127306 │ -0.0453024 │ 0.999013 │ 608.395   │ 1103.0       │ 0.96735      │ 1.04969      │ 1.00694    │ 1.00024     │\n│ 445 │ 951.84  │ 2159.27   │ -0.103468  │ 0.0207677 │ -0.0415093 │ 1.0003   │ 1000.0    │ 2268.53      │ 0.97463      │ 1.06208      │ 1.0171     │ 0.999189    │\n│ 446 │ 948.782 │ 1164.19   │ -0.110913  │ 0.0170485 │ -0.0423884 │ 1.00133  │ 1000.0    │ 1227.04      │ 0.973883     │ 1.06253      │ 1.018      │ 0.999011    │\n│ 447 │ 1000.0  │ 1758.8    │ -0.105022  │ 0.0154367 │ -0.043221  │ 1.00022  │ 370.093   │ 650.921      │ 0.968455     │ 1.06218      │ 1.01705    │ 0.999325    │\n│ 448 │ 879.725 │ 1900.39   │ -0.0472455 │ 0.0761518 │ 0.0152611  │ 1.00018  │ 874.352   │ 1888.78      │ 1.00112      │ 1.09242      │ 1.04392    │ 0.999115    │\n│ 449 │ 1000.0  │ 1367.86   │ -0.0394613 │ 0.0828844 │ 0.0163545  │ 0.999198 │ 1000.0    │ 1367.86      │ 1.00124      │ 1.08632      │ 1.04264    │ 1.00029     │\n│ 450 │ 934.934 │ 1587.04   │ -0.0495172 │ 0.0814705 │ 0.0169015  │ 1.00209  │ 440.281   │ 747.371      │ 0.996308     │ 1.08719      │ 1.0428     │ 0.999471    │\n\n│ Row │ epsilon  │ tree_depth │ time     │ megabytes │ gctime    │ gcpercent │ allocations │ sampler     │ Nsamples │ Nadapt │ delta   │ Nd    │ mu_sampler_rhat │\n│     │ Float64  │ Float64    │ Float64  │ Float64   │ Float64   │ Float64   │ Int64       │ String      │ Int64    │ Int64  │ Float64 │ Int64 │ Float64         │\n├─────┼──────────┼────────────┼──────────┼───────────┼───────────┼───────────┼─────────────┼─────────────┼──────────┼────────┼─────────┼───────┼─────────────────┤\n│ 1   │ 0.769406 │ 2.113      │ 0.411262 │ 7.78675   │ 0.0       │ 0.0       │ 175314      │ CmdStanNUTS │ 2000     │ 1000   │ 0.8     │ 10    │ 1.00571         │\n│ 2   │ 0.706563 │ 2.219      │ 0.367404 │ 233.422   │ 0.0741201 │ 0.20174   │ 2654525     │ AHMCNUTS    │ 2000     │ 1000   │ 0.8     │ 10    │ 1.00571         │\n│ 3   │ 0.793221 │ 1.915      │ 0.109194 │ 58.6358   │ 0.0288007 │ 0.263756  │ 1530417     │ DHMCNUTS    │ 2000     │ 1000   │ 0.8     │ 10    │ 1.00571         │\n│ 4   │ 0.853159 │ 1.842      │ 0.395863 │ 7.26259   │ 0.0       │ 0.0       │ 165981      │ CmdStanNUTS │ 2000     │ 1000   │ 0.8     │ 10    │ 0.999527        │\n│ 5   │ 0.718885 │ 2.269      │ 0.406792 │ 236.96    │ 0.0790683 │ 0.19437   │ 2731926     │ AHMCNUTS    │ 2000     │ 1000   │ 0.8     │ 10    │ 0.999527        │\n│ 6   │ 0.429143 │ 2.317      │ 0.131546 │ 71.1897   │ 0.0312859 │ 0.237833  │ 1877320     │ DHMCNUTS    │ 2000     │ 1000   │ 0.8     │ 10    │ 0.999527        │\n│ 7   │ 0.779473 │ 1.906      │ 0.400339 │ 7.25304   │ 0.0       │ 0.0       │ 165982      │ CmdStanNUTS │ 2000     │ 1000   │ 0.8     │ 10    │ 0.999831        │\n⋮\n│ 443 │ 1.01321  │ 1.747      │ 1.00796  │ 583.327   │ 0.36536   │ 0.362476  │ 2056393     │ AHMCNUTS    │ 2000     │ 1000   │ 0.8     │ 1000  │ 0.999432        │\n│ 444 │ 0.57954  │ 1.984      │ 0.551582 │ 503.207   │ 0.0783162 │ 0.141985  │ 1695754     │ DHMCNUTS    │ 2000     │ 1000   │ 0.8     │ 1000  │ 0.999432        │\n│ 445 │ 0.91965  │ 1.8        │ 0.440815 │ 7.36456   │ 0.0       │ 0.0       │ 166982      │ CmdStanNUTS │ 2000     │ 1000   │ 0.8     │ 1000  │ 1.00027         │\n│ 446 │ 0.810912 │ 1.816      │ 0.81497  │ 636.641   │ 0.118367  │ 0.145241  │ 2233313     │ AHMCNUTS    │ 2000     │ 1000   │ 0.8     │ 1000  │ 1.00027         │\n│ 447 │ 0.622224 │ 2.014      │ 0.568569 │ 502.033   │ 0.0863364 │ 0.151849  │ 1689812     │ DHMCNUTS    │ 2000     │ 1000   │ 0.8     │ 1000  │ 1.00027         │\n│ 448 │ 0.830561 │ 1.865      │ 0.462918 │ 7.3316    │ 0.0       │ 0.0       │ 166982      │ CmdStanNUTS │ 2000     │ 1000   │ 0.8     │ 1000  │ 1.00022         │\n│ 449 │ 0.876156 │ 1.796      │ 0.731066 │ 637.126   │ 0.115552  │ 0.15806   │ 2234563     │ AHMCNUTS    │ 2000     │ 1000   │ 0.8     │ 1000  │ 1.00022         │\n│ 450 │ 0.689293 │ 1.896      │ 0.589106 │ 455.712   │ 0.0896887 │ 0.152245  │ 1525902     │ DHMCNUTS    │ 2000     │ 1000   │ 0.8     │ 1000  │ 1.00022         │\n\n│ Row │ sigma_sampler_rhat │\n│     │ Float64            │\n├─────┼────────────────────┤\n│ 1   │ 1.00186            │\n│ 2   │ 1.00186            │\n│ 3   │ 1.00186            │\n│ 4   │ 1.00135            │\n│ 5   │ 1.00135            │\n│ 6   │ 1.00135            │\n│ 7   │ 1.00377            │\n⋮\n│ 443 │ 0.999586           │\n│ 444 │ 0.999586           │\n│ 445 │ 0.999321           │\n│ 446 │ 0.999321           │\n│ 447 │ 0.999321           │\n│ 448 │ 0.999731           │\n│ 449 │ 0.999731           │\n│ 450 │ 0.999731           │"
 },
 
 {
@@ -133,7 +349,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Gaussian",
     "category": "section",
-    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design#Number of data points\nNd = [10, 100, 1000]\n#Number of simulations\nNreps = 50\noptions = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)speed(Image: Gaussian_Speed)allocations(Image: Gaussian_Allocations)effective sample size(Image: Gaussian_MuESS)(Image: Gaussian_SigmaESS)"
+    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design#Number of data points\nNd = [10, 100, 1000]\n#Number of simulations\nNreps = 50\noptions = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)speed(Image: summary_time)(Image: plot)allocations(Image: Gaussian_Allocations)effective sample size(Image: Gaussian_MuESS)(Image: Gaussian_SigmaESS)"
 },
 
 {
@@ -149,7 +365,23 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Linear Regression",
     "category": "section",
-    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)\n\n\n* benchmark design\n\n* speed\n* allocations\n* effective sample size\n\n Linear Ballistic Accumulator (LBA)\n\n* Model\nmath \\tau \\sim TNormal(.4,.1,0,y_{min})math A \\sim TNormal(.8,.4,0,\\infty)math k \\sim TNormal(.2,.3,0,\\infty)math v \\sim Normal(0,3)math (t,c) \\sim LBA(A,b,v,s,\\tau)\nwhere\nmath t = yi - t{er}math b = A + kmath s = 1math LBA(A,b,v,s,\\tau) = fc(t)\\prod{j \\neq c} (1-F_j(t))math fc(t) = \\frac{1}{A} \\left[-vc \\Phi\\left( \\frac{b-A-tvc}{ts} \\right) + \\phi\\left( \\frac{b-A-tvc}{ts} \\right) +vc \\Phi\\left( \\frac{b-tvc}{ts} \\right) + s \\phi\\left( \\frac{b-tv_c}{ts} \\right) \\right]math Fc(t) = 1 + \\frac{b-A-tvi}{A}  \\Phi\\left \\frac{b-A-tvc}{ts} \\right) - \\frac{b-tvi}{A}  \\Phi\\left \\frac{b-tvc}{ts} \\right) + \\frac{ts}{A} \\phi \\left(\\frac{b-A-tvc}{ts} \\right) - \\frac{ts}{A} \\phi \\left(\\frac{b-tv_c}{ts} \\right)math Y = {y1,...,yn}math y_{min} = min{Y}\n* benchmark design\n\n* speed\n* allocations\n* effective sample size\n\n### Poisson Regression\n\n* Model\nmath a_0 \\sim Normal(0,10)math a_1 \\sim Normal(0,1)math \\sigma_{a0} \\sim TCauchy(0,1,0,\\infty)math a{0i} ~ \\sim Normal(0,\\sigma{a0})math \\lambda = e^(a0 + a{0i} + a1*xi)math y_i \\sim Poisson(\\lambda)\n* benchmark design\njulia #Number of data points per unit Nd = [1,2,5] #Number of units in model Ns = 10 #Number of simulations Nreps = 25 options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Ns=Ns) ```speed\nallocations\neffective sample size"
+    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design\nspeed\nallocations\neffective sample size"
+},
+
+{
+    "location": "benchmarks/#Linear-Ballistic-Accumulator-(LBA)-1",
+    "page": "Benchmark Results",
+    "title": "Linear Ballistic Accumulator (LBA)",
+    "category": "section",
+    "text": "Modeltau sim TNormal(410y_min)A sim TNormal(840infty)k sim TNormal(230infty)v sim Normal(03)(tc) sim LBA(Abvstau)wheret = y_i - t_erb = A + ks = 1LBA(Abvstau) = f_c(t)prod_j neq c (1-F_j(t))f_c(t) = frac1A left-v_c Phileft( fracb-A-tv_cts right) + phileft( fracb-A-tv_cts right) +\n+ v_c Phileft( fracb-tv_cts right) + s phileft( fracb-tv_cts right) rightF_c(t) = 1 + fracb-A-tv_iA  Phileft fracb-A-tv_cts right) - fracb-tv_iA  Phileft fracb-tv_cts right) + fractsA phi left(fracb-A-tv_cts right) - fractsA phi left(fracb-tv_cts right)Y = y_1y_ny_min = minYbenchmark design\nspeed\nallocations\neffective sample size"
+},
+
+{
+    "location": "benchmarks/#Poisson-Regression-1",
+    "page": "Benchmark Results",
+    "title": "Poisson Regression",
+    "category": "section",
+    "text": "Modela_0 sim Normal(010)a_1 sim Normal(01)sigma_a0 sim TCauchy(010infty)a_0i  sim Normal(0sigma_a0)lambda = e^(a_0 + a_0i + a_1*x_i)y_i sim Poisson(lambda)benchmark design#Number of data points per unit\nNd = [1,2,5]\n#Number of units in model\nNs = 10\n#Number of simulations\nNreps = 25\noptions = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Ns=Ns)speed\nallocations\neffective sample size"
 },
 
 ]}
