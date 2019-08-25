@@ -146,7 +146,7 @@ f_c(t) = \frac{1}{A} \left[-v_c \Phi\left( \frac{b-A-tv_c}{ts} \right) + \phi\le
 + v_c \Phi\left( \frac{b-tv_c}{ts} \right) + s \phi\left( \frac{b-tv_c}{ts} \right) \right]
 ```
 ```math
-F_c(t) = 1 + \frac{b-A-tv_i}{A}  \Phi\left \frac{b-A-tv_c}{ts} \right) - \frac{b-tv_i}{A}  \Phi\left \frac{b-tv_c}{ts} \right) + \frac{ts}{A} \phi \left(\frac{b-A-tv_c}{ts} \right) - \frac{ts}{A} \phi \left(\frac{b-tv_c}{ts} \right)
+F_c(t) = 1 + \frac{b-A-tv_c}{A} \Phi\left(\frac{b-A-tv_c}{ts} \right) - \frac{b-tv_c}{A} \Phi\left( \frac{b-tv_c}{ts} \right) + \frac{ts}{A} \phi\left( \frac{b-A-tv_c}{ts} \right) - \frac{ts}{A} \phi\left( \frac{b-tv_c}{ts} \right)
 ```
 ```math
 Y = {y_1,...,y_n}
