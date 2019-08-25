@@ -38,6 +38,13 @@ options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 
 ![summary_time](../../Examples/Gaussian/results/summary_time.pdf)
 
+```@raw html
+<img src="../../Examples/Gaussian/results/summary_time.pdf" alt="GMT_Albers" title="Albers equal-area conic map projection" width="500" class="center"/>
+```
+
+```@raw html
+<img src="../../Examples/Gaussian/results/plot.png" alt="GMT_Albers" title="Albers equal-area conic map projection" width="500" class="center"/>
+```
 ![plot](../../Examples/Gaussian/results/plot.png)
 
 * allocations
