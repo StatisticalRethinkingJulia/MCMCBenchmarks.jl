@@ -46,7 +46,7 @@ options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 
 * effective sample size
 
-![Gaussian_MuESS](../../Examples/Gaussian/results/density_mu_ess.pdf)
+![Gaussian_MuESS](../Examples/Gaussian/results/density_mu_ess.pdf)
 
 ![Gaussian_SigmaESS](../../Examples/Gaussian/results/density_sigma_ess.pdf)
 
