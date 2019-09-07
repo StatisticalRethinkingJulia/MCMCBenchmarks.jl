@@ -53,25 +53,17 @@ CmdStanConfig = Stanmodel(name = "CmdStanRegression",model=CmdStanRegression,nch
   function sampleDHMC(x,y,Nd,Nc,nsamples)
     p = RegressionProb(x,y,Nd,Nc)
     p((B0=0.0,B=fill(0.0,Nc),sigma=1.0))
-
     # Write a function to return properly dimensioned transformation.
-
-    problem_transformation(p::RegressionProb) =
-        as((B0=asℝ,B=as(Array,asℝ,Nc), sigma = asℝ₊))
+    trans = as((B0=asℝ,B=as(Array,asℝ,Nc), sigma = asℝ₊))
     # Use Flux for the gradient.
-
-    P = TransformedLogDensity(problem_transformation(p), p)
+    P = TransformedLogDensity(trans, p)
     #∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P))
     ∇P = ADgradient(:ForwardDiff, P)
-
-    # FSample from the posterior.
-
-    chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, nsamples,report=ReportSilent());
-
+    # Sample from the posterior.
+    results = mcmc_with_warmup(Random.GLOBAL_RNG, ∇P, nsamples; reporter = NoProgressReport())
     # Undo the transformation to obtain the posterior from the chain.
-
-    posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));
-    chns = nptochain(posterior, chain, NUTS_tuned)
+    posterior = transform.(trans, results.chain)
+    chns = nptochain(results,posterior)
     return chns
   end
 

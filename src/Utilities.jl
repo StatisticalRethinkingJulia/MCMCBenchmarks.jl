@@ -3,19 +3,20 @@ using Base.Sys
 Convert DynamcHMC samples to a chain
 * `posterior`: an array of NamedTuple consisting of mcmcm samples
 """
-function nptochain(posterior,chain,tune)
+function nptochain(results,posterior)
     Np = length(vcat(posterior[1]...))+2 #include lf_eps
     Ns = length(posterior)
     a3d = Array{Float64,3}(undef,Ns,Np,1)
-    ϵ=tune.ϵ
+    depth = map(x->x.depth,results.tree_statistics)
+    ϵ=results.ϵ
     i = 0
-    for (post,ch) in zip(posterior,chain)
+    for (post,ch) in zip(posterior,depth)
         i += 1
         temp = Float64[]
         for p in post
             push!(temp,values(p)...)
         end
-        push!(temp,ϵ,ch.depth)
+        push!(temp,ϵ,ch)
         a3d[i,:,1] = temp'
     end
     parameter_names = getnames(posterior)

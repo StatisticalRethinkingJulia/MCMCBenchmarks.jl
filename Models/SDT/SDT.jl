@@ -53,27 +53,25 @@ CmdStanConfig = Stanmodel(name = "CmdStan_SDT",model=CmdStan_SDT,nchains=1,
   end
 
   # Define problem with data and inits.
-  function sampleDHMC(hits,fas,Nd,Nsamples)
+  function sampleDHMC(hits,fas,Nd,nsamples)
     p = SDTProblem(hits,fas,Nd)
     p((d=2.0,c=.0))
     # Write a function to return properly dimensioned transformation.
-    problem_transformation(p::SDTProblem) =
-         as((d=asℝ,c=asℝ))
-    # Use Flux for the gradient.
-    P = TransformedLogDensity(problem_transformation(p), p)
-    ∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P));
-    # FSample from the posterior.
-    chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P,Nsamples,report=ReportSilent());
+    trans = as((d=asℝ,c=asℝ))
+    P = TransformedLogDensity(trans, p)
+    ∇P = ADgradient(:ForwardDiff, P)
+    # Sample from the posterior.
+    results = mcmc_with_warmup(Random.GLOBAL_RNG, ∇P, nsamples; reporter = NoProgressReport())
     # Undo the transformation to obtain the posterior from the chain.
-    posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));
-    chns = nptochain(posterior, chain, NUTS_tuned)
+    posterior = transform.(trans, results.chain)
+    chns = nptochain(results,posterior)
     return chns
   end
 
   function simulateSDT(;d=2.,c=0.,Nd,kwargs...)
-      θhit=cdf(Normal(0,1),d/2-c)
-      θfa=cdf(Normal(0,1),-d/2-c)
-      hits = rand(Binomial(Nd,θhit))
-      fas = rand(Binomial(Nd,θfa))
-        return (hits=hits,fas=fas,Nd=Nd)
-   end
+    θhit=cdf(Normal(0,1),d/2-c)
+    θfa=cdf(Normal(0,1),-d/2-c)
+    hits = rand(Binomial(Nd,θhit))
+    fas = rand(Binomial(Nd,θfa))
+      return (hits=hits,fas=fas,Nd=Nd)
+  end

@@ -49,20 +49,20 @@ function sampleDHMC(obs,N,nsamples)
   p((mu=0.0, sigma=1.0))
 
   # Write a function to return properly dimensioned transformation.
-  problem_transformation(p::GaussianProb) =
-      as((mu=as(Real, -25, 25), sigma=asℝ₊), )
+  trans = as((mu=as(Real, -25, 25), sigma=asℝ₊), )
 
   # Use Flux for the gradient.
 
-  P = TransformedLogDensity(problem_transformation(p), p)
-  ∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P));
+  P = TransformedLogDensity(trans, p)
+  ∇P = ADgradient(:ForwardDiff, P)
 
-  # FSample from the posterior.
-  chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, 2000,report=ReportSilent());
+  # Sample from the posterior.
+  results = mcmc_with_warmup(Random.GLOBAL_RNG, ∇P, nsamples; reporter = NoProgressReport())
 
   # Undo the transformation to obtain the posterior from the chain.
-  posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));
-  chns = nptochain(posterior, chain, NUTS_tuned)
+  posterior = transform.(trans, results.chain)
+
+  chns = nptochain(results,posterior)
   return chns
 end
 

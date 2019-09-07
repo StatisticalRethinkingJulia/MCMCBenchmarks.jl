@@ -171,19 +171,17 @@ function sampleDHMC(data,N,Nc,nsamples)
     p = LBAProb(data,N,Nc)
     p((v=fill(.5,Nc),A=.8,k=.2,tau=.4))
     # Write a function to return properly dimensioned transformation.
-    problem_transformation(p::LBAProb) =
-    as((v=as(Array,asℝ₊,Nc),A=asℝ₊,k=asℝ₊,tau=asℝ₊))
+    trans = as((v=as(Array,asℝ₊,Nc),A=asℝ₊,k=asℝ₊,tau=asℝ₊))
     # Use Flux for the gradient.
-
-    P = TransformedLogDensity(problem_transformation(p), p)
-    ∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P))
+    P = TransformedLogDensity(trans, p)
+    ∇P = ADgradient(:ForwardDiff, P)
     # FSample from the posterior.
     n = dimension(problem_transformation(p))
-    chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, nsamples;
-          q = zeros(n), p = ones(n), report=ReportSilent());
+    results = mcmc_with_warmup(Random.GLOBAL_RNG, ∇P, nsamples;
+        q = zeros(n), p = ones(n),reporter = NoProgressReport())
     # Undo the transformation to obtain the posterior from the chain.
-    posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));
-    chns = nptochain(posterior, chain, NUTS_tuned)
+    posterior = transform.(trans, results.chain)
+    chns = nptochain(results,posterior)
     return chns
 end
 

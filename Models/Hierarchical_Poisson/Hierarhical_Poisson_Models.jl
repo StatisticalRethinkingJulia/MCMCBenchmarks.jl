@@ -44,8 +44,6 @@ function simulatePoisson(; Nd=1, Ns=10, a0=1.0, a1=.5, a0_sig=.3, kwargs...)
   return (y=y, x=x, idx=idx, N=N, Ns=Ns)
  end
 
-DNconfig = DynamicNUTS(2000)
-
 CmdStanPoisson = "
 data {
   int N;
@@ -104,15 +102,13 @@ function sampleDHMC(y, x, idx, N, Ns, nsamples)
   p = PoissonProb(y, x, idx, N, Ns)
   p((a0=0.0, a1=0.0, a0s=fill(0.0, Ns), a0_sig=.3))
   # Write a function to return properly dimensioned transformation.
-  problem_transformation(p::PoissonProb) =
-      as((a0=asℝ, a1=asℝ, a0s=as(Array, Ns), a0_sig=asℝ₊))
-  # Use Flux for the gradient.
-  P = TransformedLogDensity(problem_transformation(p), p)
-  ∇P = LogDensityRejectErrors(ADgradient(:ForwardDiff, P))
-  # FSample from the posterior.
-  chain, NUTS_tuned = NUTS_init_tune_mcmc(∇P, nsamples,report=ReportSilent());
+  trans = as((a0=asℝ, a1=asℝ, a0s=as(Array, Ns), a0_sig=asℝ₊))
+  P = TransformedLogDensity(trans, p)
+  ∇P = ADgradient(:ForwardDiff, P)
+  # Sample from the posterior.
+  results = mcmc_with_warmup(Random.GLOBAL_RNG, ∇P, nsamples; reporter = NoProgressReport())
   # Undo the transformation to obtain the posterior from the chain.
-  posterior = TransformVariables.transform.(Ref(problem_transformation(p)), get_position.(chain));
-  chns = nptochain(posterior, chain, NUTS_tuned)
+  posterior = transform.(trans, results.chain)
+  chns = nptochain(results,posterior)
   return chns
 end
