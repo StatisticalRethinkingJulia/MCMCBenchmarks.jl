@@ -8,7 +8,7 @@ Plots a desnity of a distribution for a selected metric (e.g. effective sample s
 * `dir`: directory of saved plot. Default pwd.
 """
 function plotdensity(df::DataFrame,metric::Symbol,group=(:sampler,);save=false,
-    figfmt="pdf",dir="",options...)
+    figfmt="png",dir="",options...)
     plots = Plots.Plot[]
     layout = SetLayout(df,group)
     grouping = map(x->df[!,x],group)
@@ -34,7 +34,7 @@ Plots a summary of a metric computed according to a function, func. func default
 * `dir`: directory of saved plot. Default pwd.
 """
 function plotsummary(df::DataFrame,xvar::Symbol,metric::Symbol,group=(:sampler,);save=false,
-    figfmt="pdf",func=mean,dir="",options...)
+    figfmt="png",func=mean,dir="",options...)
     plots = Plots.Plot[]
     layout = SetLayout(df,group)
     for c in names(df)
@@ -63,7 +63,7 @@ benchmarking metrics.
 * `dir`: directory of saved plot. Default pwd.
 """
 function plotscatter(df::DataFrame,xvar::Symbol,metric::Symbol,group=(:sampler,);save=false,
-    figfmt="pdf",func=mean,dir="",options...)
+    figfmt="png",func=mean,dir="",options...)
     plots = Plots.Plot[]
     layout = SetLayout(df,group)
     grouping = map(x->df[!,x],group)
@@ -89,7 +89,7 @@ generate simulated data.
 * `dir`: directory of saved plot. Default pwd.
 """
 function plotrecovery(df::DataFrame,parms,group=(:sampler,);save=false,
-    figfmt="pdf",dir="",options...)
+    figfmt="png",dir="",options...)
     plots = Plots.Plot[]
     layout = SetLayout(df,group)
     for s in groupby(df,:sampler)

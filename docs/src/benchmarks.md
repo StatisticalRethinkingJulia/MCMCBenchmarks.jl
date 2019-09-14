@@ -36,26 +36,15 @@ options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 
 * speed
 
-![summary_time](../../Examples/Gaussian/results/summary_time.pdf)
+![summary_time](../../Examples/Gaussian/results/summary_time.png)
 
 ```@raw html
-<img src="../../Examples/Gaussian/results/summary_time.pdf" width="500"/>
+<img src="../../Examples/Gaussian/results/summary_time.png" width="500"/>
 ```
-
-```@raw html
-<img src="../../Examples/Gaussian/results/plot.png" width="500"/>
-```
-![plot](../../Examples/Gaussian/results/plot.png)
 
 * allocations
 
-![Gaussian_Allocations](../../Examples/Gaussian/results/summary_allocations.pdf)
-
 * effective sample size
-
-![Gaussian_MuESS](../Examples/Gaussian/results/density_mu_ess.pdf)
-
-![Gaussian_SigmaESS](../../Examples/Gaussian/results/density_sigma_ess.pdf)
 
 ### Signal Detection Theory
 
@@ -153,17 +142,19 @@ f_c(t) = \frac{1}{A} \left[-v_c \Phi\left( \frac{b-A-tv_c}{ts} \right) + \phi\le
 + v_c \Phi\left( \frac{b-tv_c}{ts} \right) + s \phi\left( \frac{b-tv_c}{ts} \right) \right]
 ```
 ```math
-F_c(t) = 1 + \frac{b-A-tv_c}{A} \Phi\left(\frac{b-A-tv_c}{ts} \right) - \frac{b-tv_c}{A} \Phi\left( \frac{b-tv_c}{ts} \right) + \frac{ts}{A} \phi\left( \frac{b-A-tv_c}{ts} \right) - \frac{ts}{A} \phi\left( \frac{b-tv_c}{ts} \right)
+\begin{multline*}
+ F_c(t) = 1 + \frac{b-A-tv_c}{A} \Phi\left( \frac{b-A-tv_c}{ts} \right) - \frac{b-tv_c}{A} \Phi\left( \frac{b-tv_c}{ts} \right)\\
+ + \frac{ts}{A} \phi\left( \frac{b-A-tv_c}{ts} \right) - \frac{ts}{A} \phi\left( \frac{b-tv_c}{ts} \right)
+ \end{multline*}
 ```
 ```math
 Y = {y_1,...,y_n}
 ```
 ```math
-y_{min} = min{Y}
+y_{min} = minimum(Y)
 ```
 
 * benchmark design
-
 * speed
 * allocations
 * effective sample size
@@ -185,7 +176,7 @@ a_1 \sim Normal(0,1)
 a_{0i} ~ \sim Normal(0,\sigma_{a0})
 ```
 ```math
-\lambda = e^(a_0 + a_{0i} + a_1*x_i)
+\lambda = e^{a_0 + a_{0i} + a_1*x_i}
 ```
 ```math
 y_i \sim Poisson(\lambda)
