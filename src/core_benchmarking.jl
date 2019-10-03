@@ -15,9 +15,10 @@ mutable struct AHMCNUTS{T1,T2} <: MCMCSampler
     model::T1
     config::T2
     name::Symbol
+    Nsamples::Int64
 end
 
-AHMCNUTS(model,config)=AHMCNUTS(model,config,:AHMCNUTS)
+AHMCNUTS(model,config)=AHMCNUTS(model,config,:AHMCNUTS,0)
 
 """
 MCMC sampler struct for CmdStan NUTS
@@ -49,7 +50,7 @@ mutable struct DHMCNUTS{T1,T2} <: MCMCSampler
     name::Symbol
 end
 
-DHMCNUTS(model,Nsamples) = DHMCNUTS(model,Nsamples,:DHMCNUTS)
+DHMCNUTS(model) = DHMCNUTS(model,0,:DHMCNUTS)
 
 """
 Primary function that performs mcmc benchmark repeatedly on a set of samplers
@@ -127,7 +128,7 @@ parameter estimation
 * `Nchains`: number of chains ran serially. Default =  1
 """
 function runSampler(s::AHMCNUTS,data;Nchains=1,kwargs...)
-    f() = sample(s.model(data...),s.config;discard_adapt=false)
+    f() = sample(s.model(data...),s.config,s.Nsamples;discard_adapt=false)
     return reduce(chainscat, map(x->f(),1:Nchains))
 end
 
@@ -216,7 +217,8 @@ acceptance rate and others depending on the specific sampler.
 * `delta`: target acceptance rate.
 """
 function modifyConfig!(s::AHMCNUTS;Nsamples,Nadapt,delta,kwargs...)
-    s.config = Turing.NUTS(Nsamples,Nadapt,delta)
+    s.config = Turing.NUTS(Nadapt,delta)
+    s.Nsamples = Nsamples
 end
 
 function modifyConfig!(s::CmdStanNUTS;Nsamples,Nadapt,delta,kwargs...)

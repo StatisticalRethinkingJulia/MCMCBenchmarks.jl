@@ -15,7 +15,7 @@ using MCMCBenchmarks,Test
     samplers = (
       CmdStanNUTS(CmdStanConfig,ProjDir),
       AHMCNUTS(AHMCpoisson,AHMCconfig),
-      DHMCNUTS(sampleDHMC,2000))
+      DHMCNUTS(sampleDHMC))
     options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Ns=Ns)
     results = benchmark(samplers,simulatePoisson,Nreps;options...)
     #Models run slow and these are noisy

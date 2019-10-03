@@ -4,7 +4,7 @@
     y ~ MvNormal(Fill(mu, N), sigma)  # use `Fill(mu, N)` is memory freiendly
 end
 
-AHMCconfig = Turing.NUTS(2000, 1000, .85)
+AHMCconfig = Turing.NUTS(1000, .85)
 
 CmdStanGaussian = "
 data {

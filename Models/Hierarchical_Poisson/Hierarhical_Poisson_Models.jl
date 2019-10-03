@@ -22,7 +22,7 @@ end
   end
 end
 
-AHMCconfig = Turing.NUTS(2000, 1000, .80)
+AHMCconfig = Turing.NUTS(1000, .80)
 
 function simulatePoisson(; Nd=1, Ns=10, a0=1.0, a1=.5, a0_sig=.3, kwargs...)
   N = Nd * Ns

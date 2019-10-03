@@ -6,7 +6,7 @@ end
 
 AHMC_SDT(hits,fas,Nd) = SDTmodel((hits,fas,Nd))
 
-AHMCconfig = Turing.NUTS(2000,1000,.85)
+AHMCconfig = Turing.NUTS(1000,.85)
 
 CmdStan_SDT = "
 data {

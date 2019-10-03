@@ -15,7 +15,8 @@ using MCMCBenchmarks,Test
     samplers = (
       CmdStanNUTS(CmdStanConfig,ProjDir),
       AHMCNUTS(AHMClba,AHMCconfig),
-      DHMCNUTS(sampleDHMC,2000))
+      #DHMCNUTS(sampleDHMC)
+      )
     options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
     results = benchmark(samplers,simulateLBA,Nreps;options...)
     @test results[!,Symbol("v[1]_mean")][results[!,:sampler] .== :AHMCNUTS,:][1] ≈ v[1] atol = .7

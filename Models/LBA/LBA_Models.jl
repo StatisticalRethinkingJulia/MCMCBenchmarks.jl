@@ -15,7 +15,7 @@ function AHMClba(choice,rt,N,Nc)
     return lbaModel(data,N,Nc)
 end
 
-AHMCconfig = Turing.NUTS(2000,1000,.85)
+AHMCconfig = Turing.NUTS(1000,.85)
 
 CmdStanLBA = "
 functions{
@@ -176,7 +176,7 @@ function sampleDHMC(data,N,Nc,nsamples)
     P = TransformedLogDensity(trans, p)
     ∇P = ADgradient(:ForwardDiff, P)
     # FSample from the posterior.
-    n = dimension(problem_transformation(p))
+    n = dimension(trans)
     results = mcmc_with_warmup(Random.GLOBAL_RNG, ∇P, nsamples;
         q = zeros(n), p = ones(n),reporter = NoProgressReport())
     # Undo the transformation to obtain the posterior from the chain.

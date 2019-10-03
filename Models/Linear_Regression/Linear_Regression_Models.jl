@@ -6,7 +6,7 @@
     y ~ MvNormal(mu, sigma)
 end
 
-AHMCconfig = Turing.NUTS(2000, 1000, .85)
+AHMCconfig = Turing.NUTS(1000, .85)
 
 CmdStanRegression = "
 data {

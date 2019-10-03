@@ -12,7 +12,7 @@ using MCMCBenchmarks,Test
     samplers=(
       CmdStanNUTS(CmdStanConfig,ProjDir),
       AHMCNUTS(AHMCGaussian,AHMCconfig),
-      DHMCNUTS(sampleDHMC,2000))
+      DHMCNUTS(sampleDHMC))
     options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
     results = benchmark(samplers,simulateGaussian,Nreps;options...)
     @test results[!,:mu_mean][results[!,:sampler] .== :AHMCNUTS,:][1] ≈ mu atol = .05

@@ -32,7 +32,7 @@ end
 samplers=(
   CmdStanNUTS(CmdStanConfig,ProjDir),
   AHMCNUTS(AHMCregression,AHMCconfig),
-  DHMCNUTS(sampleDHMC,2000)
+  DHMCNUTS(sampleDHMC)
 )
 
 stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
