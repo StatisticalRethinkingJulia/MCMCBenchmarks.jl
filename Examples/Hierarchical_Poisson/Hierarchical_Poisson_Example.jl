@@ -34,7 +34,7 @@ end
 samplers=(
   CmdStanNUTS(CmdStanConfig, ProjDir),
   AHMCNUTS(AHMCpoisson, AHMCconfig),
-  DHMCNUTS(sampleDHMC),
+  #DHMCNUTS(sampleDHMC),
 )
 
 stanSampler = CmdStanNUTS(CmdStanConfig, ProjDir)
@@ -60,4 +60,4 @@ results = pbenchmark(samplers, simulatePoisson, Nreps; options...)
 save(results, ProjDir)
 
 # Make plots
-include("plotting.jl")
+include("primary_plots.jl")

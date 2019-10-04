@@ -49,7 +49,6 @@ Nc = [2,3]
 Nreps = 50
 
 options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Nc=Nc)
-# options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=10,Nc=3)
 #perform the benchmark
 results = pbenchmark(samplers,simulateRegression,Nreps;options...)
 

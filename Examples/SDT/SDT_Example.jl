@@ -39,7 +39,7 @@ samplers=(CmdStanNUTS(CmdStanConfig,ProjDir),
 )
 
 #Number of data points
-Nd = [10,100,1000]
+Nd = [10,100,1000,10_000]
 
 #Number of simulations
 Nreps = 100

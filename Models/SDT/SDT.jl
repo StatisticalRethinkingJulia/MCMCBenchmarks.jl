@@ -1,5 +1,5 @@
 @model SDTmodel(data) = begin
-    d ~ Normal(0,1/sqrt(2))
+    d ~ Normal(0,1/sqrt(.5))
     c ~ Normal(0,1/sqrt(2))
     data ~ SDT(d,c)
 end
@@ -48,7 +48,7 @@ CmdStanConfig = Stanmodel(name = "CmdStan_SDT",model=CmdStan_SDT,nchains=1,
   function (problem::SDTProblem)(θ)
       @unpack hits,fas,Nd=problem   # extract the data
       @unpack d,c=θ
-      logpdf(SDT(d,c),[hits,fas,Nd])+logpdf(Normal(0,1/sqrt(2)),d) +
+      logpdf(SDT(d,c),[hits,fas,Nd])+logpdf(Normal(0,1/sqrt(.5)),d) +
       logpdf(Normal(0,1/sqrt(2)),c)
   end
 
