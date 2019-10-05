@@ -1,6 +1,7 @@
-using MCMCBenchmarks,Test
+using MCMCBenchmarks, Test, Random
 
 @testset "Gaussian Tests " begin
+    Random.seed!(540457)
     path = pathof(MCMCBenchmarks)
     include(joinpath(path, "../../Models/Gaussian/Gaussian_Models.jl"))
     mu = 0

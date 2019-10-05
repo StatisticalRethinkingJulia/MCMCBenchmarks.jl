@@ -1,6 +1,5 @@
-using MCMCBenchmarks
-using Test
-
+using MCMCBenchmarks, Test, Random
+Random.seed!(7841)
 path = pathof(MCMCBenchmarks)
 @testset "LBA Generative Model " begin
     include(joinpath(path, "../../Models/LBA/LBA_Models.jl"))

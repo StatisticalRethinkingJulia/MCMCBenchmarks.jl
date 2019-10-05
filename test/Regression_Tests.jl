@@ -1,6 +1,7 @@
-using MCMCBenchmarks,Test
+using MCMCBenchmarks, Test, Random
 
 @testset "Regression Tests " begin
+    Random.seed!(22385)
     path = pathof(MCMCBenchmarks)
     include(joinpath(path,
       "../../Models/Linear_Regression/Linear_Regression_Models.jl"))

@@ -1,6 +1,7 @@
-using MCMCBenchmarks,Test
+using MCMCBenchmarks, Test, Random
 
 @testset "LBA Tests " begin
+    Random.seed!(2215)
     path = pathof(MCMCBenchmarks)
     include(joinpath(path, "../../Models/LBA/LBA_Models.jl"))
     include(joinpath(path, "../../Models/LBA/LinearBallisticAccumulator.jl"))
@@ -21,22 +22,22 @@ using MCMCBenchmarks,Test
     results = benchmark(samplers,simulateLBA,Nreps;options...)
     @test results[!,Symbol("v[1]_mean")][results[!,:sampler] .== :AHMCNUTS,:][1] ≈ v[1] atol = .7
     @test results[!,Symbol("v[1]_mean")][results[!,:sampler] .== :CmdStanNUTS,:][1] ≈ v[1] atol = .7
-    @test results[!,Symbol("v[1]_mean")][results[!,:sampler] .== :DHMCNUTS,:][1] ≈ v[1] atol = .7
+    #@test results[!,Symbol("v[1]_mean")][results[!,:sampler] .== :DHMCNUTS,:][1] ≈ v[1] atol = .7
     @test results[!,Symbol("v[2]_mean")][results[!,:sampler] .== :AHMCNUTS,:][1] ≈ v[2] atol = .7
     @test results[!,Symbol("v[2]_mean")][results[!,:sampler] .== :CmdStanNUTS,:][1] ≈ v[2] atol = .7
-    @test results[!,Symbol("v[2]_mean")][results[!,:sampler] .== :DHMCNUTS,:][1] ≈ v[2] atol = .7
+    #@test results[!,Symbol("v[2]_mean")][results[!,:sampler] .== :DHMCNUTS,:][1] ≈ v[2] atol = .7
     @test results[!,Symbol("v[3]_mean")][results[!,:sampler] .== :AHMCNUTS,:][1] ≈ v[3] atol = .7
     @test results[!,Symbol("v[3]_mean")][results[!,:sampler] .== :CmdStanNUTS,:][1] ≈ v[3] atol = .7
-    @test results[!,Symbol("v[3]_mean")][results[!,:sampler] .== :DHMCNUTS,:][1] ≈ v[3] atol = .7
+    #@test results[!,Symbol("v[3]_mean")][results[!,:sampler] .== :DHMCNUTS,:][1] ≈ v[3] atol = .7
     @test results[!,:A_mean][results[!,:sampler] .== :AHMCNUTS,:][1] ≈ A atol = .6
     @test results[!,:A_mean][results[!,:sampler] .== :CmdStanNUTS,:][1] ≈ A atol = .6
-    @test results[!,:A_mean][results[!,:sampler] .== :DHMCNUTS,:][1] ≈ A atol = .6
+    #@test results[!,:A_mean][results[!,:sampler] .== :DHMCNUTS,:][1] ≈ A atol = .6
     @test results[!,:k_mean][results[!,:sampler] .== :AHMCNUTS,:][1] ≈ k atol = .2
     @test results[!,:k_mean][results[!,:sampler] .== :CmdStanNUTS,:][1] ≈ k atol = .2
-    @test results[!,:k_mean][results[!,:sampler] .== :DHMCNUTS,:][1] ≈ k atol = .2
+    #@test results[!,:k_mean][results[!,:sampler] .== :DHMCNUTS,:][1] ≈ k atol = .2
     @test results[!,:tau_mean][results[!,:sampler] .== :AHMCNUTS,:][1] ≈ tau atol = .2
     @test results[!,:tau_mean][results[!,:sampler] .== :CmdStanNUTS,:][1] ≈ tau atol = .2
-    @test results[!,:tau_mean][results[!,:sampler] .== :DHMCNUTS,:][1] ≈ tau atol = .2
+    #@test results[!,:tau_mean][results[!,:sampler] .== :DHMCNUTS,:][1] ≈ tau atol = .2
     # @test results[!,Symbol("v[1]_sampler_rhat")][1] ≈ 1 atol = .05
     # @test results[!,Symbol("v[2]_sampler_rhat")][1] ≈ 1 atol = .05
     # @test results[!,Symbol("v[3]_sampler_rhat")][1] ≈ 1 atol = .05
