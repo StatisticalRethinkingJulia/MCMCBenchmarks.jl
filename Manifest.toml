@@ -241,6 +241,12 @@ git-tree-sha1 = "c61d6eedbc3c4323c08b64af12d29c8ee0fcbb5f"
 uuid = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 version = "0.23.2"
 
+[[DynamicHMC]]
+deps = ["ArgCheck", "DocStringExtensions", "LinearAlgebra", "LogDensityProblems", "NLSolversBase", "Optim", "Parameters", "Random", "Statistics"]
+git-tree-sha1 = "82588b1eeb6d229a272b2204b718a4826194d9d4"
+uuid = "bbc10e6e-7c05-544b-b16e-64fede858acb"
+version = "2.1.0"
+
 [[FFTW]]
 deps = ["AbstractFFTs", "BinaryProvider", "Conda", "Libdl", "LinearAlgebra", "Reexport", "Test"]
 git-tree-sha1 = "e1a479d3c972f20c9a70563eec740bbfc786f515"
