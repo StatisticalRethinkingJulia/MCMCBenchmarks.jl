@@ -3,7 +3,7 @@ using Documenter, MCMCBenchmarks
 makedocs(
     modules = [MCMCBenchmarks],
     checkdocs = :exports,
-    format = Documenter.HTML(assets = ["assets/custom.css"]),
+    format = :html,
     clean = true,
     authors = "Christopher R. Fisher, Rob J Goedman",
     sitename = "StatisticalRethinkingJulia/MCMCBenchmarks.jl",
