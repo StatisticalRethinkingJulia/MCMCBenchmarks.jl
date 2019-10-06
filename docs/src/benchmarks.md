@@ -31,7 +31,7 @@ Y \sim Normal(\mu,\sigma)
 Nd = [10, 100, 1000]
 #Number of simulations
 Nreps = 50
-options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
+options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)
 ```
 
 * speed
@@ -39,8 +39,10 @@ options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
 ![summary_time](../../Examples/Gaussian/results/summary_time.png)
 
 ```@raw html
-<img src="../../Examples/Gaussian/results/summary_time.png" width="500"/>
+<img src="../../../Examples/Gaussian/results/summary_time.png" width="500"/>
 ```
+
+![summary_time](../../../Examples/Gaussian/results/summary_time.png)
 
 * allocations
 
@@ -76,7 +78,7 @@ n_{fas} \sim Binomial(N,\theta_{fas})
 Nd = [10,100,1000]
 #Number of simulations
 Nreps = 100
-options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
+options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)
 ```
 
 * speed
@@ -191,7 +193,7 @@ Nd = [1,2,5]
 Ns = 10
 #Number of simulations
 Nreps = 25
-options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Ns=Ns)
+options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd, Ns=Ns)
 ```
 
 * speed
