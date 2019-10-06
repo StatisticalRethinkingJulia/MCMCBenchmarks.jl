@@ -269,7 +269,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Gaussian",
     "category": "section",
-    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design#Number of data points\nNd = [10, 100, 1000]\n#Number of simulations\nNreps = 50\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)speed(Image: summary_time)<img src=\"../../../Examples/Gaussian/results/summary_time.png\" width=\"500\"/>(Image: summary_time)allocations\neffective sample size"
+    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design#Number of data points\nNd = [10, 100, 1000]\n#Number of simulations\nNreps = 50\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)speed(Image: summary_time)<img src=\"../../Examples/Gaussian/results/summary_time.png\" width=\"500\"/>allocations\neffective sample size"
 },
 
 {
