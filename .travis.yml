@@ -8,7 +8,7 @@ os:
 
 env:
   - JULIA_CMDSTAN_HOME="$HOME/cmdstan-2.20.0/"
-  
+
 before_install:
   - OLDWD=`pwd`
   - cd ~
@@ -16,10 +16,16 @@ before_install:
   - tar -xzpf cmdstan-2.20.0.tar.gz
   - make -C $JULIA_CMDSTAN_HOME build
   - cd $OLDWD
-  
+
 
 julia:
-  - 1.1
+  - 1.2
+  - 1.3
+
+matrix:
+    allow_failures:
+      - julia: 1.3
+    fast_finish: true
 
 notifications:
   email: false
@@ -30,10 +36,10 @@ git:
 jobs:
   include:
     - stage: Test
-      julia: 1.1
+      julia: 1.2
       os: linux
     - stage: Documentation
-      julia: 1.1
+      julia: 1.2
       os: linux
       script:
         - julia --project=docs -e 'using Pkg; Pkg.instantiate(); Pkg.develop(PackageSpec(path=pwd()))'
