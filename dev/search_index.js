@@ -269,7 +269,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Gaussian",
     "category": "section",
-    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design#Number of data points\nNd = [10, 100, 1000]\n#Number of simulations\nNreps = 50\noptions = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)speed(Image: summary_time)<img src=\"../../Examples/Gaussian/results/summary_time.png\" width=\"500\"/>allocations\neffective sample size"
+    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design#Number of data points\nNd = [10, 100, 1000]\n#Number of simulations\nNreps = 50\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)speed(Image: summary_time)<img src=\"../../../Examples/Gaussian/results/summary_time.png\" width=\"500\"/>(Image: summary_time)allocations\neffective sample size"
 },
 
 {
@@ -277,7 +277,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Signal Detection Theory",
     "category": "section",
-    "text": "Modeld sim Normal(01sqrt(2))c sim Normal(01sqrt(2))theta_hits = ϕ(d2-c)theta_fas = ϕ(-d2-c)n_hits sim Binomial(Ntheta_hits)n_fas sim Binomial(Ntheta_fas)benchmark design#Number of data points\nNd = [10,100,1000]\n#Number of simulations\nNreps = 100\noptions = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)speed\nallocations\neffective sample size"
+    "text": "Modeld sim Normal(01sqrt(2))c sim Normal(01sqrt(2))theta_hits = ϕ(d2-c)theta_fas = ϕ(-d2-c)n_hits sim Binomial(Ntheta_hits)n_fas sim Binomial(Ntheta_fas)benchmark design#Number of data points\nNd = [10,100,1000]\n#Number of simulations\nNreps = 100\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)speed\nallocations\neffective sample size"
 },
 
 {
@@ -301,7 +301,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Poisson Regression",
     "category": "section",
-    "text": "Modela_0 sim Normal(010)a_1 sim Normal(01)sigma_a0 sim TCauchy(010infty)a_0i  sim Normal(0sigma_a0)lambda = e^a_0 + a_0i + a_1*x_iy_i sim Poisson(lambda)benchmark design#Number of data points per unit\nNd = [1,2,5]\n#Number of units in model\nNs = 10\n#Number of simulations\nNreps = 25\noptions = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Ns=Ns)speed\nallocations\neffective sample size"
+    "text": "Modela_0 sim Normal(010)a_1 sim Normal(01)sigma_a0 sim TCauchy(010infty)a_0i  sim Normal(0sigma_a0)lambda = e^a_0 + a_0i + a_1*x_iy_i sim Poisson(lambda)benchmark design#Number of data points per unit\nNd = [1,2,5]\n#Number of units in model\nNs = 10\n#Number of simulations\nNreps = 25\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd, Ns=Ns)speed\nallocations\neffective sample size"
 },
 
 ]}
