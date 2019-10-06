@@ -165,7 +165,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "Top-level Benchmark Routines",
     "category": "section",
-    "text": "benchmark\njulia benchmark!(samplers,results,csr̂,simulate,Nreps,chains;kwargs...)benchmark!(sampler::T,results,csr̂,simulate,Nreps,chains;kwargs...) where {T<:MCMCSampler}pbenchmark\njulia pbenchmark(samplers,simulate,Nreps;kwargs...)benchmark!\njulia benchmark!(samplers,results,csr̂,simulate,Nreps,chains;kwargs...)"
+    "text": "benchmarkbenchmark!(samplers,results,csr̂,simulate,Nreps,chains;kwargs...)\n\nbenchmark!(sampler::T,results,csr̂,simulate,Nreps,chains;kwargs...) where {T<:MCMCSampler}pbenchmarkpbenchmark(samplers,simulate,Nreps;kwargs...)\nbenchmark!benchmark!(samplers,results,csr̂,simulate,Nreps,chains;kwargs...)"
 },
 
 {
@@ -197,87 +197,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Functions",
     "title": "Overloaded Benchmark Functions",
     "category": "section",
-    "text": "modifyConfig!\njulia modifyConfig!(s::AHMCNUTS;Nsamples,Nadapt,delta,kwargs...)updateResults!\njulia updateResults!(s::CmdStanNUTS,performance,results;kwargs...)runSampler\njulia  runSampler(s::AHMCNUTS,data;kwargs...)"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.addPerformance!",
-    "page": "Functions",
-    "title": "MCMCBenchmarks.addPerformance!",
-    "category": "function",
-    "text": "Adds performance metrics to benchmark results, which include runtime, memory allocations in MB, garbage collection time, percent of time spent in garbage collection, and the number of memory allocations\n\ndf: the dataframe to which performance metrics are added\np: a collection of performance metrics including run time,\n\nmemory allocations and garbage collection time\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.addKW!",
-    "page": "Functions",
-    "title": "MCMCBenchmarks.addKW!",
-    "category": "function",
-    "text": "Adds keyword arguments to the results DataFrame\n\ndf: DataFrame containing benchmark results for single iteration\nkwargs: keyword arguments\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.addChainSummary!",
-    "page": "Functions",
-    "title": "MCMCBenchmarks.addChainSummary!",
-    "category": "function",
-    "text": "Adds chain summary (e.g. rhat,ess) to newDF for each parameter.\n\nnewDF: dataframe that collects results on an iteration\nchn: chain for given iteration\ndf: df of chain results\ncol: name of column\n\ne.g. If col = :ess, and parameters are mu and sigma, the new columns will be muess and sigmaess and will contain their respective ess values\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#Helper-Functions-1",
-    "page": "Functions",
-    "title": "Helper Functions",
-    "category": "section",
-    "text": "addPerformance!\njulia addPerformance!(df,p)addKW!\njulia addKW!(df;kwargs...)addChainSummary!\njulia addChainSummary!(newDF,chn,df,col)addHPD!\njulia addHPD!(newDF,chain)addMeans!\njulia addMeans!(newDF,df)"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.plotdensity",
-    "page": "Functions",
-    "title": "MCMCBenchmarks.plotdensity",
-    "category": "function",
-    "text": "Plots a desnity of a distribution for a selected metric (e.g. effective sample size)\n\ndf: dataframe of results\nmetric: name of metric, such as :ess for effective sample size\ngroup: a tuple of grouping factors, e.g. (:sampler,:Nd)\nsave: save=true saves each plot\nfigfmt: figure format\ndir: directory of saved plot. Default pwd.\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.plotsummary",
-    "page": "Functions",
-    "title": "MCMCBenchmarks.plotsummary",
-    "category": "function",
-    "text": "Plots a summary of a metric computed according to a function, func. func defaults to the mean.\n\ndf: dataframe of results\nxvar: variable assigned to x-axis\nmetric: name of metric, such as :ess for effective sample size\ngroup: a tuple of grouping factors, e.g. (:sampler,:Nd)\nsave: save=true saves each plot\nfigfmt: figure format\nfunc: a function used to summarize results. Default mean\ndir: directory of saved plot. Default pwd.\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.plotscatter",
-    "page": "Functions",
-    "title": "MCMCBenchmarks.plotscatter",
-    "category": "function",
-    "text": "Generates a scatter plot to visualize the relationship between two benchmarking metrics.\n\ndf: dataframe of results\nxvar: variable assigned to x-axis\nmetric: name of metric, such as :ess for effective sample size\ngroup: a tuple of grouping factors, e.g. (:sampler,:Nd)\nsave: save=true saves each plot\nfigfmt: figure format\nfunc: a function used to summarize results. Default mean\ndir: directory of saved plot. Default pwd.\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#MCMCBenchmarks.plotrecovery",
-    "page": "Functions",
-    "title": "MCMCBenchmarks.plotrecovery",
-    "category": "function",
-    "text": "Generates a plot to compare the estimated parameters to true parameter values used to generate simulated data.\n\ndf: dataframe of results\nparms: namedtuple of parameter names and true values\ngroup: a tuple of grouping factors, e.g. (:sampler,:Nd)\nsave: save=true saves each plot\nfigfmt: figure format\nfunc: a function used to summarize results. Default mean\ndir: directory of saved plot. Default pwd.\n\n\n\n\n\n"
-},
-
-{
-    "location": "functions/#Plotting-1",
-    "page": "Functions",
-    "title": "Plotting",
-    "category": "section",
-    "text": "plotdensity\njulia plotdensity(df::DataFrame,metric::Symbol,group=(:sampler,);save=false,     figfmt=\"pdf\",dir=\"\",options...)plotsummary\njulia plotsummary(df::DataFrame,xvar::Symbol,metric::Symbol,group=(:sampler,);save=false,     figfmt=\"pdf\",func=mean,dir=\"\",options...)plotscatter\njulia plotscatter(df::DataFrame,xvar::Symbol,metric::Symbol,group=(:sampler,);save=false,     figfmt=\"pdf\",func=mean,dir=\"\",options...)plotrecovery\njulia plotrecovery(df::DataFrame,parms,group=(:sampler,);save=false,     figfmt=\"pdf\",dir=\"\",options...)`"
-},
-
-{
-    "location": "functions/#Results-DataFrame-1",
-    "page": "Functions",
-    "title": "Results DataFrame",
-    "category": "section",
-    "text": ""
+    "text": "modifyConfig!modifyConfig!(s::AHMCNUTS;Nsamples,Nadapt,delta,kwargs...)updateResults!updateResults!(s::CmdStanNUTS,performance,results;kwargs...)runSampler runSampler(s::AHMCNUTS,data;kwargs...)\n ```\n\n### Helper Functions\n@docs addPerformance!julia addPerformance!(df,p)@docs addKW!julia addKW!(df;kwargs...)@docs addChainSummary!julia addChainSummary!(newDF,chn,df,col)@docs addHPD!julia addHPD!(newDF,chain)@docs addMeans!julia addMeans!(newDF,df)### Plotting\n@docs plotdensityjulia plotdensity(df::DataFrame,metric::Symbol,group=(:sampler,);save=false,     figfmt=\"pdf\",dir=\"\",options...)@docs plotsummaryjulia plotsummary(df::DataFrame,xvar::Symbol,metric::Symbol,group=(:sampler,);save=false,     figfmt=\"pdf\",func=mean,dir=\"\",options...)@docs plotscatterjulia plotscatter(df::DataFrame,xvar::Symbol,metric::Symbol,group=(:sampler,);save=false,     figfmt=\"pdf\",func=mean,dir=\"\",options...)@docs plotrecoveryjulia plotrecovery(df::DataFrame,parms,group=(:sampler,);save=false,     figfmt=\"pdf\",dir=\"\",options...) ```"
 },
 
 {
@@ -349,7 +269,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Gaussian",
     "category": "section",
-    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design#Number of data points\nNd = [10, 100, 1000]\n#Number of simulations\nNreps = 50\noptions = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)speed(Image: summary_time)(Image: plot)allocations(Image: Gaussian_Allocations)effective sample size(Image: Gaussian_MuESS)(Image: Gaussian_SigmaESS)"
+    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design#Number of data points\nNd = [10, 100, 1000]\n#Number of simulations\nNreps = 50\noptions = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)speed(Image: summary_time)<img src=\"../../Examples/Gaussian/results/summary_time.png\" width=\"500\"/>allocations\neffective sample size"
 },
 
 {
@@ -373,7 +293,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Linear Ballistic Accumulator (LBA)",
     "category": "section",
-    "text": "Modeltau sim TNormal(410y_min)A sim TNormal(840infty)k sim TNormal(230infty)v sim Normal(03)(tc) sim LBA(Abvstau)wheret = y_i - t_erb = A + ks = 1LBA(Abvstau) = f_c(t)prod_j neq c (1-F_j(t))f_c(t) = frac1A left-v_c Phileft( fracb-A-tv_cts right) + phileft( fracb-A-tv_cts right) +\n+ v_c Phileft( fracb-tv_cts right) + s phileft( fracb-tv_cts right) rightF_c(t) = 1 + fracb-A-tv_iA  Phileft fracb-A-tv_cts right) - fracb-tv_iA  Phileft fracb-tv_cts right) + fractsA phi left(fracb-A-tv_cts right) - fractsA phi left(fracb-tv_cts right)Y = y_1y_ny_min = minYbenchmark design\nspeed\nallocations\neffective sample size"
+    "text": "Modeltau sim TNormal(410y_min)A sim TNormal(840infty)k sim TNormal(230infty)v sim Normal(03)(tc) sim LBA(Abvstau)wheret = y_i - t_erb = A + ks = 1LBA(Abvstau) = f_c(t)prod_j neq c (1-F_j(t))f_c(t) = frac1A left-v_c Phileft( fracb-A-tv_cts right) + phileft( fracb-A-tv_cts right) +\n+ v_c Phileft( fracb-tv_cts right) + s phileft( fracb-tv_cts right) rightbeginmultline*\n F_c(t) = 1 + fracb-A-tv_cA Phileft( fracb-A-tv_cts right) - fracb-tv_cA Phileft( fracb-tv_cts right)\n + fractsA phileft( fracb-A-tv_cts right) - fractsA phileft( fracb-tv_cts right)\n endmultline*Y = y_1y_ny_min = minimum(Y)benchmark design\nspeed\nallocations\neffective sample size"
 },
 
 {
@@ -381,7 +301,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Poisson Regression",
     "category": "section",
-    "text": "Modela_0 sim Normal(010)a_1 sim Normal(01)sigma_a0 sim TCauchy(010infty)a_0i  sim Normal(0sigma_a0)lambda = e^(a_0 + a_0i + a_1*x_i)y_i sim Poisson(lambda)benchmark design#Number of data points per unit\nNd = [1,2,5]\n#Number of units in model\nNs = 10\n#Number of simulations\nNreps = 25\noptions = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Ns=Ns)speed\nallocations\neffective sample size"
+    "text": "Modela_0 sim Normal(010)a_1 sim Normal(01)sigma_a0 sim TCauchy(010infty)a_0i  sim Normal(0sigma_a0)lambda = e^a_0 + a_0i + a_1*x_iy_i sim Poisson(lambda)benchmark design#Number of data points per unit\nNd = [1,2,5]\n#Number of units in model\nNs = 10\n#Number of simulations\nNreps = 25\noptions = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Ns=Ns)speed\nallocations\neffective sample size"
 },
 
 ]}
