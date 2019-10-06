@@ -14,12 +14,12 @@ using MCMCBenchmarks, Test, Random
     ProjDir = @__DIR__
     cd(ProjDir)
     samplers = (
-      CmdStanNUTS(CmdStanConfig,ProjDir),
-      AHMCNUTS(AHMCpoisson,AHMCconfig),
+      CmdStanNUTS(CmdStanConfig, ProjDir),
+      AHMCNUTS(AHMCpoisson, AHMCconfig),
       #DHMCNUTS(sampleDHMC)
       )
-    options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Ns=Ns)
-    results = benchmark(samplers,simulatePoisson,Nreps;options...)
+    options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd, Ns=Ns)
+    results = benchmark(samplers, simulatePoisson, Nreps;options...)
     #Models run slow and these are noisy
     @test results[!,:a0_mean][results[!,:sampler] .== :AHMCNUTS,:][1] ≈ a0 atol = .6
     @test results[!,:a0_mean][results[!,:sampler] .== :CmdStanNUTS,:][1] ≈ a0 atol = .6

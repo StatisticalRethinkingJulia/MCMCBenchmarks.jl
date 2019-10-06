@@ -11,12 +11,12 @@ using MCMCBenchmarks, Test, Random
     Nreps = 1
     ProjDir = @__DIR__
     cd(ProjDir)
-    samplers=(CmdStanNUTS(CmdStanConfig,ProjDir),
-        AHMCNUTS(AHMC_SDT,AHMCconfig),
+    samplers=(CmdStanNUTS(CmdStanConfig, ProjDir),
+        AHMCNUTS(AHMC_SDT, AHMCconfig),
         DHMCNUTS(sampleDHMC)
         )
-    options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
-    results = benchmark(samplers,simulateSDT,Nreps;options...)
+    options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)
+    results = benchmark(samplers, simulateSDT, Nreps;options...)
     @test results[!,:d_mean][results[!,:sampler] .== :AHMCNUTS,:][1] ≈ d atol = .05
     @test results[!,:d_mean][results[!,:sampler] .== :CmdStanNUTS,:][1] ≈ d atol = .05
     @test results[!,:d_mean][results[!,:sampler] .== :DHMCNUTS,:][1] ≈ d atol = .05

@@ -44,7 +44,7 @@ function (problem::GaussianProb)(θ)
 end
 
 # Define problem with data and inits.
-function sampleDHMC(obs,N,nsamples)
+function sampleDHMC(obs, N, nsamples, autodiff)
   p = GaussianProb(obs);
   p((mu=0.0, sigma=1.0))
 
@@ -54,7 +54,7 @@ function sampleDHMC(obs,N,nsamples)
   # Use Flux for the gradient.
 
   P = TransformedLogDensity(trans, p)
-  ∇P = ADgradient(:ForwardDiff, P)
+  ∇P = ADgradient(autodiff, P)
 
   # Sample from the posterior.
   results = mcmc_with_warmup(Random.GLOBAL_RNG, ∇P, nsamples; reporter = NoProgressReport())
@@ -62,7 +62,7 @@ function sampleDHMC(obs,N,nsamples)
   # Undo the transformation to obtain the posterior from the chain.
   posterior = transform.(trans, results.chain)
 
-  chns = nptochain(results,posterior)
+  chns = nptochain(results, posterior)
   return chns
 end
 

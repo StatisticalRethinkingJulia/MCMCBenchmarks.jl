@@ -11,14 +11,15 @@ MCMC sampler struct for AdvancedHMC NUTS
 * `config`: sampler configution settings
 * `name`: a unique identifer given to each sampler
 """
-mutable struct AHMCNUTS{T1,T2} <: MCMCSampler
+mutable struct AHMCNUTS{T1} <: MCMCSampler
     model::T1
-    config::T2
+    config::Turing.Inference.NUTS
     name::Symbol
     Nsamples::Int64
+    autodiff::Symbol
 end
 
-AHMCNUTS(model,config)=AHMCNUTS(model,config,:AHMCNUTS,0)
+AHMCNUTS(model, config)=AHMCNUTS(model, config, :AHMCNUTS, 0, :forward)
 
 """
 MCMC sampler struct for CmdStan NUTS
@@ -33,9 +34,10 @@ mutable struct CmdStanNUTS{T1} <: MCMCSampler
     dir::String
     id::String
     name::Symbol
+    autidiff::Symbol
 end
 
-CmdStanNUTS(model,dir) = CmdStanNUTS(model,dir,model.name,:CmdStanNUTS)
+CmdStanNUTS(model, dir) = CmdStanNUTS(model, dir, model.name, :CmdStanNUTS, :reverse)
 
 """
 MCMC sampler struct for DynamicHMC NUTS
@@ -48,9 +50,10 @@ mutable struct DHMCNUTS{T1,T2} <: MCMCSampler
     model::T1
     Nsamples::T2
     name::Symbol
+    autodiff::Symbol
 end
 
-DHMCNUTS(model) = DHMCNUTS(model,0,:DHMCNUTS)
+DHMCNUTS(model) = DHMCNUTS(model,0,:DHMCNUTS,:forward)
 
 """
 Primary function that performs mcmc benchmark repeatedly on a set of samplers
@@ -63,7 +66,7 @@ and records the results.
 * `kwargs`: optional keyword arguments that are passed to modifyConfig!, updateResults! and
 runSampler, providing flexibility in benchmark simulations.
 """
-function benchmark!(samplers,results,csr̂,simulate,Nreps,chains;kwargs...)
+function benchmark!(samplers, results, csr̂, simulate, Nreps, chains;kwargs...)
     for rep in 1:Nreps
       data = simulate(;kwargs...)
       schains = Chains[]
@@ -73,19 +76,19 @@ function benchmark!(samplers,results,csr̂,simulate,Nreps,chains;kwargs...)
           println("Simulation: $simulate")
           println("Repetition: $rep of $Nreps\n")
           foreach(x->println(x),kwargs)
-          performance = @timed runSampler(s,data;kwargs...)
+          performance = @timed runSampler(s, data;kwargs...)
           push!(schains,performance[1])
           allowmissing!(results)
-          results = updateResults!(s,performance,results;kwargs...)
-          savechain!(s,chains,performance;kwargs...)
+          results = updateResults!(s, performance, results;kwargs...)
+          savechain!(s ,chains, performance;kwargs...)
       end
-      csr̂=cross_samplerRhat!(schains,csr̂;kwargs...)
+      csr̂=cross_samplerRhat!(schains, csr̂;kwargs...)
     end
     return results,csr̂
 end
 
-function benchmark!(sampler::T,results,csr̂,simulate,Nreps,chains;kwargs...) where {T<:MCMCSampler}
-    return benchmark!((sampler,),results,simulate,Nreps,chains;kwargs...)
+function benchmark!(sampler::T, results, csr̂, simulate, Nreps, chains;kwargs...) where {T<:MCMCSampler}
+    return benchmark!((sampler, ), results, simulate, Nreps, chains;kwargs...)
 end
 
 """
@@ -95,11 +98,11 @@ Runs the benchmarking procedure and returns the results
 * `simulate`: model simulation function with keyword Nd
 * `Nreps`: number of times the benchmark is repeated for each factor combination
 """
- function benchmark(samplers,simulate,Nreps,chains=();kwargs...)
+ function benchmark(samplers, simulate, Nreps, chains=();kwargs...)
      results = DataFrame()
      csr̂ = DataFrame()
      for p in Permutation(kwargs)
-         results,csr̂=benchmark!(samplers,results,csr̂,simulate,Nreps,chains;p...)
+         results,csr̂=benchmark!(samplers, results, csr̂, simulate, Nreps, chains;p...)
      end
      return [results csr̂]
  end
@@ -112,12 +115,12 @@ Runs the benchmarking procedure and returns the results
  * `simulate`: model simulation function with keyword Nd
  * `Nreps`: number of times the benchmark is repeated for each factor combination
  """
- function pbenchmark(samplers,simulate,Nreps;kwargs...)
-     compile(samplers,simulate;kwargs...)
-     pfun(rep) = benchmark(samplers,simulate,rep,chains;kwargs...)
+ function pbenchmark(samplers, simulate, Nreps;kwargs...)
+     compile(samplers, simulate;kwargs...)
+     pfun(rep) = benchmark(samplers, simulate, rep, chains;kwargs...)
      reps = setreps(Nreps)
      presults = pmap(rep->pfun(rep),reps)
-     return vcat(presults...,cols=:union)
+     return vcat(presults..., cols=:union)
  end
 
 """
@@ -127,18 +130,18 @@ parameter estimation
 * `data`: data for benchmarking
 * `Nchains`: number of chains ran serially. Default =  1
 """
-function runSampler(s::AHMCNUTS,data;Nchains=1,kwargs...)
-    f() = sample(s.model(data...),s.config,s.Nsamples;discard_adapt=false)
+function runSampler(s::AHMCNUTS, data;Nchains=1, kwargs...)
+    f() = sample(s.model(data...), s.config, s.Nsamples;discard_adapt=false)
     return reduce(chainscat, map(x->f(),1:Nchains))
 end
 
-function runSampler(s::CmdStanNUTS,data;Nchains=1,kwargs...)
-    f() = stan(s.model,toDict(data),summary=false,s.dir)[2]
-    return reduce(chainscat, map(x->f(),1:Nchains))
+function runSampler(s::CmdStanNUTS, data;Nchains=1, kwargs...)
+    f() = stan(s.model, toDict(data), summary=false, s.dir)[2]
+    return reduce(chainscat, map(x->f(), 1:Nchains))
 end
 
-function runSampler(s::DHMCNUTS,data;Nchains=1,kwargs...)
-    f() = s.model(data...,s.Nsamples)
+function runSampler(s::DHMCNUTS, data;Nchains=1, kwargs...)
+    f() = s.model(data...,s.Nsamples,s.autodiff)
     return reduce(chainscat, map(x->f(),1:Nchains))
 end
 
@@ -148,64 +151,64 @@ Update the results DataFrame on each iteration
 * `performance`: includes MCMC Chain, execution time, and memory measurements
 * `results`: DataFrame containing benchmark results
 """
-function updateResults!(s::AHMCNUTS,performance,results;kwargs...)
+function updateResults!(s::AHMCNUTS, performance, results;kwargs...)
     chain = performance[1]
     newDF = DataFrame()
     chain=removeBurnin(chain;kwargs...)
     df = MCMCChains.describe(chain)[1].df
-    addChainSummary!(newDF,chain,df,:ess)
-    addChainSummary!(newDF,chain,df,:r_hat)
-    addESStime!(newDF,chain,df,performance)
-    addHPD!(newDF,chain)
-    addMeans!(newDF,df)
-    permutecols!(newDF,sort!(names(newDF)))#ensure correct order
-    dfi=MCMCChains.describe(chain,sections=[:internals])[1]
-    newDF[!,:epsilon]=[dfi[:step_size,:mean][1]]
-    newDF[!,:tree_depth]=[dfi[:tree_depth, :mean][1]]
-    addPerformance!(newDF,performance)
-    newDF[!,:sampler]= [s.name]
-    addKW!(newDF;kwargs...)
-    return vcat(results,newDF,cols=:union)
-end
-
-function updateResults!(s::CmdStanNUTS,performance,results;kwargs...)
-    chain = performance[1]
-    newDF = DataFrame()
-    chain=removeBurnin(chain;kwargs...)
-    df = MCMCChains.describe(chain)[1].df
-    addChainSummary!(newDF,chain,df,:ess)
-    addChainSummary!(newDF,chain,df,:r_hat)
-    addESStime!(newDF,chain,df,performance)
-    addHPD!(newDF,chain)
-    addMeans!(newDF,df)
-    permutecols!(newDF,sort!(names(newDF)))#ensure correct order
-    dfi=MCMCChains.describe(chain,sections=[:internals])[1]
-    newDF[!,:epsilon]=[dfi[:stepsize__, :mean][1]]
-    newDF[!,:tree_depth]=[dfi[:treedepth__, :mean][1]]
+    addChainSummary!(newDF, chain,df,:ess)
+    addChainSummary!(newDF, chain,df,:r_hat)
+    addESStime!(newDF, chain, df, performance)
+    addHPD!(newDF, chain)
+    addMeans!(newDF, df)
+    permutecols!(newDF, sort!(names(newDF)))#ensure correct order
+    dfi=MCMCChains.describe(chain, sections=[:internals])[1]
+    newDF[!,:epsilon] = [dfi[:step_size,:mean][1]]
+    newDF[!,:tree_depth] = [dfi[:tree_depth, :mean][1]]
     addPerformance!(newDF,performance)
     newDF[!,:sampler] = [s.name]
     addKW!(newDF;kwargs...)
-    return vcat(results,newDF,cols=:union)
+    return vcat(results, newDF, cols=:union)
 end
 
-function updateResults!(s::DHMCNUTS,performance,results;kwargs...)
+function updateResults!(s::CmdStanNUTS, performance, results;kwargs...)
     chain = performance[1]
     newDF = DataFrame()
     chain=removeBurnin(chain;kwargs...)
     df = MCMCChains.describe(chain)[1].df
-    addChainSummary!(newDF,chain,df,:ess)
+    addChainSummary!(newDF, chain, df, :ess)
     addChainSummary!(newDF,chain,df,:r_hat)
-    addESStime!(newDF,chain,df,performance)
-    addHPD!(newDF,chain)
-    addMeans!(newDF,df)
-    permutecols!(newDF,sort!(names(newDF)))#ensure correct order
-    dfi=MCMCChains.describe(chain,sections=[:internals])[1]
-    newDF[!,:epsilon]=[dfi[:lf_eps, :mean][1]]
-    newDF[!,:tree_depth]=[dfi[:tree_depth, :mean][1]]
+    addESStime!(newDF, chain, df, performance)
+    addHPD!(newDF, chain)
+    addMeans!(newDF, df)
+    permutecols!(newDF, sort!(names(newDF)))#ensure correct order
+    dfi=MCMCChains.describe(chain, sections=[:internals])[1]
+    newDF[!,:epsilon] = [dfi[:stepsize__, :mean][1]]
+    newDF[!,:tree_depth] = [dfi[:treedepth__, :mean][1]]
+    addPerformance!(newDF, performance)
+    newDF[!,:sampler] = [s.name]
+    addKW!(newDF;kwargs...)
+    return vcat(results, newDF, cols=:union)
+end
+
+function updateResults!(s::DHMCNUTS, performance, results;kwargs...)
+    chain = performance[1]
+    newDF = DataFrame()
+    chain = removeBurnin(chain;kwargs...)
+    df = MCMCChains.describe(chain)[1].df
+    addChainSummary!(newDF, chain, df, :ess)
+    addChainSummary!(newDF, chain, df, :r_hat)
+    addESStime!(newDF, chain, df, performance)
+    addHPD!(newDF, chain)
+    addMeans!(newDF, df)
+    permutecols!(newDF, sort!(names(newDF)))#ensure correct order
+    dfi=MCMCChains.describe(chain, sections=[:internals])[1]
+    newDF[!,:epsilon] = [dfi[:lf_eps, :mean][1]]
+    newDF[!,:tree_depth] = [dfi[:tree_depth, :mean][1]]
     addPerformance!(newDF,performance)
     newDF[!,:sampler] = [s.name]
     addKW!(newDF;kwargs...)
-    return vcat(results,newDF,cols=:union)
+    return vcat(results, newDF, cols=:union)
 end
 
 """
@@ -216,12 +219,13 @@ acceptance rate and others depending on the specific sampler.
 * `Nadapt`: number of adaption samples during warm up
 * `delta`: target acceptance rate.
 """
-function modifyConfig!(s::AHMCNUTS;Nsamples,Nadapt,delta,kwargs...)
-    s.config = Turing.NUTS(Nadapt,delta)
+function modifyConfig!(s::AHMCNUTS;Nsamples, Nadapt, delta, autodiff=:forward, kwargs...)
+    s.config = Turing.NUTS(Nadapt, delta)
     s.Nsamples = Nsamples
+    s.autodiff = autodiff == :reverse ? Turing.setadbackend(:reverse_diff) : Turing.setadbackend(:forward_diff)
 end
 
-function modifyConfig!(s::CmdStanNUTS;Nsamples,Nadapt,delta,kwargs...)
+function modifyConfig!(s::CmdStanNUTS;Nsamples, Nadapt, delta, kwargs...)
     s.model.num_samples = Nsamples-Nadapt
     s.model.num_warmup = Nadapt
     s.model.method.adapt.delta = delta
@@ -233,6 +237,7 @@ function modifyConfig!(s::CmdStanNUTS;Nsamples,Nadapt,delta,kwargs...)
     end
 end
 
-function modifyConfig!(s::DHMCNUTS;Nsamples,kwargs...)
+function modifyConfig!(s::DHMCNUTS;Nsamples, autodiff=:forward, kwargs...)
     s.Nsamples = Nsamples
+    s.autodiff = autodiff == :reverse ? :ReverseDiff : :ForwardDiff
 end

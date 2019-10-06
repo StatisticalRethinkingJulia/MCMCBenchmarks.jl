@@ -86,7 +86,7 @@ function (problem::PoissonProb)(θ)
   @unpack y, x, idx, N, Ns = problem   # extract the data
   @unpack a0, a1, a0s, a0_sig = θ
   LL = 0.0
-  LL += logpdf(Truncated(Cauchy(0, 1),0, Inf), a0_sig)
+  LL += logpdf(Truncated(Cauchy(0, 1), 0, Inf), a0_sig)
   LL += sum(logpdf(MvNormal(zeros(Ns), a0_sig), a0s))
   LL += logpdf.(Normal(0, 10), a0)
   LL += logpdf.(Normal(0, 1), a1)
@@ -98,17 +98,17 @@ function (problem::PoissonProb)(θ)
 end
 
 # Define problem with data and inits.
-function sampleDHMC(y, x, idx, N, Ns, nsamples)
+function sampleDHMC(y, x, idx, N, Ns, nsamples, autodiff)
   p = PoissonProb(y, x, idx, N, Ns)
   p((a0=0.0, a1=0.0, a0s=fill(0.0, Ns), a0_sig=.3))
   # Write a function to return properly dimensioned transformation.
   trans = as((a0=asℝ, a1=asℝ, a0s=as(Array, Ns), a0_sig=asℝ₊))
   P = TransformedLogDensity(trans, p)
-  ∇P = ADgradient(:ForwardDiff, P)
+  ∇P = ADgradient(autodiff, P)
   # Sample from the posterior.
   results = mcmc_with_warmup(Random.GLOBAL_RNG, ∇P, nsamples; reporter = NoProgressReport())
   # Undo the transformation to obtain the posterior from the chain.
   posterior = transform.(trans, results.chain)
-  chns = nptochain(results,posterior)
+  chns = nptochain(results, posterior)
   return chns
 end

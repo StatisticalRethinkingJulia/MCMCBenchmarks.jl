@@ -141,9 +141,9 @@ model {
 }
 "
 
-CmdStanConfig = Stanmodel(name = "CmdStanLBA",model=CmdStanLBA,nchains=1,
-   Sample(num_samples=1000,num_warmup=1000,adapt=CmdStan.Adapt(delta=0.8),
-   save_warmup = true))
+CmdStanConfig = Stanmodel(name="CmdStanLBA", model=CmdStanLBA, nchains=1,
+   Sample(num_samples=1000, num_warmup=1000, adapt=CmdStan.Adapt(delta=0.8),
+   save_warmup=true))
 
    struct LBAProb{T}
       data::T
@@ -154,37 +154,37 @@ CmdStanConfig = Stanmodel(name = "CmdStanLBA",model=CmdStanLBA,nchains=1,
   function (problem::LBAProb)(θ)
       @unpack data=problem
       @unpack v,A,k,tau=θ
-      d=LBA(ν=v,A=A,k=k,τ=tau)
-      minRT = minimum(x->x[2],data)
-      logpdf(d,data)+sum(logpdf.(TruncatedNormal(0,3,0,Inf),v)) +
-      logpdf(TruncatedNormal(.8,.4,0,Inf),A)+logpdf(TruncatedNormal(.2,.3,0,Inf),k)+
-      logpdf(TruncatedNormal(.4,.1,0,minRT),tau)
+      d=LBA(ν=v, A=A, k=k, τ=tau)
+      minRT = minimum(x->x[2], data)
+      logpdf(d,data)+sum(logpdf.(TruncatedNormal(0, 3, 0, Inf), v)) +
+      logpdf(TruncatedNormal(.8, .4, 0, Inf),A)+logpdf(TruncatedNormal(.2, .3 ,0 ,Inf), k)+
+      logpdf(TruncatedNormal(.4, .1, 0, minRT), tau)
   end
 
-function sampleDHMC(choice,rt,N,Nc,nsamples)
-    data = [(c,r) for (c,r) in zip(choice,rt)]
-    return sampleDHMC(data,N,Nc,nsamples)
+function sampleDHMC(choice, rt, N, Nc, nsamples)
+    data = [(c, r) for (c, r) in zip(choice, rt)]
+    return sampleDHMC(data, N, Nc, nsamples)
 end
 
 # Define problem with data and inits.
-function sampleDHMC(data,N,Nc,nsamples)
-    p = LBAProb(data,N,Nc)
-    p((v=fill(.5,Nc),A=.8,k=.2,tau=.4))
+function sampleDHMC(data, N, Nc, nsamples, autodiff)
+    p = LBAProb(data, N, Nc)
+    p((v=fill(.5, Nc), A=.8, k=.2, tau=.4))
     # Write a function to return properly dimensioned transformation.
-    trans = as((v=as(Array,asℝ₊,Nc),A=asℝ₊,k=asℝ₊,tau=asℝ₊))
+    trans = as((v=as(Array, asℝ₊, Nc),A=asℝ₊, k=asℝ₊, tau=asℝ₊))
     # Use Flux for the gradient.
     P = TransformedLogDensity(trans, p)
-    ∇P = ADgradient(:ForwardDiff, P)
+    ∇P = ADgradient(autodiff, P)
     # FSample from the posterior.
     n = dimension(trans)
     results = mcmc_with_warmup(Random.GLOBAL_RNG, ∇P, nsamples;
         q = zeros(n), p = ones(n),reporter = NoProgressReport())
     # Undo the transformation to obtain the posterior from the chain.
     posterior = transform.(trans, results.chain)
-    chns = nptochain(results,posterior)
+    chns = nptochain(results, posterior)
     return chns
 end
 
-function simulateLBA(;Nd,v=[1.0,1.5,2.0],A=.8,k=.2,tau=.4,kwargs...)
-    return (rand(LBA(ν=v,A=A,k=k,τ=tau),Nd)...,N=Nd,Nc=length(v))
+function simulateLBA(;Nd, v=[1.0,1.5,2.0], A=.8, k=.2, tau=.4, kwargs...)
+    return (rand(LBA(ν=v, A=A, k=k, τ=tau), Nd)..., N=Nd, Nc=length(v))
 end
