@@ -35,9 +35,6 @@ git:
 
 jobs:
   include:
-    - stage: Test
-      julia: 1.2
-      os: linux
     - stage: Documentation
       julia: 1.2
       os: linux

@@ -36,7 +36,7 @@ options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)
 
 * speed
 
-![summary_time](images/summary_time.png)
+![summary_time](build/images/summary_time.png)
 
 ```@raw html
 <img src="images/summary_time.png" width="500"/>
