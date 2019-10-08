@@ -17,6 +17,9 @@ makedocs(
         ]
 )
 
+mkpath("build/images")
+cp("../Examples/Gaussian/results/summary_time.png","build/images/summary_time.png")
+
 deploydocs(
     repo = "github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl.git",
 )
