@@ -177,17 +177,16 @@ end
 function run_all_benchmarks()
     path = pathof(MCMCBenchmarks)
     models = [
-        "generative_model_tests",
-        "Gaussian_Tests",
-        "SDT_Tests",
-        "Poisson_Test",
-        "Regression_Tests",
-        "Plot_Tests",
-        #"LBA_Tests"
+        "Hierarchial_Poisson",
+        "LBA",
+        "Linear_Regression",
+        "SDT",
+        "Gaussian",
+        "Autodiff",
     ]
     res = map(models) do m
         @eval module $(Symbol("Test_", m))
-            include(joinpath($path, "../../Models/"*$t * ".jl"))
+            include(joinpath($path, "../../Models/"*$t * "_Example.jl"))
         end
     end
  end
