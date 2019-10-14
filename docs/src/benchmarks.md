@@ -90,7 +90,7 @@ options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)
 * speed
 
 ```@raw html
-<img src="images/SDT/summary_time.png" width="500"/>
+<img src="images/SDT/summary_time.png" width="1200" height="800"/>
 ```
 
 * allocations
@@ -136,7 +136,7 @@ Y \sim Normal(\mu,\sigma)
 * effective sample size
 
 ```@raw html
-<img src="images/Linear_Regression/density_B0_ess.png" width="500"/>
+<img src="images/Linear_Regression/summary_B0_ess.png" width="500"/>
 ```
 
 ### Linear Ballistic Accumulator (LBA)

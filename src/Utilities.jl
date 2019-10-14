@@ -146,7 +146,7 @@ end
 
 function compile(samplers,data;kwargs...)
     for s in samplers
-        println("Compling $(typeof(s))")
+        println("Compiling $(typeof(s))")
         println()
         modifyConfig!(s;kwargs...)
         runSampler(s, data;kwargs...)

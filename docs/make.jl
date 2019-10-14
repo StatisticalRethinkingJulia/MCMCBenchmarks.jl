@@ -30,7 +30,7 @@ folders = ["Gaussian","Gaussian","Gaussian","SDT","SDT","SDT",
 
 files = ["summary_time.png","summary_allocations.png","density_mu_ess.png",
     "summary_time.png","summary_allocations.png","density_d_ess.png",
-    "summary_time.png","summary_allocations.png","density_B0_ess.png",
+    "summary_time.png","summary_allocations.png","summary_B0_ess.png",
     "summary_time.png","summary_allocations.png","density_A_ess.png",
     "summary_time.png","summary_allocations.png","density_a0_ess.png"]
 
