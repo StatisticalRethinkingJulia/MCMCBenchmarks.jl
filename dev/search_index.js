@@ -277,7 +277,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Signal Detection Theory",
     "category": "section",
-    "text": "Modeld sim Normal(01sqrt(5))c sim Normal(01sqrt(2))theta_hits = ϕ(d2-c)theta_fas = ϕ(-d2-c)n_hits sim Binomial(Ntheta_hits)n_fas sim Binomial(Ntheta_fas)benchmark design#Number of data points\nNd = [10, 100, 1000, 10_000]\n#Number of simulations\nNreps = 100\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)\n#perform the benchmarkspeed<img src=\"images/SDT/summary_time.png\" width=\"500\"/>allocations<img src=\"images/SDT/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/SDT/density_d_ess.png\" width=\"500\"/>"
+    "text": "Modeld sim Normal(01sqrt(5))c sim Normal(01sqrt(2))theta_hits = ϕ(d2-c)theta_fas = ϕ(-d2-c)n_hits sim Binomial(Ntheta_hits)n_fas sim Binomial(Ntheta_fas)benchmark design#Number of data points\nNd = [10, 100, 1000, 10_000]\n#Number of simulations\nNreps = 100\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)\n#perform the benchmarkspeed<img src=\"images/SDT/summary_time.png\" width=\"1200\" height=\"800\"/>allocations<img src=\"images/SDT/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/SDT/density_d_ess.png\" width=\"500\"/>"
 },
 
 {
@@ -285,7 +285,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Linear Regression",
     "category": "section",
-    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design\nspeed<img src=\"images/Linear_Regression/summary_time.png\" width=\"500\"/>allocations<img src=\"images/Linear_Regression/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/Linear_Regression/density_B0_ess.png\" width=\"500\"/>"
+    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design\nspeed<img src=\"images/Linear_Regression/summary_time.png\" width=\"500\"/>allocations<img src=\"images/Linear_Regression/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/Linear_Regression/summary_B0_ess.png\" width=\"500\"/>"
 },
 
 {
