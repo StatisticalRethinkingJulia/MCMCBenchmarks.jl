@@ -261,7 +261,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Benchmark Results",
     "category": "section",
-    "text": "In this section, we report key benchmark results comparing Turing, CmdStan, and DynamicHMC for a variety of models. The code for each of the benchmarks can be found in the Examples folder, including corresponding code for the models in folder named Models. The benchmarks were performed with the following software and hardware:Julia 1.1.1\nCmdStan 5.1.1\nTuring 0.6.23\nDynamicHMC 1.0.6\nUbuntu 18.04\nIntel(R) Core(TM) i7-4790K CPU @ 4.00GHzBefore proceeding to the results, a few caveates should be noted. (1) Turing and DynamicHMC are under active development. Consequentially, their performance may improve over time. (2) Memory allocations and garbage collection time is not applicable for CmdStan because the heavy lifting is performed in C++. (3) Performance scaling is poor for Turing and DynamicHMC because they use forward mode autodifferentiation where as CmdStan uses reverse mode autodifferentiation."
+    "text": "In this section, we report key benchmark results comparing Turing, CmdStan, and DynamicHMC for a variety of models. The code for each of the benchmarks can be found in the Examples folder, while the corresponding code for the models in folder named Models. The benchmarks were performed with the following software and hardware:Julia 1.2.0\nCmdStan 5.2.0\nTuring 0.7.0\nAdvancedHMC 0.2.6\nDynamicHMC 2.1.0\nUbuntu 18.04\nIntel(R) Core(TM) i7-4790K CPU @ 4.00GHzBefore proceeding to the results, a few caveats should be noted. (1) Turing\'s performance may improve over time as it matures. (2) memory allocations and garbage collection time are not applicable for CmdStan because the heavy lifting is performed in C++. (3) Compared to Stan, Turing and DynamicHMC exhibit poor scalability in large part due to the use of forward mode autodiff. As soon as the reverse mode autodiff package Zygote matures in Julia, it will become the default autodiff in MCMCBenchmarks."
 },
 
 {
@@ -269,7 +269,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Gaussian",
     "category": "section",
-    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design#Number of data points\nNd = [10, 100, 1000, 10_000]\n#Number of simulations\nNreps = 50\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)speed<img src=\"images/Gaussian/summary_time.png\" width=\"500\"/>allocations<img src=\"images/Gaussian/summary_allocations.png\" width=\"400\" height=\"700\"/>effective sample size<img src=\"images/Gaussian/density_mu_ess.png\" width=\"800\"/>"
+    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design#Number of data points\nNd = [10, 100, 1000, 10_000]\n#Number of simulations\nNreps = 50\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)speed<img src=\"images/Gaussian/summary_time.png\" width=\"500\"/>allocations<img src=\"images/Gaussian/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/Gaussian/density_mu_ess.png\" width=\"700\"/>"
 },
 
 {
@@ -277,7 +277,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Signal Detection Theory",
     "category": "section",
-    "text": "Modeld sim Normal(01sqrt(5))c sim Normal(01sqrt(2))theta_hits = ϕ(d2-c)theta_fas = ϕ(-d2-c)n_hits sim Binomial(Ntheta_hits)n_fas sim Binomial(Ntheta_fas)benchmark design#Number of data points\nNd = [10, 100, 1000, 10_000]\n#Number of simulations\nNreps = 100\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)\n#perform the benchmarkspeed<img src=\"images/SDT/summary_time.png\" width=\"1200\" height=\"800\"/>allocations<img src=\"images/SDT/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/SDT/density_d_ess.png\" width=\"500\"/>"
+    "text": "Modeld sim Normal(01sqrt(5))c sim Normal(01sqrt(2))theta_hits = ϕ(d2-c)theta_fas = ϕ(-d2-c)n_hits sim Binomial(Ntheta_hits)n_fas sim Binomial(Ntheta_fas)benchmark design#Number of data points\nNd = [10, 100, 1000, 10_000]\n#Number of simulations\nNreps = 100\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)\n#perform the benchmarkspeed<img src=\"images/SDT/summary_time.png\" width=\"500\"/>allocations<img src=\"images/SDT/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/SDT/density_d_ess.png\" width=\"700\"/>"
 },
 
 {
@@ -285,7 +285,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Linear Regression",
     "category": "section",
-    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design\nspeed<img src=\"images/Linear_Regression/summary_time.png\" width=\"500\"/>allocations<img src=\"images/Linear_Regression/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/Linear_Regression/summary_B0_ess.png\" width=\"500\"/>"
+    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design#Number of data points\nNd = [10, 50, 200]\n#Number of simulations\nNreps = 50\noptions = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)\n#perform the benchmark\nresults = pbenchmark(samplers,simulateLBA,Nreps;options...)speed<img src=\"images/Linear_Regression/summary_time.png\" width=\"700\"/>allocations<img src=\"images/Linear_Regression/summary_allocations.png\" width=\"700\"/>effective sample size<img src=\"images/Linear_Regression/summary_B0_ess.png\" width=\"700\"/>"
 },
 
 {
@@ -293,7 +293,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Linear Ballistic Accumulator (LBA)",
     "category": "section",
-    "text": "Modeltau sim TNormal(410y_min)A sim TNormal(840infty)k sim TNormal(230infty)v sim Normal(03)(tc) sim LBA(Abvstau)wheret = y_i - t_erb = A + ks = 1LBA(Abvstau) = f_c(t)prod_j neq c (1-F_j(t))f_c(t) = frac1A left-v_c Phileft( fracb-A-tv_cts right) + phileft( fracb-A-tv_cts right) +\n+ v_c Phileft( fracb-tv_cts right) + s phileft( fracb-tv_cts right) rightbeginmultline*\n F_c(t) = 1 + fracb-A-tv_cA Phileft( fracb-A-tv_cts right) - fracb-tv_cA Phileft( fracb-tv_cts right)\n + fractsA phileft( fracb-A-tv_cts right) - fractsA phileft( fracb-tv_cts right)\n endmultline*Y = y_1y_ny_min = minimum(Y)benchmark design\nspeed<img src=\"images/LBA/summary_time.png\" width=\"500\"/>allocations<img src=\"images/LBA/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/LBA/density_A_ess.png\" width=\"500\"/>"
+    "text": "Modeltau sim TNormal(410y_min)A sim TNormal(840infty)k sim TNormal(230infty)v sim Normal(03)(tc) sim LBA(Abvstau)wheret = y_i - t_erb = A + ks = 1LBA(Abvstau) = f_c(t)prod_j neq c (1-F_j(t))f_c(t) = frac1A left-v_c Phileft( fracb-A-tv_cts right) + phileft( fracb-A-tv_cts right) +\n+ v_c Phileft( fracb-tv_cts right) + s phileft( fracb-tv_cts right) rightbeginmultline*\n F_c(t) = 1 + fracb-A-tv_cA Phileft( fracb-A-tv_cts right) - fracb-tv_cA Phileft( fracb-tv_cts right)\n + fractsA phileft( fracb-A-tv_cts right) - fractsA phileft( fracb-tv_cts right)\n endmultline*Y = y_1y_ny_min = minimum(Y)benchmark design\nspeed<img src=\"images/LBA/summary_time.png\" width=\"500\"/>allocations<img src=\"images/LBA/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/LBA/density_A_ess.png\" width=\"700\"/>"
 },
 
 {
@@ -302,6 +302,14 @@ var documenterSearchIndex = {"docs": [
     "title": "Poisson Regression",
     "category": "section",
     "text": "Modela_0 sim Normal(010)a_1 sim Normal(01)sigma_a0 sim TCauchy(010infty)a_0i  sim Normal(0sigma_a0)lambda = e^a_0 + a_0i + a_1*x_iy_i sim Poisson(lambda)benchmark design# Number of data points per unit\nNd = [1, 2, 5]\n# Number of units in model\nNs = 10\n# Number of simulations\nNreps = 25\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd, Ns=Ns)\nspeed<img src=\"images/Hierarchical_Poisson/summary_time.png\" width=\"500\"/>allocations<img src=\"images/Hierarchical_Poisson/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/Hierarchical_Poisson/density_a0_ess.png\" width=\"500\"/>"
+},
+
+{
+    "location": "benchmarks/#Forward-vs.-Reverse-Autodiff-1",
+    "page": "Benchmark Results",
+    "title": "Forward vs. Reverse Autodiff",
+    "category": "section",
+    "text": "Hierarchical Poisson\nbenchmark design\n# Number of data points per unit\nNd = 1\n# Number of units in model\nNs = [10, 20, 50]\n# Number of simulations\nNreps = 20\nautodiff = [:forward, :reverse]\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd, Ns=Ns, autodiff=autodiff)\nspeed<img src=\"images/Autodiff/summary_time.png\" width=\"500\"/>allocations<img src=\"images/Autodiff/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/Autodiff/density_a0_ess.png\" width=\"500\"/>"
 },
 
 ]}
