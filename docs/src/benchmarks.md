@@ -28,7 +28,7 @@ Y \sim Normal(\mu,\sigma)
 
 ```julia
 #Number of data points
-Nd = [10, 100, 1000]
+Nd = [10, 100, 1000, 10_000]
 #Number of simulations
 Nreps = 50
 options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)
@@ -36,22 +36,30 @@ options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)
 
 * speed
 
-![summary_time](build/images/summary_time.png)
-
 ```@raw html
-<img src="images/summary_time.png" width="500"/>
+<img src="images/Gaussian/summary_time.png" width="500"/>
 ```
 
 * allocations
 
+```@raw html
+<img src="images/Gaussian/summary_allocations.png" width="500"/>
+```
+
+
 * effective sample size
+
+```@raw html
+<img src="images/Gaussian/density_mu_ess.png" width="500"/>
+```
+
 
 ### Signal Detection Theory
 
 * Model
 
 ```math
-d \sim Normal(0,1/\sqrt(2))
+d \sim Normal(0,1/\sqrt(.5))
 ```
 ```math
 c \sim Normal(0,1/\sqrt(2))

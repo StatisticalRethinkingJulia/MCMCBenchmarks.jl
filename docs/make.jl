@@ -1,5 +1,11 @@
 using Documenter, MCMCBenchmarks
 
+function add_image(folder,file)
+    mkpath("docs/build/benchmarks/images/"*folder)
+    cp("Examples/"*folder*"/results/"*file,
+       "docs/build/benchmarks/images/"*folder*"/"*file)
+end
+
 makedocs(
     modules = [MCMCBenchmarks],
     checkdocs = :exports,
@@ -17,9 +23,11 @@ makedocs(
         ]
 )
 
-mkpath("docs/build/benchmarks/images")
-cp("Examples/Gaussian/results/summary_time.png",
-   "docs/build/benchmarks/images/summary_time.png")
+folders = ["Gaussian","Gaussian","Gaussian"]
+files = ["summary_time.png","summary_allocations.png","density_mu_ess.png"]
+
+[add_image(folder,file) (folder,file) in zip(folders,files)]
+
 
 deploydocs(
     repo = "github.com/StatisticalRethinkingJulia/MCMCBenchmarks.jl.git",
