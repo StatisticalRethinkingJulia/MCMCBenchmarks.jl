@@ -46,7 +46,6 @@ options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)
 <img src="images/Gaussian/summary_allocations.png" width="500"/>
 ```
 
-
 * effective sample size
 
 ```@raw html
@@ -81,7 +80,7 @@ n_{fas} \sim Binomial(N,\theta_{fas})
 
 ```julia
 #Number of data points
-Nd = [10,100,1000]
+Nd = [10, 100, 1000]
 #Number of simulations
 Nreps = 100
 options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)
@@ -159,7 +158,7 @@ f_c(t) = \frac{1}{A} \left[-v_c \Phi\left( \frac{b-A-tv_c}{ts} \right) + \phi\le
 Y = {y_1,...,y_n}
 ```
 ```math
-y_{min} = minimum(Y)
+y_{min} = /textrm{minimum}(Y)
 ```
 
 * benchmark design

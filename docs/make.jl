@@ -26,7 +26,7 @@ makedocs(
 folders = ["Gaussian","Gaussian","Gaussian"]
 files = ["summary_time.png","summary_allocations.png","density_mu_ess.png"]
 
-[add_image(folder,file) (folder,file) in zip(folders,files)]
+[add_image(folder,file) for (folder,file) in zip(folders,files)]
 
 
 deploydocs(
