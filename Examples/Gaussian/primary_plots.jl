@@ -4,12 +4,12 @@ dir = "results/"
 font_size = 20
 # Plot mean run time as a function of number of data points (Nd) for each sampler
 meantimePlot = plotsummary(results, :Nd, :time, (:sampler,); save=true, dir=dir, yscale=:log10,
-  xaxis=font(font_size), yaxis=font(font_size), legendfont = 12, size=(700,700), width=3
+  xaxis=font(font_size), yaxis=font(font_size), legendfont = 12, size=(500,500), width=3
 )
 
 # Plot mean allocations as a function of number of data points (Nd) for each sampler
 meanallocPlot = plotsummary(results, :Nd, :allocations, (:sampler,); save=true, dir=dir, yscale=:log10,
-  ylabel="Allocations (log scale)",xaxis=font(font_size), yaxis=font(font_size), legendfont = 12, size=(700,700),
+  ylabel="Allocations (log scale)",xaxis=font(font_size), yaxis=font(font_size), legendfont = 12, size=(700,400),
   width=3
 )
 
