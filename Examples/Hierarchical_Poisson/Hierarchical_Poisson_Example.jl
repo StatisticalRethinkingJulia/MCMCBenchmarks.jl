@@ -25,7 +25,7 @@ include(joinpath(path,
 
 @everywhere Turing.turnprogress(false)
 #set seeds on each processor
-seeds = (939388,39884,28484,495858,544443)
+seeds = (939388, 39884, 28484, 495858, 544443)
 for (i,seed) in enumerate(seeds)
     @fetch @spawnat i Random.seed!(seed)
 end

@@ -1,5 +1,5 @@
 using MCMCBenchmarks,Distributed
-Nchains=4
+Nchains = 4
 setprocs(Nchains)
 
 ProjDir = @__DIR__

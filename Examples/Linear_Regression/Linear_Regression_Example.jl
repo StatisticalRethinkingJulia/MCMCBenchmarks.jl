@@ -1,5 +1,5 @@
 using Revise,MCMCBenchmarks,Distributed
-Nchains=4
+Nchains = 4
 setprocs(Nchains)
 
 ProjDir = @__DIR__
@@ -23,37 +23,37 @@ include(joinpath(path,
 
 @everywhere Turing.turnprogress(false)
 #set seeds on each processor
-seeds = (939388,39884,28484,495858,544443)
+seeds = (939388, 39884, 28484, 495858, 544443)
 for (i,seed) in enumerate(seeds)
     @fetch @spawnat i Random.seed!(seed)
 end
 #create a sampler object or a tuple of sampler objects
 
 samplers=(
-  CmdStanNUTS(CmdStanConfig,ProjDir),
-  AHMCNUTS(AHMCregression,AHMCconfig),
+  CmdStanNUTS(CmdStanConfig, ProjDir),
+  AHMCNUTS(AHMCregression, AHMCconfig),
   DHMCNUTS(sampleDHMC)
 )
 
-stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
+stanSampler = CmdStanNUTS(CmdStanConfig, ProjDir)
 #Initialize model files for each instance of stan
 initStan(stanSampler)
 
 #Number of data points
-Nd = [10,100,1000]
+Nd = [10, 100, 1000]
 
 #Number of coefficients
-Nc = [2,3]
+Nc = [2, 3]
 
 #Number of simulations
 Nreps = 50
 
-options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd,Nc=Nc)
+options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd, Nc=Nc)
 #perform the benchmark
-results = pbenchmark(samplers,simulateRegression,Nreps;options...)
+results = pbenchmark(samplers, simulateRegression, Nreps; options...)
 
 #save results
-save(results,ProjDir)
+save(results, ProjDir)
 
 # Make plots
 include("primary_plots.jl")

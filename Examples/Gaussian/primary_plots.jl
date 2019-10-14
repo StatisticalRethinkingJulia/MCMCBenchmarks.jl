@@ -1,7 +1,8 @@
 pyplot()
 cd(pwd)
 dir = "results/"
-font_size = 20
+font_size = 18
+
 # Plot mean run time as a function of number of data points (Nd) for each sampler
 meantimePlot = plotsummary(results, :Nd, :time, (:sampler,); save=true, dir=dir, yscale=:log10,
   xaxis=font(font_size), yaxis=font(font_size), legendfont = 12, size=(500,500), width=3

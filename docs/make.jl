@@ -26,12 +26,13 @@ makedocs(
 folders = ["Gaussian","Gaussian","Gaussian","SDT","SDT","SDT",
     "Linear_Regression","Linear_Regression","Linear_Regression",
     "LBA","LBA","LBA","Hierarchical_Poisson","Hierarchical_Poisson",
-    "Hierarchical_Poisson"]
+    "Hierarchical_Poisson","Autodiff","Autodiff","Autodiff"]
 
 files = ["summary_time.png","summary_allocations.png","density_mu_ess.png",
     "summary_time.png","summary_allocations.png","density_d_ess.png",
     "summary_time.png","summary_allocations.png","summary_B0_ess.png",
     "summary_time.png","summary_allocations.png","density_A_ess.png",
+    "summary_time.png","summary_allocations.png","density_a0_ess.png",
     "summary_time.png","summary_allocations.png","density_a0_ess.png"]
 
 [add_image(folder,file) for (folder,file) in zip(folders,files)]

@@ -1,5 +1,5 @@
-using MCMCBenchmarks,Distributed
-Nchains=4
+using MCMCBenchmarks, Distributed
+Nchains = 4
 setprocs(Nchains)
 
 ProjDir = @__DIR__
@@ -23,21 +23,21 @@ include(joinpath(path, "../../Models/LBA/LinearBallisticAccumulator.jl"))
 
 @everywhere turnprogress(false)
 #set seeds on each processor
-seeds = (939388,39884,28484,495858,544443)
+seeds = (939388, 39884, 28484, 495858, 544443)
 for (i,seed) in enumerate(seeds)
     @fetch @spawnat i Random.seed!(seed)
 end
 
 @everywhere Turing.turnprogress(false)
 
-stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
+stanSampler = CmdStanNUTS(CmdStanConfig, ProjDir)
 #Initialize model files for each instance of stan
 initStan(stanSampler)
 
 #create a sampler object or a tuple of sampler objects
 samplers=(
-  CmdStanNUTS(CmdStanConfig,ProjDir),
-  AHMCNUTS(AHMClba,AHMCconfig),
+  CmdStanNUTS(CmdStanConfig, ProjDir),
+  AHMCNUTS(AHMClba, AHMCconfig),
 #  DHMCNUTS(sampleDHMC)
 )
 
@@ -47,12 +47,12 @@ Nd = [10, 50, 200]
 #Number of simulations
 Nreps = 50
 
-options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
+options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)
 #perform the benchmark
-results = pbenchmark(samplers,simulateLBA,Nreps;options...)
+results = pbenchmark(samplers, simulateLBA, Nreps; options...)
 
 #save results
-save(results,ProjDir)
+save(results, ProjDir)
 
 # Make plots
 include("primary_plots.jl")
