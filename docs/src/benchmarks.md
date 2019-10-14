@@ -308,5 +308,5 @@ options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd, Ns=Ns, autodiff=autodiff
 * effective sample size
 
 ```@raw html
-<img src="images/Autodiff/density_a0_ess.png" width="500"/>
+<img src="images/Autodiff/density_a0_ess.png" width="700"/>
 ```
