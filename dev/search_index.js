@@ -277,7 +277,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Signal Detection Theory",
     "category": "section",
-    "text": "Modeld sim Normal(01sqrt(5))c sim Normal(01sqrt(2))theta_hits = ϕ(d2-c)theta_fas = ϕ(-d2-c)n_hits sim Binomial(Ntheta_hits)n_fas sim Binomial(Ntheta_fas)benchmark design#Number of data points\nNd = [10, 100, 1000]\n#Number of simulations\nNreps = 100\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)speed\nallocations\neffective sample size"
+    "text": "Modeld sim Normal(01sqrt(5))c sim Normal(01sqrt(2))theta_hits = ϕ(d2-c)theta_fas = ϕ(-d2-c)n_hits sim Binomial(Ntheta_hits)n_fas sim Binomial(Ntheta_fas)benchmark design#Number of data points\nNd = [10, 100, 1000, 10_000]\n#Number of simulations\nNreps = 100\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)\n#perform the benchmarkspeed<img src=\"images/SDT/summary_time.png\" width=\"500\"/>allocations<img src=\"images/SDT/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/SDT/density_d_ess.png\" width=\"500\"/>"
 },
 
 {
@@ -285,7 +285,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Linear Regression",
     "category": "section",
-    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design\nspeed\nallocations\neffective sample size"
+    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design\nspeed<img src=\"images/Linear_Regression/summary_time.png\" width=\"500\"/>allocations<img src=\"images/Linear_Regression/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/Linear_Regression/density_B0_ess.png\" width=\"500\"/>"
 },
 
 {
@@ -293,7 +293,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Linear Ballistic Accumulator (LBA)",
     "category": "section",
-    "text": "Modeltau sim TNormal(410y_min)A sim TNormal(840infty)k sim TNormal(230infty)v sim Normal(03)(tc) sim LBA(Abvstau)wheret = y_i - t_erb = A + ks = 1LBA(Abvstau) = f_c(t)prod_j neq c (1-F_j(t))f_c(t) = frac1A left-v_c Phileft( fracb-A-tv_cts right) + phileft( fracb-A-tv_cts right) +\n+ v_c Phileft( fracb-tv_cts right) + s phileft( fracb-tv_cts right) rightbeginmultline*\n F_c(t) = 1 + fracb-A-tv_cA Phileft( fracb-A-tv_cts right) - fracb-tv_cA Phileft( fracb-tv_cts right)\n + fractsA phileft( fracb-A-tv_cts right) - fractsA phileft( fracb-tv_cts right)\n endmultline*Y = y_1y_ny_min = textrmminimum(Y)benchmark design\nspeed\nallocations\neffective sample size"
+    "text": "Modeltau sim TNormal(410y_min)A sim TNormal(840infty)k sim TNormal(230infty)v sim Normal(03)(tc) sim LBA(Abvstau)wheret = y_i - t_erb = A + ks = 1LBA(Abvstau) = f_c(t)prod_j neq c (1-F_j(t))f_c(t) = frac1A left-v_c Phileft( fracb-A-tv_cts right) + phileft( fracb-A-tv_cts right) +\n+ v_c Phileft( fracb-tv_cts right) + s phileft( fracb-tv_cts right) rightbeginmultline*\n F_c(t) = 1 + fracb-A-tv_cA Phileft( fracb-A-tv_cts right) - fracb-tv_cA Phileft( fracb-tv_cts right)\n + fractsA phileft( fracb-A-tv_cts right) - fractsA phileft( fracb-tv_cts right)\n endmultline*Y = y_1y_ny_min = minimum(Y)benchmark design\nspeed<img src=\"images/LBA/summary_time.png\" width=\"500\"/>allocations<img src=\"images/LBA/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/LBA/density_A_ess.png\" width=\"500\"/>"
 },
 
 {
@@ -301,7 +301,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Poisson Regression",
     "category": "section",
-    "text": "Modela_0 sim Normal(010)a_1 sim Normal(01)sigma_a0 sim TCauchy(010infty)a_0i  sim Normal(0sigma_a0)lambda = e^a_0 + a_0i + a_1*x_iy_i sim Poisson(lambda)benchmark design#Number of data points per unit\nNd = [1,2,5]\n#Number of units in model\nNs = 10\n#Number of simulations\nNreps = 25\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd, Ns=Ns)speed\nallocations\neffective sample size"
+    "text": "Modela_0 sim Normal(010)a_1 sim Normal(01)sigma_a0 sim TCauchy(010infty)a_0i  sim Normal(0sigma_a0)lambda = e^a_0 + a_0i + a_1*x_iy_i sim Poisson(lambda)benchmark design# Number of data points per unit\nNd = [1, 2, 5]\n# Number of units in model\nNs = 10\n# Number of simulations\nNreps = 25\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd, Ns=Ns)\nspeed<img src=\"images/Hierarchical_Poisson/summary_time.png\" width=\"500\"/>allocations<img src=\"images/Hierarchical_Poisson/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/Hierarchical_Poisson/density_a0_ess.png\" width=\"500\"/>"
 },
 
 ]}
