@@ -309,7 +309,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Forward vs. Reverse Autodiff",
     "category": "section",
-    "text": "Hierarchical Poisson\nbenchmark design\n# Number of data points per unit\nNd = 1\n# Number of units in model\nNs = [10, 20, 50]\n# Number of simulations\nNreps = 20\nautodiff = [:forward, :reverse]\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd, Ns=Ns, autodiff=autodiff)\nspeed<img src=\"images/Autodiff/summary_time.png\" width=\"500\"/>allocations<img src=\"images/Autodiff/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/Autodiff/density_a0_ess.png\" width=\"500\"/>"
+    "text": "Hierarchical Poisson\nbenchmark design\n# Number of data points per unit\nNd = 1\n# Number of units in model\nNs = [10, 20, 50]\n# Number of simulations\nNreps = 20\nautodiff = [:forward, :reverse]\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd, Ns=Ns, autodiff=autodiff)\nspeed<img src=\"images/Autodiff/summary_time.png\" width=\"500\"/>allocations<img src=\"images/Autodiff/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/Autodiff/density_a0_ess.png\" width=\"700\"/>"
 },
 
 ]}
