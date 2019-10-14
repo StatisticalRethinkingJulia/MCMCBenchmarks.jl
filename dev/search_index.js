@@ -269,7 +269,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Gaussian",
     "category": "section",
-    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design#Number of data points\nNd = [10, 100, 1000]\n#Number of simulations\nNreps = 50\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)speed(Image: summary_time)<img src=\"images/summary_time.png\" width=\"500\"/>allocations\neffective sample size"
+    "text": "Modelmu sim Normal(01)sigma sim TCauchy(050infty)Y sim Normal(musigma)benchmark design#Number of data points\nNd = [10, 100, 1000, 10_000]\n#Number of simulations\nNreps = 50\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)speed<img src=\"images/Gaussian/summary_time.png\" width=\"500\"/>allocations<img src=\"images/Gaussian/summary_allocations.png\" width=\"500\"/>effective sample size<img src=\"images/Gaussian/density_mu_ess.png\" width=\"500\"/>"
 },
 
 {
@@ -277,7 +277,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Signal Detection Theory",
     "category": "section",
-    "text": "Modeld sim Normal(01sqrt(2))c sim Normal(01sqrt(2))theta_hits = ϕ(d2-c)theta_fas = ϕ(-d2-c)n_hits sim Binomial(Ntheta_hits)n_fas sim Binomial(Ntheta_fas)benchmark design#Number of data points\nNd = [10,100,1000]\n#Number of simulations\nNreps = 100\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)speed\nallocations\neffective sample size"
+    "text": "Modeld sim Normal(01sqrt(5))c sim Normal(01sqrt(2))theta_hits = ϕ(d2-c)theta_fas = ϕ(-d2-c)n_hits sim Binomial(Ntheta_hits)n_fas sim Binomial(Ntheta_fas)benchmark design#Number of data points\nNd = [10, 100, 1000]\n#Number of simulations\nNreps = 100\noptions = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)speed\nallocations\neffective sample size"
 },
 
 {
@@ -293,7 +293,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Benchmark Results",
     "title": "Linear Ballistic Accumulator (LBA)",
     "category": "section",
-    "text": "Modeltau sim TNormal(410y_min)A sim TNormal(840infty)k sim TNormal(230infty)v sim Normal(03)(tc) sim LBA(Abvstau)wheret = y_i - t_erb = A + ks = 1LBA(Abvstau) = f_c(t)prod_j neq c (1-F_j(t))f_c(t) = frac1A left-v_c Phileft( fracb-A-tv_cts right) + phileft( fracb-A-tv_cts right) +\n+ v_c Phileft( fracb-tv_cts right) + s phileft( fracb-tv_cts right) rightbeginmultline*\n F_c(t) = 1 + fracb-A-tv_cA Phileft( fracb-A-tv_cts right) - fracb-tv_cA Phileft( fracb-tv_cts right)\n + fractsA phileft( fracb-A-tv_cts right) - fractsA phileft( fracb-tv_cts right)\n endmultline*Y = y_1y_ny_min = minimum(Y)benchmark design\nspeed\nallocations\neffective sample size"
+    "text": "Modeltau sim TNormal(410y_min)A sim TNormal(840infty)k sim TNormal(230infty)v sim Normal(03)(tc) sim LBA(Abvstau)wheret = y_i - t_erb = A + ks = 1LBA(Abvstau) = f_c(t)prod_j neq c (1-F_j(t))f_c(t) = frac1A left-v_c Phileft( fracb-A-tv_cts right) + phileft( fracb-A-tv_cts right) +\n+ v_c Phileft( fracb-tv_cts right) + s phileft( fracb-tv_cts right) rightbeginmultline*\n F_c(t) = 1 + fracb-A-tv_cA Phileft( fracb-A-tv_cts right) - fracb-tv_cA Phileft( fracb-tv_cts right)\n + fractsA phileft( fracb-A-tv_cts right) - fractsA phileft( fracb-tv_cts right)\n endmultline*Y = y_1y_ny_min = textrmminimum(Y)benchmark design\nspeed\nallocations\neffective sample size"
 },
 
 {
