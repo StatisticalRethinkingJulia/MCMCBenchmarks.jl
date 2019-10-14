@@ -37,13 +37,13 @@ options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)
 * speed
 
 ```@raw html
-<img src="images/Gaussian/summary_time.png" width="500"/>
+<img src="images/Gaussian/summary_time.png" width="1200" height="800"/>
 ```
 
 * allocations
 
 ```@raw html
-<img src="images/Gaussian/summary_allocations.png" width="500"/>
+<img src="images/Gaussian/summary_allocations.png" width="800"/>
 ```
 
 * effective sample size
