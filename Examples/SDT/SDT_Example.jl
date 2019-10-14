@@ -39,14 +39,14 @@ samplers=(CmdStanNUTS(CmdStanConfig,ProjDir),
 )
 
 #Number of data points
-Nd = [10,100,1000,10_000]
+Nd = [10, 100, 1000, 10_000]
 
 #Number of simulations
 Nreps = 100
 
-options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
+options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)
 #perform the benchmark
-results = pbenchmark(samplers,simulateSDT,Nreps;options...)
+results = pbenchmark(samplers, simulateSDT, Nreps; options...)
 
 #save results
 save(results,ProjDir)

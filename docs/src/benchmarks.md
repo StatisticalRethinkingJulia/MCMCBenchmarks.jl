@@ -80,15 +80,30 @@ n_{fas} \sim Binomial(N,\theta_{fas})
 
 ```julia
 #Number of data points
-Nd = [10, 100, 1000]
+Nd = [10, 100, 1000, 10_000]
 #Number of simulations
 Nreps = 100
 options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)
+#perform the benchmark
 ```
 
 * speed
+
+```@raw html
+<img src="images/SDT/summary_time.png" width="500"/>
+```
+
 * allocations
+
+```@raw html
+<img src="images/SDT/summary_allocations.png" width="500"/>
+```
+
 * effective sample size
+
+```@raw html
+<img src="images/SDT/density_d_ess.png" width="500"/>
+```
 
 ### Linear Regression
 
@@ -107,8 +122,22 @@ Y \sim Normal(\mu,\sigma)
 * benchmark design
 
 * speed
+
+```@raw html
+<img src="images/Linear_Regression/summary_time.png" width="500"/>
+```
+
 * allocations
+
+```@raw html
+<img src="images/Linear_Regression/summary_allocations.png" width="500"/>
+```
+
 * effective sample size
+
+```@raw html
+<img src="images/Linear_Regression/density_B0_ess.png" width="500"/>
+```
 
 ### Linear Ballistic Accumulator (LBA)
 
@@ -158,13 +187,27 @@ f_c(t) = \frac{1}{A} \left[-v_c \Phi\left( \frac{b-A-tv_c}{ts} \right) + \phi\le
 Y = {y_1,...,y_n}
 ```
 ```math
-y_{min} = /textrm{minimum}(Y)
+y_{min} = minimum(Y)
 ```
 
 * benchmark design
 * speed
+
+```@raw html
+<img src="images/LBA/summary_time.png" width="500"/>
+```
+
 * allocations
+
+```@raw html
+<img src="images/LBA/summary_allocations.png" width="500"/>
+```
+
 * effective sample size
+
+```@raw html
+<img src="images/LBA/density_A_ess.png" width="500"/>
+```
 
 ### Poisson Regression
 
@@ -192,15 +235,30 @@ y_i \sim Poisson(\lambda)
 * benchmark design
 
 ```julia
-#Number of data points per unit
-Nd = [1,2,5]
-#Number of units in model
+# Number of data points per unit
+Nd = [1, 2, 5]
+# Number of units in model
 Ns = 10
-#Number of simulations
+# Number of simulations
 Nreps = 25
 options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd, Ns=Ns)
+
 ```
 
 * speed
+
+```@raw html
+<img src="images/Hierarchical_Poisson/summary_time.png" width="500"/>
+```
+
 * allocations
+
+```@raw html
+<img src="images/Hierarchical_Poisson/summary_allocations.png" width="500"/>
+```
+
 * effective sample size
+
+```@raw html
+<img src="images/Hierarchical_Poisson/density_a0_ess.png" width="500"/>
+```
