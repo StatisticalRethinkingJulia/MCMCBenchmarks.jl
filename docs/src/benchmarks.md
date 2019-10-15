@@ -9,7 +9,7 @@ In this section, we report key benchmark results comparing Turing, CmdStan, and 
 * Ubuntu 18.04
 * Intel(R) Core(TM) i7-4790K CPU @ 4.00GHz
 
-Before proceeding to the results, a few caveats should be noted. (1) Turing's performance may improve over time as it matures. (2) memory allocations and garbage collection time are not applicable for CmdStan because the heavy lifting is performed in C++. (3) Compared to Stan, Turing and DynamicHMC exhibit poor scalability in large part due to the use of forward mode autodiff. As soon as the reverse mode autodiff package [Zygote](https://github.com/FluxML/Zygote.jl) matures in Julia, it will become the default autodiff in MCMCBenchmarks.
+Before proceeding to the results, a few caveats should be noted. (1) Turing's performance may improve over time as it matures. (2) memory allocations and garbage collection time are not applicable for CmdStan because the heavy lifting is performed in C++ where it is not measured. (3) Compared to Stan, Turing and DynamicHMC exhibit poor scalability in large part due to the use of forward mode autodiff. As soon as the reverse mode autodiff package [Zygote](https://github.com/FluxML/Zygote.jl) matures in Julia, it will become the default autodiff in MCMCBenchmarks.
 
 ### Gaussian
 
@@ -111,10 +111,16 @@ options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)
 * Model
 
 ```math
-\mu \sim Normal(0,1)
+\beta_0 \sim Normal(0,10)
+```
+```math
+\boldsymbol{\beta} \sim Normal(0,10)
 ```
 ```math
 \sigma \sim TCauchy(0,5,0,\infty)
+```
+```math
+\mu = \beta_0 + \boldsymbol{X}\boldsymbol{\beta}
 ```
 ```math
 Y \sim Normal(\mu,\sigma)
@@ -124,12 +130,12 @@ Y \sim Normal(\mu,\sigma)
 
 ```julia
 #Number of data points
-Nd = [10, 50, 200]
+Nd = [10, 100, 1000]
+#Number of coefficients
+Nc = [2, 3]
 #Number of simulations
 Nreps = 50
-options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
-#perform the benchmark
-results = pbenchmark(samplers,simulateLBA,Nreps;options...)
+options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd, Nc=Nc)
 ```
 
 * speed
@@ -202,6 +208,15 @@ y_{min} = minimum(Y)
 ```
 
 * benchmark design
+
+```julia
+#Number of data points
+Nd = [10, 50, 200]
+#Number of simulations
+Nreps = 50
+options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)
+```
+
 * speed
 
 ```@raw html
