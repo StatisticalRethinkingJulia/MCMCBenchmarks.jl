@@ -100,10 +100,9 @@ function log_dens_win(d::LBA, v, rt)
     dt = rt-τ; b=A+k
     n1 = (b-A-dt*v)/(dt*σ)
     n2 = (b-dt*v)/(dt*σ)
-    dens = (1/A)*(-v*cdf(Normal(0, 1), n1) + σ*pdf(Normal(0, 1), n1) +
-        v*cdf(Normal(0, 1), n2) - σ*pdf(Normal(0, 1), n2))
-    dens = max(dens, 1e-10)
-    return log(dens)
+    Δcdfs = cdf(Normal(0,1),n2) - cdf(Normal(0,1),n1)
+    Δpdfs = pdf(Normal(0,1),n1) - pdf(Normal(0,1),n2)
+    return -log(A) + logaddexp(log(σ) + log(Δpdfs), log(v) + log(Δcdfs))
 end
 
 function log_dens_lose(d::LBA, v, rt)
