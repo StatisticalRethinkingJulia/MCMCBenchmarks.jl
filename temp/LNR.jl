@@ -1,6 +1,8 @@
-using Distributions, Turing, Random, Parameters
 import Base.rand
 import Distributions: logpdf
+
+ProjDir = @__DIR__
+cd(ProjDir)
 
 struct LNR{T1,T2,T3} <: ContinuousUnivariateDistribution
     μ::T1
@@ -35,29 +37,3 @@ function logpdf(d::T, r::Int, t::Float64) where {T<:LNR}
 end
 
 logpdf(d::LNR, data::Tuple) = logpdf(d, data...)
-
-
-@model model(data,Nr) = begin
-    μ = Array{Real,1}(undef,Nr)
-    μ ~ [Normal(0,3)]
-    σ ~ Truncated(Cauchy(0, 1), 0, Inf)
-    for i in 1:length(data)
-        data[i] ~ LNR(μ, σ, 0.0)
-    end
-end
-
-Random.seed!(343)
-Nreps = 30
-error_count = fill(0.0,Nreps)
-Nr = 3
-
-for i in 1:Nreps
-    μ = rand(Normal(0 ,3), Nr)
-    σ = rand(Uniform(.5, 2))
-    dist = LNR(μ=μ, σ=σ, ϕ=0.0)
-    data = rand(dist, 30)
-    chain = sample(model(data, Nr), NUTS(1000, .8), 2000, discard_adapt = false)
-    error_count[i] = sum(get(chain,:numerical_error)[1])
-end
-
-describe(error_count)
