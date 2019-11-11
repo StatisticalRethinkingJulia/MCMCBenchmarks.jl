@@ -29,7 +29,7 @@ parameters {
 
 model {
      mu ~ normal(0, 3);
-     sigma ~ normal(0,1);
+     sigma ~ cauchy(0,1);
      for(i in 1:N){
          target += LNR_LL(mu, sigma, 0.0, rt[i], choice[i]);
       }

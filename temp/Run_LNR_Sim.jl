@@ -6,7 +6,7 @@ include("LNR.jl")
 @model model(data,Nr) = begin
     μ = Array{Real,1}(undef,Nr)
     μ ~ [Normal(0,3)]
-    σ ~ Truncated(Normal(0, 1), 0, Inf)
+    σ ~ Truncated(Cauchy(0, 1), 0, Inf)
     for i in 1:length(data)
         data[i] ~ LNR(μ, σ, 0.0)
     end
