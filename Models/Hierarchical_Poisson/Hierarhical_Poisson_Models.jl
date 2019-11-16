@@ -8,7 +8,7 @@ struct LogPoisson{T<:Real} <: DiscreteUnivariateDistribution
 end
 
 function logpdf(lp::LogPoisson, k::Int)
-    return k * lp.logλ - exp(lp.logλ) - lgamma(k + 1)
+    return k * lp.logλ - exp(lp.logλ) - loggamma(k + 1)
 end
 
 @model AHMCpoisson(y, x, idx, N, Ns) = begin
