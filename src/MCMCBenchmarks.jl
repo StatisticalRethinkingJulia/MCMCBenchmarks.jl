@@ -45,6 +45,7 @@ export
   save,
   Permutation,
   initChains,
-  initStan
-  getMetadata
+  initStan,
+  getMetadata,
+  run_all_benchmarks
 end # module

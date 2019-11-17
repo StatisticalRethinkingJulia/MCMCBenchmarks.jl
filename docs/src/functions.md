@@ -105,6 +105,13 @@ addMeans!
 ```julia
 addMeans!(newDF,df)
 ```
+
+```@docs
+run_all_benchmarks
+```
+```julia
+run_all_benchmarks()
+```
 ### Plotting
 
 ```@docs
