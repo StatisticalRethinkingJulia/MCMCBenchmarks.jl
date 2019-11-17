@@ -193,3 +193,11 @@ function run_all_benchmarks()
         end
     end
  end
+
+ function run_all_benchmarks(models)
+     res = map(models) do m
+         @eval module $(Symbol("Test_", m))
+             include($m)
+         end
+     end
+  end

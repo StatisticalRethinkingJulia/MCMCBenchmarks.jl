@@ -138,18 +138,18 @@ end
 """
 remove compile time from benchmarks
 """
-function compile(samplers, fun::F;kwargs...) where {F<:Function}
-    p=collect(Permutation(kwargs))[1]
+function compile(samplers, fun::F; kwargs...) where {F<:Function}
+    p = collect(Permutation(kwargs))[1]
     data = fun(;Nd=1, p...); N=nprocs()
     pmap(s->compile(samplers, data;p...),1:N)
 end
 
-function compile(samplers,data;kwargs...)
+function compile(samplers, data; kwargs...)
     for s in samplers
         println("Compiling $(typeof(s))")
         println()
-        modifyConfig!(s;kwargs...)
-        runSampler(s, data;kwargs...)
+        modifyConfig!(s; kwargs...)
+        runSampler(s, data; kwargs...)
     end
 end
 
