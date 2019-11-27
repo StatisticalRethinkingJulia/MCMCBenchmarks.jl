@@ -11,11 +11,11 @@ using MCMCBenchmarks, Test, Random
     ProjDir = @__DIR__
     cd(ProjDir)
     samplers=(
-      CmdStanNUTS(CmdStanConfig,ProjDir),
-      AHMCNUTS(AHMCGaussian,AHMCconfig),
+      CmdStanNUTS(CmdStanConfig, ProjDir),
+      AHMCNUTS(AHMCGaussian, AHMCconfig),
       DHMCNUTS(sampleDHMC))
     options = (Nsamples=2000,Nadapt=1000,delta=.8,Nd=Nd)
-    results = benchmark(samplers,simulateGaussian,Nreps;options...)
+    results = benchmark(samplers, simulateGaussian, Nreps; options...)
     @test results[!,:mu_mean][results[!,:sampler] .== :AHMCNUTS,:][1] ≈ mu atol = .05
     @test results[!,:mu_mean][results[!,:sampler] .== :CmdStanNUTS,:][1] ≈ mu atol = .05
     @test results[!,:mu_mean][results[!,:sampler] .== :DHMCNUTS,:][1] ≈ mu atol = .05

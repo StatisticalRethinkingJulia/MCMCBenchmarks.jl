@@ -131,8 +131,9 @@ parameter estimation
 * `Nchains`: number of chains ran serially. Default =  1
 """
 function runSampler(s::AHMCNUTS, data;Nchains=1, kwargs...)
-    f() = sample(s.model(data...), s.config, s.Nsamples;discard_adapt=false)
-    return reduce(chainscat, map(x->f(),1:Nchains))
+    f() = sample(s.model(data...), s.config, s.Nsamples; discard_adapt=false,
+        progress=false)
+    return reduce(chainscat, map(x->f(), 1:Nchains))
 end
 
 function runSampler(s::CmdStanNUTS, data;Nchains=1, kwargs...)
@@ -140,9 +141,9 @@ function runSampler(s::CmdStanNUTS, data;Nchains=1, kwargs...)
     return reduce(chainscat, map(x->f(), 1:Nchains))
 end
 
-function runSampler(s::DHMCNUTS, data;Nchains=1, kwargs...)
-    f() = s.model(data...,s.Nsamples,s.autodiff)
-    return reduce(chainscat, map(x->f(),1:Nchains))
+function runSampler(s::DHMCNUTS, data; Nchains=1, kwargs...)
+    f() = s.model(data..., s.Nsamples, s.autodiff)
+    return reduce(chainscat, map(x->f(), 1:Nchains))
 end
 
 """

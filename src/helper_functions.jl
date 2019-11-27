@@ -174,30 +174,46 @@ function Chains(chain::Chains)
     return Chains(v,parms)
 end
 
-"""
-Run all benchmarks
-"""
-function run_all_benchmarks()
-    path = pathof(MCMCBenchmarks)
-    models = [
-        "Gaussian",
-        "Hierarchial_Poisson",
-        "LBA",
-        "Linear_Regression",
-        "SDT",
-        "Autodiff",
-    ]
-    res = map(models) do m
-        @eval module $(Symbol("Test_", m))
-            include(joinpath($path, "../../Examples/" * $m * "/" * $m * "_Example.jl"))
-        end
-    end
- end
+# """
+# Run all benchmarks
+# """
+# function run_all_benchmarks()
+#     path = pathof(MCMCBenchmarks)
+#     models = [
+#         "Gaussian",
+#         "Hierarchial_Poisson",
+#         "LBA",
+#         "Linear_Regression",
+#         "SDT",
+#         "Autodiff",
+#     ]
+#     res = map(models) do m
+#         @eval module $(Symbol("Test_", m))
+#             include(joinpath($path, "../../Examples/" * $m * "/" * $m * "_Example.jl"))
+#         end
+#     end
+#  end
 
- function run_all_benchmarks(models)
-     res = map(models) do m
-         @eval module $(Symbol("Test_", m))
-             include($m)
-         end
-     end
+"""
+Runs a set of benchmarks on seperate processes. Each benchmark
+must call benchmark instead of pbenchmark.
+* `paths`: a list of paths to each benchmark file.
+"""
+ # function run_all_benchmarks(paths)
+ #     res = pmap(paths) do p
+ #         @eval module $(Symbol("Test_", p))
+ #             include($p)
+ #         end
+ #     end
+ #  end
+
+
+ function run_all_benchmarks(paths)
+     pmap(run_benchmark, paths)
   end
+
+function run_benchmark(p)
+    @eval module $(Symbol("Test_", p))
+        include($p)
+    end
+end
