@@ -30,12 +30,11 @@ In order to perform a benchmark, the user must define the following:
 * Sampler specific struct and methods defined for updateResults!, modifyConfig!, and runSampler. Structs and methods for NUTS in CmdStan, AdvancedHMC/Turing, and DynamicHMC are provided by MCMCBenchmarks.
 
 
-We will walk through the code in the top-level script named Gaussian_Example.jl. In the first snippet, we call the required packages, set the number of chains to 4, set the file directory as the project directory, remove old the old CmdStan output director tmp and create a new one, then create a results folder if one does not already exist.  
+We will walk through the code in the top-level script named Gaussian_Example.jl. In the first snippet, we call the required packages, set the number of workers to 4, set the file directory as the project directory, remove old the old CmdStan output director tmp and create a new one, then create a results folder if one does not already exist.  
 
 ```julia
-using Revise,MCMCBenchmarks,Distributed
-Nchains=4
-setprocs(Nchains)
+using Revise,MCMCBenchmarks, Distributed
+setprocs(4)
 
 ProjDir = @__DIR__
 cd(ProjDir)
@@ -50,7 +49,7 @@ In the following code snippet, we set the path to the Gaussian model file and lo
 ```julia
 path = pathof(MCMCBenchmarks)
 @everywhere begin
-  using MCMCBenchmarks,Revise
+  using MCMCBenchmarks, Revise
   #Model and configuration patterns for each sampler are located in a
   #seperate model file.
   include(joinpath($path, "../../Models/Gaussian/Gaussian_Models.jl"))
@@ -73,11 +72,11 @@ The follow snippet creates a tuple of samplers and initializes a CmdStan output 
 ```julia
 #create a sampler object or a tuple of sampler objects
 samplers=(
-  CmdStanNUTS(CmdStanConfig,ProjDir),
-  AHMCNUTS(AHMCGaussian,AHMCconfig),
-  DHMCNUTS(sampleDHMC,2000))
+  CmdStanNUTS(CmdStanConfig, ProjDir),
+  AHMCNUTS(AHMCGaussian, AHMCconfig),
+  DHMCNUTS(sampleDHMC, 2000))
 
-stanSampler = CmdStanNUTS(CmdStanConfig,ProjDir)
+stanSampler = CmdStanNUTS(CmdStanConfig, ProjDir)
 #Initialize model files for each instance of stan
 initStan(stanSampler)
 ```
@@ -104,14 +103,14 @@ The function `pbenchmark` performs the benchmarks in parallel, by dividing the j
 
 ```julia  
 #perform the benchmark
-results = pbenchmark(samplers,simulateGaussian,Nreps;options...)
+results = pbenchmark(samplers, simulateGaussian, Nreps; options...)
 ```
 
 After the benchmark has completed, the results are saved in the results as a csv file. In addition, relevant package version information and system information is saved in a seperate csv file.
 
 ```julia
 #save results
-save(results,ProjDir)
+save(results, ProjDir)
 ```
 ## Results Output
 The following information is stored in the results `DataFrame`:
