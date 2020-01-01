@@ -1,6 +1,6 @@
 @model AHMCGaussian(y, N) = begin
     mu ~ Normal(0, 1)
-    sigma ~ Truncated(Cauchy(0, 5), 0, Inf)
+    sigma ~ Truncated(Cauchy(0, 5), 0.0, Inf)
     y ~ MvNormal(Fill(mu, N), sigma)  # use `Fill(mu, N)` is memory freiendly
 end
 
@@ -40,7 +40,7 @@ function (problem::GaussianProb)(θ)
     @unpack mu, sigma = θ
     N = length(y)
     logpdf(MvNormal(Fill(mu, N), sigma), y) + logpdf(Normal(0, 1), mu) +
-      logpdf(Truncated(Cauchy(0, 5), 0, Inf), sigma)
+      logpdf(Truncated(Cauchy(0, 5), 0.0, Inf), sigma)
 end
 
 # Define problem with data and inits.

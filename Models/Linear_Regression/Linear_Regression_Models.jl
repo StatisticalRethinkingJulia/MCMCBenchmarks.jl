@@ -1,7 +1,7 @@
 @model AHMCregression(x, y, Nd, Nc) = begin
     B ~ MvNormal(zeros(Nc), 10)
     B0 ~ Normal(0, 10)
-    sigma ~ Truncated(Cauchy(0, 5), 0, Inf)
+    sigma ~ Truncated(Cauchy(0, 5), 0.0, Inf)
     mu = B0 .+ x * B
     y ~ MvNormal(mu, sigma)
 end
@@ -46,7 +46,7 @@ CmdStanConfig = Stanmodel(name="CmdStanRegression", model=CmdStanRegression, nch
       @unpack B0,B,sigma = θ
       μ = B0 .+x*B
       logpdf(MvNormal(μ, sigma), y)  + logpdf(Normal(0, 10), B0) +
-      loglikelihood(Normal(0, 10), B) + logpdf(Truncated(Cauchy(0, 5), 0, Inf), sigma)
+      loglikelihood(Normal(0, 10), B) + logpdf(Truncated(Cauchy(0, 5), 0.0, Inf), sigma)
   end
 
   # Define problem with data and inits.

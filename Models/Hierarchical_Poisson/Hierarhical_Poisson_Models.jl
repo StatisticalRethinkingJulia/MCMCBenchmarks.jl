@@ -14,7 +14,7 @@ end
 @model AHMCpoisson(y, x, idx, N, Ns) = begin
   a0 ~ Normal(0, 10)
   a1 ~ Normal(0, 1)
-  a0_sig ~ Truncated(Cauchy(0, 1), 0, Inf)
+  a0_sig ~ Truncated(Cauchy(0, 1), 0.0, Inf)
   a0s ~ MvNormal(zeros(Ns), a0_sig)
   for i ∈ 1:N
     λ = a0 + a0s[idx[i]] + a1 * x[i]
@@ -86,7 +86,7 @@ function (problem::PoissonProb)(θ)
   @unpack y, x, idx, N, Ns = problem   # extract the data
   @unpack a0, a1, a0s, a0_sig = θ
   LL = 0.0
-  LL += logpdf(Truncated(Cauchy(0, 1), 0, Inf), a0_sig)
+  LL += logpdf(Truncated(Cauchy(0, 1), 0.0, Inf), a0_sig)
   LL += sum(logpdf(MvNormal(zeros(Ns), a0_sig), a0s))
   LL += logpdf.(Normal(0, 10), a0)
   LL += logpdf.(Normal(0, 1), a1)
