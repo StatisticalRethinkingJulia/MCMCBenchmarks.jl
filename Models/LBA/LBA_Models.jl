@@ -1,11 +1,11 @@
 @model lbaModel(data, N, Nc, ::Type{T}=Float64) where {T} = begin
      mn = minimum(x -> x[2], data)
-     tau ~ TruncatedNormal(0.4, 0.1, 0, mn)
-     A ~ TruncatedNormal(0.8, 0.4, 0, Inf)
-     k ~ TruncatedNormal(0.2, 0.3, 0, Inf)
+     tau ~ Truncated(Normal(0.4, 0.1), 0.0, mn)
+     A ~ Truncated(Normal(0.8, 0.4), 0.0, Inf)
+     k ~ Truncated(Normal(0.2, 0.3), 0.0, Inf)
      v = Vector{T}(undef, Nc)
      for i in 1:Nc
-          v[i] ~ TruncatedNormal(0, 3, 0, Inf)
+          v[i] ~ Truncated(Normal(0, 3), 0.0, Inf)
      end
      data ~ [LBA(; ν=v, τ=tau, A=A, k=k)]
 end
@@ -156,9 +156,9 @@ CmdStanConfig = Stanmodel(name="CmdStanLBA", model=CmdStanLBA, nchains=1,
       @unpack v,A,k,tau=θ
       d=LBA(ν=v, A=A, k=k, τ=tau)
       minRT = minimum(x->x[2], data)
-      logpdf(d,data)+sum(logpdf.(TruncatedNormal(0, 3, 0, Inf), v)) +
-      logpdf(TruncatedNormal(.8, .4, 0, Inf),A)+logpdf(TruncatedNormal(.2, .3 ,0 ,Inf), k)+
-      logpdf(TruncatedNormal(.4, .1, 0, minRT), tau)
+      logpdf(d,data)+sum(logpdf.(Truncated(Normal(0, 3), 0.0, Inf), v)) +
+      logpdf(Truncated(Normal(.8, .4), 0.0, Inf),A)+logpdf(Truncated(Normal(.2, .3) ,0.0 ,Inf), k)+
+      logpdf(Truncated(Normal(.4, .1), 0.0, minRT), tau)
   end
 
 function sampleDHMC(choice, rt, N, Nc, nsamples)

@@ -50,6 +50,9 @@ options = (Nsamples=2000, Nadapt=1000, delta=.8, Nd=Nd)
 # Perform the benchmark
 results = pbenchmark(samplers, simulateGaussian, Nreps; options...)
 
+# replace 0s for log time
+replace!(results[!,:gctime], 0.0=>eps())
+
 # Save results
 save(results, ProjDir)
 

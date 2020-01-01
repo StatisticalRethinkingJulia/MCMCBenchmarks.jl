@@ -41,7 +41,7 @@ logpdf(d::LNR, data::Tuple) = logpdf(d, data...)
     ::Type{T1}=Array{Float64,2}) where {T,T1}  = begin
     Nr = 3
     mu_g = T(undef,Nr)
-    sigma_g ~ Truncated(Cauchy(0, 1), 0, Inf)
+    sigma_g ~ Truncated(Cauchy(0, 1), 0.0, Inf)
     mu_g ~ [Normal(0,3)]
     mu = T1(undef,Nsub,Nr)
     for s in 1:Nsub
@@ -49,7 +49,7 @@ logpdf(d::LNR, data::Tuple) = logpdf(d, data...)
             mu[s,i] ~ Normal(mu_g[i], sigma_g)
         end
     end
-    sigma ~ Truncated(Cauchy(0, 1), 0, Inf)
+    sigma ~ Truncated(Cauchy(0, 1), 0.0, Inf)
     for i in 1:N
         data[i] ~ LNR(mu[idx[i],:], sigma, 0.0)
     end
@@ -145,6 +145,7 @@ CmdStanConfig = Stanmodel(name="CmdStanLNR", model=CmdStanLNR, nchains=1,
       @unpack v,A,k,tau=θ
       d=LBA(ν=v, A=A, k=k, τ=tau)
       minRT = minimum(x->x[2], data)
+
       logpdf(d,data)+sum(logpdf.(TruncatedNormal(0, 3, 0, Inf), v)) +
       logpdf(TruncatedNormal(.8, .4, 0, Inf),A)+logpdf(TruncatedNormal(.2, .3 ,0 ,Inf), k)+
       logpdf(TruncatedNormal(.4, .1, 0, minRT), tau)
