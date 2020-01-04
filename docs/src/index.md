@@ -23,7 +23,6 @@ Pages = [
     "src/design.md",
     "src/example.md",
     "src/functions.md",
-    "src/benchmarks.md",
 ]
 Depth = 1
 ```
