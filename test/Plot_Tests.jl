@@ -1,8 +1,7 @@
-using MCMCBenchmarks,Test
+using MCMCBenchmarks, Test
 
 @testset "Plot Tests " begin
     cd( @__DIR__)
-
     results = CSV.read("Plot_Data.csv")
 
     #Plot parameter recovery
