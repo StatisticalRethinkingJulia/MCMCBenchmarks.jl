@@ -223,6 +223,7 @@ acceptance rate and others depending on the specific sampler.
 function modifyConfig!(s::AHMCNUTS; Nsamples, Nadapt, delta, autodiff=:forward, kwargs...)
     s.config = Turing.NUTS(Nadapt, delta)
     s.Nsamples = Nsamples
+    println("Nsamples" , Nsamples)
     s.autodiff = autodiff == :reverse ? Turing.setadbackend(:reverse_diff) : Turing.setadbackend(:forward_diff)
 end
 

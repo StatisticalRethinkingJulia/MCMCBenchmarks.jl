@@ -4,11 +4,11 @@ Computes r̂ across a set of chains from different samplers.
 * `csr̂`: A DataFrame containing cross sampler r̂. This is concatonated to the
 results DataFrame
 """
-function cross_samplerRhat!(schains,csr̂;kwargs...)
+function cross_samplerRhat!(schains, csr̂; kwargs...)
     schains = Chains.(schains)
     schains = standardizeNames.(schains)
-    chains = reduce(chainscat,schains)
-    chains = removeBurnin(chains;kwargs...)
+    chains = reduce(chainscat, schains)
+    chains = removeBurnin(chains; kwargs...)
     df = MCMCChains.describe(chains)[1].df
     sort!(df)
     parms = sort!(chains.name_map.parameters)
@@ -28,7 +28,7 @@ Adds keyword arguments to the results DataFrame
 * `df`: DataFrame containing benchmark results for single iteration
 * `kwargs`: keyword arguments
 """
-function addKW!(df;kwargs...)
+function addKW!(df; kwargs...)
     for (k,v) in pairs(kwargs)
         df[!,k] = [v]
     end
@@ -42,7 +42,7 @@ and the number of memory allocations
 * `p`: a collection of performance metrics including run time,
 memory allocations and garbage collection time
 """
-function addPerformance!(df,p)
+function addPerformance!(df, p)
     df[!,:time] = [p[2]]
     df[!,:megabytes] = [p[3]/1e6]
     df[!,:gctime] = [p[4]]
@@ -58,7 +58,7 @@ function removeBurnin(chn;Nadapt,kwargs...)
     return chn[(Nadapt+1):end,:,:]
 end
 
-function savechain!(s,chains,performance;savechain=false,kwargs...)
+function savechain!(s, chains, performance; savechain=false, kwargs...)
     if savechain
         k = s.name
         push!(chains[k],performance[1])
@@ -75,11 +75,11 @@ Adds chain summary (e.g. rhat,ess) to newDF for each parameter.
 e.g. If col = :ess, and parameters are mu and sigma, the new columns
 will be mu_ess and sigma_ess and will contain their respective ess values
 """
-function addChainSummary!(newDF,chn,df,col)
+function addChainSummary!(newDF, chn, df, col)
     parms = sort!(chn.name_map.parameters)
     values = df[!,col]
     for (p,v) in zip(parms,values)
-        colname = createName(p,col)
+        colname = createName(p, col)
         newDF[!,colname] = [v]
     end
 end
@@ -92,7 +92,7 @@ Effective Sample Size per second
 * `performance`: a collection of performance metrics including run time,
 memory allocations and garbage collection time
 """
-function addESStime!(newDF,chn,df,performance)
+function addESStime!(newDF, chn, df, performance)
     parms = sort!(chn.name_map.parameters)
     values = df[!,:ess]/performance[2]
     for (p,v) in zip(parms,values)
@@ -106,13 +106,13 @@ Add highest probability density interval for each parameter
 * `newDF`: new DataFrame to be added to results DataFrame
 * `chain`: MCMC chain
 """
-function addHPD!(newDF,chain)
+function addHPD!(newDF, chain)
     h = hpd(chain)
     for r in eachrow(h.df)
         p,lb,ub = r
-        colname = createName(string(p),"hdp_lb")
+        colname = createName(string(p), "hdp_lb")
         newDF[!,colname] = [lb]
-        colname = createName(string(p),"hdp_ub")
+        colname = createName(string(p), "hdp_ub")
         newDF[!,colname] = [ub]
     end
 end
@@ -122,7 +122,7 @@ Add mean for each parameter
 * `newDF`: new DataFrame to be added to results DataFrame
 * `df`: DataFrame containing posterior summaries
 """
-function addMeans!(newDF,df)
+function addMeans!(newDF, df)
     for r in eachrow(df)
         p=r[:parameters]
         v = r[:mean]
@@ -134,7 +134,7 @@ end
 function standardizeNames(chain)
     nms = names(chain)
     newNames = standardizeName.(nms)
-    newChain = Chains(chain.value.data,newNames)
+    newChain = Chains(chain.value.data, newNames)
     return newChain
 end
 
