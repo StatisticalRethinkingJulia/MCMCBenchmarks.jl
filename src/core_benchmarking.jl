@@ -77,7 +77,7 @@ function benchmark!(samplers, results, csr̂, simulate, Nreps, chains; kwargs...
           println("Repetition: $rep of $Nreps\n")
           foreach(x->println(x),kwargs)
           performance = @timed runSampler(s, data; kwargs...)
-          push!(schains,performance[1])
+          push!(schains, performance[1])
           allowmissing!(results)
           results = updateResults!(s, performance, results; kwargs...)
           savechain!(s ,chains, performance; kwargs...)
@@ -223,6 +223,7 @@ acceptance rate and others depending on the specific sampler.
 function modifyConfig!(s::AHMCNUTS; Nsamples, Nadapt, delta, autodiff=:forward, kwargs...)
     s.config = Turing.NUTS(Nadapt, delta)
     s.Nsamples = Nsamples
+    println("Nsamples" , Nsamples)
     s.autodiff = autodiff == :reverse ? Turing.setadbackend(:reverse_diff) : Turing.setadbackend(:forward_diff)
 end
 
