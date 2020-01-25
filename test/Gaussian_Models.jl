@@ -1,3 +1,4 @@
+cd(@__DIR__)
 @model AHMCGaussian(y, N) = begin
     mu ~ Normal(0, 1)
     sigma ~ Truncated(Cauchy(0, 5), 0.0, Inf)
@@ -23,7 +24,7 @@ model {
 "
 
 CmdStanConfig = Stanmodel(
-  name = "CmdStanGaussian", model=CmdStanGaussian, nchains=1,
+  name = "CmdStanGaussian", model=CmdStanGaussian, nchains=1,  output_format=:mcmcchains,
   Sample(
     num_samples=1000, num_warmup=1000, adapt=CmdStan.Adapt(delta=0.8),
     save_warmup=true
