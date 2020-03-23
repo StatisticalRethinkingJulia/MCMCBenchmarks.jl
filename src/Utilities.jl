@@ -4,11 +4,11 @@ Convert DynamcHMC samples to a chain
 * `posterior`: an array of NamedTuple consisting of mcmcm samples
 """
 function nptochain(results, posterior)
-    Np = length(vcat(posterior[1]...))+2 #include lf_eps
+    Np = length(vcat(posterior[1]...)) + 2 #include lf_eps
     Ns = length(posterior)
     a3d = Array{Float64, 3}(undef, Ns, Np, 1)
     depth = map(x->x.depth, results.tree_statistics)
-    ϵ=results.ϵ
+    ϵ = results.ϵ
     i = 0
     for (post,ch) in zip(posterior, depth)
         i += 1
@@ -22,13 +22,13 @@ function nptochain(results, posterior)
     parameter_names = getnames(posterior)
     push!(parameter_names, "lf_eps","tree_depth")
     chns = MCMCChains.Chains(a3d, parameter_names,
-        Dict(:internals => ["lf_eps", "tree_depth"]))
+        Dict(:internals => ["lf_eps", "tree_depth"]); sorted=true)
     return chns
 end
 
 function getnames(post)
     nt = post[1]
-    Np =length(vcat(nt...))
+    Np = length(vcat(nt...))
     parm_names = fill("", Np)
     cnt = 0
     for (k,v) in pairs(nt)

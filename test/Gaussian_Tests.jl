@@ -10,7 +10,7 @@ using MCMCBenchmarks, Test, Random
     Nreps = 1
     ProjDir = @__DIR__
     cd(ProjDir)
-    samplers=(
+    samplers = (
       CmdStanNUTS(CmdStanConfig, ProjDir),
       AHMCNUTS(AHMCGaussian, AHMCconfig),
       DHMCNUTS(sampleDHMC))

@@ -1,4 +1,4 @@
-using MCMCBenchmarks,Test,Random
+using MCMCBenchmarks, Test, Random
 Random.seed!(4504)
 tests = [
     "Gaussian_Tests",
