@@ -19,7 +19,7 @@ mutable struct AHMCNUTS{T1} <: MCMCSampler
     autodiff::Symbol
 end
 
-AHMCNUTS(model, config)=AHMCNUTS(model, config, :AHMCNUTS, 0, :forward)
+AHMCNUTS(model, config) = AHMCNUTS(model, config, :AHMCNUTS, 0, :forward)
 
 """
 MCMC sampler struct for CmdStan NUTS
@@ -82,7 +82,7 @@ function benchmark!(samplers, results, csr̂, simulate, Nreps, chains; kwargs...
           results = updateResults!(s, performance, results; kwargs...)
           savechain!(s ,chains, performance; kwargs...)
       end
-      csr̂=cross_samplerRhat!(schains, csr̂; kwargs...)
+      csr̂ = cross_samplerRhat!(schains, csr̂; kwargs...)
     end
     return results,csr̂
 end
@@ -102,7 +102,7 @@ Runs the benchmarking procedure and returns the results
      results = DataFrame()
      csr̂ = DataFrame()
      for p in Permutation(kwargs)
-         results,csr̂=benchmark!(samplers, results, csr̂, simulate, Nreps, chains; p...)
+         results,csr̂ = benchmark!(samplers, results, csr̂, simulate, Nreps, chains; p...)
      end
      return [results csr̂]
  end
@@ -155,17 +155,17 @@ Update the results DataFrame on each iteration
 function updateResults!(s::AHMCNUTS, performance, results; kwargs...)
     chain = performance[1]
     newDF = DataFrame()
-    chain=removeBurnin(chain; kwargs...)
-    df = MCMCChains.describe(chain)[1].df
-    addChainSummary!(newDF, chain,df,:ess)
-    addChainSummary!(newDF, chain,df,:r_hat)
+    chain = removeBurnin(chain; kwargs...)
+    df = DataFrame(MCMCChains.describe(chain)[1])
+    addChainSummary!(newDF, chain, df, :ess)
+    addChainSummary!(newDF, chain, df, :r_hat)
     addESStime!(newDF, chain, df, performance)
     addHPD!(newDF, chain)
     addMeans!(newDF, df)
     select!(newDF, sort!(names(newDF)))#ensure correct order
-    dfi=MCMCChains.describe(chain, sections=[:internals])[1]
-    newDF[!,:epsilon] = [dfi[:step_size,:mean][1]]
-    newDF[!,:tree_depth] = [dfi[:tree_depth, :mean][1]]
+    dfi = MCMCChains.describe(chain, sections=[:internals])[1]
+    newDF[!,:epsilon] = [dfi[:step_size,:mean]]
+    newDF[!,:tree_depth] = [dfi[:tree_depth, :mean]]
     addPerformance!(newDF,performance)
     newDF[!,:sampler] = [s.name]
     addKW!(newDF; kwargs...)
@@ -175,17 +175,17 @@ end
 function updateResults!(s::CmdStanNUTS, performance, results; kwargs...)
     chain = performance[1]
     newDF = DataFrame()
-    chain=removeBurnin(chain; kwargs...)
-    df = MCMCChains.describe(chain)[1].df
+    chain = removeBurnin(chain; kwargs...)
+    df = DataFrame(MCMCChains.describe(chain)[1])
     addChainSummary!(newDF, chain, df, :ess)
-    addChainSummary!(newDF,chain,df,:r_hat)
+    addChainSummary!(newDF,chain, df, :r_hat)
     addESStime!(newDF, chain, df, performance)
     addHPD!(newDF, chain)
     addMeans!(newDF, df)
     select!(newDF, sort!(names(newDF)))#ensure correct order
-    dfi=MCMCChains.describe(chain, sections=[:internals])[1]
-    newDF[!,:epsilon] = [dfi[:stepsize__, :mean][1]]
-    newDF[!,:tree_depth] = [dfi[:treedepth__, :mean][1]]
+    dfi = MCMCChains.describe(chain, sections=[:internals])[1]
+    newDF[!,:epsilon] = [dfi[:stepsize__, :mean]]
+    newDF[!,:tree_depth] = [dfi[:treedepth__, :mean]]
     addPerformance!(newDF, performance)
     newDF[!,:sampler] = [s.name]
     addKW!(newDF; kwargs...)
@@ -196,16 +196,16 @@ function updateResults!(s::DHMCNUTS, performance, results; kwargs...)
     chain = performance[1]
     newDF = DataFrame()
     chain = removeBurnin(chain; kwargs...)
-    df = MCMCChains.describe(chain)[1].df
+    df = DataFrame(MCMCChains.describe(chain)[1])
     addChainSummary!(newDF, chain, df, :ess)
     addChainSummary!(newDF, chain, df, :r_hat)
     addESStime!(newDF, chain, df, performance)
     addHPD!(newDF, chain)
     addMeans!(newDF, df)
     select!(newDF, sort!(names(newDF)))#ensure correct order
-    dfi=MCMCChains.describe(chain, sections=[:internals])[1]
-    newDF[!,:epsilon] = [dfi[:lf_eps, :mean][1]]
-    newDF[!,:tree_depth] = [dfi[:tree_depth, :mean][1]]
+    dfi = MCMCChains.describe(chain, sections=[:internals])[1]
+    newDF[!,:epsilon] = [dfi[:lf_eps, :mean]]
+    newDF[!,:tree_depth] = [dfi[:tree_depth, :mean]]
     addPerformance!(newDF,performance)
     newDF[!,:sampler] = [s.name]
     addKW!(newDF; kwargs...)

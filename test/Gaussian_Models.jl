@@ -1,4 +1,5 @@
 cd(@__DIR__)
+
 @model AHMCGaussian(y, N) = begin
     mu ~ Normal(0, 1)
     sigma ~ Truncated(Cauchy(0, 5), 0.0, Inf)
@@ -62,9 +63,7 @@ function sampleDHMC(obs, N, nsamples, autodiff)
 
   # Undo the transformation to obtain the posterior from the chain.
   posterior = transform.(trans, results.chain)
-
-  chns = nptochain(results, posterior)
-  return chns
+  return nptochain(results, posterior)
 end
 
 simulateGaussian(; μ=0, σ=1, Nd, kwargs...) = (y=rand(Normal(μ, σ), Nd), N=Nd)

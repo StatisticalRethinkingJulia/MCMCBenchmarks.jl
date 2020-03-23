@@ -9,18 +9,18 @@ function cross_samplerRhat!(schains, csr̂; kwargs...)
     schains = standardizeNames.(schains)
     chains = reduce(chainscat, schains)
     chains = removeBurnin(chains; kwargs...)
-    df = MCMCChains.describe(chains)[1].df
+    df = DataFrame(MCMCChains.describe(chains)[1])
     sort!(df)
     parms = sort!(chains.name_map.parameters)
     values = df[!,:r_hat]
     N = length(schains)
     newDF = DataFrame()
     for (p,v) in zip(parms,values)
-        colname = createName(p,:sampler_rhat)
-        V = fill(v,N)
+        colname = createName(p, :sampler_rhat)
+        V = fill(v, N)
         newDF[!,colname] = V
     end
-    return vcat(csr̂,newDF,cols=:union)
+    return vcat(csr̂, newDF, cols=:union)
 end
 
 """
@@ -54,7 +54,7 @@ function toDict(data)
     return Dict(string(k)=>v for (k,v) in pairs(data))
 end
 
-function removeBurnin(chn;Nadapt,kwargs...)
+function removeBurnin(chn; Nadapt, kwargs...)
     return chn[(Nadapt+1):end,:,:]
 end
 
@@ -107,8 +107,8 @@ Add highest probability density interval for each parameter
 * `chain`: MCMC chain
 """
 function addHPD!(newDF, chain)
-    h = hpd(chain)
-    for r in eachrow(h.df)
+    h = DataFrame(hpd(chain))
+    for r in eachrow(h)
         p,lb,ub = r
         colname = createName(string(p), "hdp_lb")
         newDF[!,colname] = [lb]
@@ -124,7 +124,7 @@ Add mean for each parameter
 """
 function addMeans!(newDF, df)
     for r in eachrow(df)
-        p=r[:parameters]
+        p = r[:parameters]
         v = r[:mean]
         colname = createName(string(p),"mean")
         newDF[!,colname] = [v]
@@ -140,15 +140,15 @@ end
 
 function standardizeName(p)
     if occursin(".",p)
-        s = split(p,".")
-        p = string(s[1],"[",s[2],"]")
+        s = split(p, ".")
+        p = string(s[1], "[",s[2],"]")
     end
     return p
 end
 
 function createName(p,col)
     p = standardizeName(p)
-    return Symbol(string(p,"_",col))
+    return Symbol(string(p, "_",col))
 end
 
 function gettype(s)
@@ -162,8 +162,8 @@ Initializes NamedTuple of chains
 * s: sampler object
 """
 function initChains(s)
-    names = map(x->x.name,s)
-    v = map(x->Chains[],1:length(s))
+    names = map(x->x.name, s)
+    v = map(x->Chains[], 1:length(s))
     return NamedTuple{names}(v)
 end
 
@@ -171,7 +171,7 @@ function Chains(chain::Chains)
     parms = String.(chain.name_map.parameters)
     sort!(parms)
     v=chain[:,parms,:].value.data
-    return Chains(v,parms)
+    return Chains(v, parms)
 end
 
 # """
