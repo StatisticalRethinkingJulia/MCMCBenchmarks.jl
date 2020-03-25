@@ -173,3 +173,22 @@ function setreps(Nreps)
     reps[1:r] .+= 1
     return reps
 end
+
+"""
+change name parm.x to parm[x]
+"""
+function format_names(chain)
+    parm_names = names(chain)
+    new_names = map(format_name, parm_names)
+    d = Dict(o=>n for (o,n) in zip(parm_names,new_names))
+    chain = set_names(chain, d)
+    return chain
+end
+
+function format_name(str)
+    s = split(str, ".")
+    if length(s) > 1
+        return string(s[1], "[", s[2],"]")
+    end
+    return str
+end
