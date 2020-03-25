@@ -1,7 +1,7 @@
 name = "MCMCBenchmarks"
 uuid = "72ce6e51-3f7f-5ebd-8e88-b86aa3e31c30"
 authors = ["Christopher R. Fisher, Rob J. Goedman"]
-version = "0.7.0"
+version = "0.7.1"
 
 [deps]
 AdvancedHMC = "0bf59076-c3b1-5ca4-86bd-e02cd72cde3d"
