@@ -138,7 +138,9 @@ end
 
 function runSampler(s::CmdStanNUTS, data; Nchains=1, kwargs...)
     f() = stan(s.model, toDict(data), summary=false, s.dir)[2]
-    return reduce(chainscat, map(x->f(), 1:Nchains))
+    chains = reduce(chainscat, map(x->f(), 1:Nchains))
+    chains = format_names(chains)
+    return chains
 end
 
 function runSampler(s::DHMCNUTS, data; Nchains=1, kwargs...)
