@@ -226,7 +226,7 @@ function modifyConfig!(s::AHMCNUTS; Nsamples, Nadapt, delta, autodiff=:forward, 
     s.config = Turing.NUTS(Nadapt, delta)
     s.Nsamples = Nsamples
     println("Nsamples" , Nsamples)
-    s.autodiff = autodiff == :reverse ? Turing.setadbackend(:reverse_diff) : Turing.setadbackend(:forward_diff)
+    s.autodiff = autodiff == :reverse ? Turing.setadbackend(:reverse_diff) : Turing.setadbackend(:forwarddiff)
 end
 
 function modifyConfig!(s::CmdStanNUTS; Nsamples, Nadapt, delta, kwargs...)
