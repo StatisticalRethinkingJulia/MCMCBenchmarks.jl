@@ -133,7 +133,8 @@ end
 se(x) = std(x)/sqrt(length(x))
 
 function summarize(df, metric, grouping, func)
-    newDF= by(df, grouping, metric=>func)
+    g = groupby(df, grouping)
+    newDF= combine(g, metric=>func)
     yvar = names(newDF)[end]
     return newDF,yvar
 end
