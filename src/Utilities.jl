@@ -188,7 +188,7 @@ end
 function format_name(str)
     s = split(str, ".")
     if length(s) > 1
-        return string(s[1], "[", s[2],"]")
+        return string(s[1], "[", join(s[2:end],","),"]")
     end
     return str
 end
